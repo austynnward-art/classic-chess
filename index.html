@@ -632,6 +632,72 @@ body.contentPage .courseOpeningGrid{gap:9px!important;margin-top:10px}
   body.contentPage .courseCatalog{padding:12px}
 }
 
+/* COURSES PRODUCT UPGRADE — hierarchy, goals, richer cards */
+body.contentPage .coursesShell{max-width:1180px!important;margin:8px auto 0!important}
+body.contentPage .chesslyCourseDash{grid-template-columns:276px minmax(0,1fr)!important;gap:18px!important;margin-top:8px!important}
+body.contentPage .courseProfileCard{padding:19px 18px!important;border-radius:18px!important;box-shadow:0 12px 30px #12243a12!important}
+body.contentPage .courseGreeting{font-size:21px!important;margin-bottom:9px!important}
+body.contentPage .courseLevel{padding-bottom:2px}
+body.contentPage .xpPanel{margin-top:15px!important}
+body.contentPage .profileMiniStats{margin-top:12px!important}
+.todayGoalCard{margin-top:13px;padding:12px;border-radius:13px;background:linear-gradient(145deg,#f0fffc,#f7fbff);border:1px solid #cfeee9}
+.todayGoalHead{display:flex;justify-content:space-between;align-items:center;color:#168f85;font-size:8px;font-weight:900;letter-spacing:1px}
+.todayGoalHead b{font-size:10px;color:#273040}
+.todayGoalCard>strong{display:block;margin-top:7px;font-size:13px;color:#202833}
+.todayGoalBar{height:6px;background:#dfeceb;border-radius:99px;overflow:hidden;margin:9px 0}
+.todayGoalBar span{display:block;height:100%;background:#29c8b9;border-radius:99px}
+.todayGoalTasks{display:grid;gap:5px;font-size:8px;color:#69757f}
+.todayGoalTasks .done{color:#168f85}
+.todayGoalCard button{width:100%;height:31px;margin-top:10px;border:0;border-radius:8px;background:#273040;color:#fff;font-size:8px;font-weight:850;cursor:pointer}
+body.contentPage .courseMainCard{border-radius:18px!important;box-shadow:0 12px 30px #12243a12!important}
+body.contentPage .courseMainHeader{padding:19px 20px 15px!important}
+body.contentPage .courseTitleWrap h1{font-size:19px!important}
+body.contentPage .courseTitleWrap span{font-size:9px!important}
+body.contentPage .courseIcon{width:47px!important;height:47px!important;font-size:27px!important}
+body.contentPage .courseWorkspace{grid-template-columns:45px minmax(0,1fr) 45px!important;gap:9px!important;padding:5px 17px 0!important}
+body.contentPage .courseChapter{min-height:340px!important}
+body.contentPage .chapterTop{font-size:9px!important;padding:10px 8px 3px!important}
+body.contentPage .courseChapter h2{font-size:15px!important;padding-bottom:10px!important}
+body.contentPage .courseLessonList{padding:10px 36px 0!important;gap:8px!important}
+body.contentPage .courseLesson{height:42px!important;grid-template-columns:112px minmax(0,1fr) 20px!important;padding:0 10px!important}
+body.contentPage .courseLesson b{font-size:10px!important}
+body.contentPage .lessonBadge{font-size:8px!important;padding:5px 7px!important}
+body.contentPage .coursePath{height:175px!important;padding-top:15px!important}
+body.contentPage .courseBottomStrip{grid-template-columns:170px minmax(0,1fr) 135px!important;padding:12px 18px!important}
+body.contentPage .courseBottomStrip b{font-size:10px!important}
+body.contentPage .courseBottomStrip span{font-size:8px!important}
+.courseNextUp{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 18px;border-top:1px solid #edf0f2;background:#f8fffd}
+.courseNextUp>div{display:grid;gap:2px}
+.nextUpKicker{font-size:7px;font-weight:900;letter-spacing:1.2px;color:#18a99f}
+.courseNextUp b{font-size:10px;color:#202833}
+.courseNextUp>div>span:last-child{font-size:8px;color:#7d8791}
+.courseNextUp button{border:1px solid #a8e8df;background:#fff;color:#087c73;border-radius:8px;padding:8px 11px;font-size:8px;font-weight:850;cursor:pointer}
+.courseSectionNav{display:flex;gap:5px;margin:14px 0 0;padding:4px;background:#fff;border:1px solid #e6e9eb;border-radius:11px;width:max-content;box-shadow:0 5px 15px #12243a0b}
+.courseSectionNav span{padding:7px 12px;border-radius:8px;font-size:8px;font-weight:850;color:#7a858f}
+.courseSectionNav span.active{background:#273040;color:#fff}
+body.contentPage .courseCatalog{margin-top:10px!important;padding:17px 18px!important}
+body.contentPage .catalogHead h2{font-size:20px!important}
+body.contentPage .catalogGrid{gap:11px!important;margin-top:12px!important}
+body.contentPage .catalogCard{min-height:74px!important;padding:10px!important;grid-template-columns:42px minmax(0,1fr) auto!important}
+body.contentPage .catalogIcon{width:42px!important;height:42px!important;font-size:21px!important}
+body.contentPage .catalogCard b{font-size:10px!important}
+body.contentPage .catalogCard span{font-size:8px!important}
+body.contentPage .catalogCard button{font-size:8px!important;padding:8px 9px!important}
+body.contentPage .courseVideoResources{margin-top:14px!important;border-radius:16px!important}
+body.contentPage .courseOpeningGrid{grid-template-columns:repeat(3,1fr)!important;gap:11px!important}
+body.contentPage .courseResourceGrid{grid-template-columns:repeat(3,1fr)!important;gap:11px!important}
+body.contentPage .courseOpening,body.contentPage .courseResource{border-radius:12px!important;padding:14px!important}
+@media(max-width:900px){
+  body.contentPage .chesslyCourseDash{grid-template-columns:1fr!important}
+  .todayGoalCard{margin-top:10px}
+  body.contentPage .courseOpeningGrid,body.contentPage .courseResourceGrid{grid-template-columns:1fr 1fr!important}
+}
+@media(max-width:600px){
+  .courseSectionNav{width:100%;justify-content:space-between}
+  .courseSectionNav span{flex:1;text-align:center;padding:7px 4px}
+  .courseNextUp{align-items:flex-start;flex-direction:column}
+  body.contentPage .courseOpeningGrid,body.contentPage .courseResourceGrid{grid-template-columns:1fr!important}
+}
 /* HOME REFERENCE MATCH — readability + proportions pass */
 body.focusHome.fourPlayerView .app{max-width:1240px;padding:0 14px 24px}
 body.focusHome.fourPlayerView .top{height:70px;padding:9px 18px}
@@ -823,6 +889,17 @@ body.focusHome.fourPlayerView .gameProgressCard span{font-size:9px}
       <div class="profileMiniStats">
         <div><b>4</b><span>Courses</span></div><div><b>18</b><span>Lessons</span></div><div><b>7</b><span>Day streak</span></div>
       </div>
+      <div class="todayGoalCard">
+        <div class="todayGoalHead"><span>TODAY'S TRAINING</span><b>2 / 3</b></div>
+        <strong>Keep your streak going</strong>
+        <div class="todayGoalBar"><span style="width:67%"></span></div>
+        <div class="todayGoalTasks">
+          <span class="done">✓ Caro-Kann lesson</span>
+          <span class="done">✓ 1 mistake practice</span>
+          <span>○ 1 tactical puzzle</span>
+        </div>
+        <button type="button" onclick="startLearningGame('caro')">Continue training →</button>
+      </div>
     </aside>
 
     <main class="courseMainCard">
@@ -860,13 +937,20 @@ body.focusHome.fourPlayerView .gameProgressCard span{font-size:9px}
       </div>
 
       <div class="courseBottomStrip">
-        <div><b>Course progress</b><span>3 of 18 lessons completed</span></div>
+        <div><b>Course progress</b><span>3 of 18 lessons completed · 17%</span></div>
         <div class="progressBar"><span style="width:17%"></span></div>
         <button type="button" onclick="startLearningGame('caro')">Continue lesson →</button>
+      </div>
+      <div class="courseNextUp">
+        <div><span class="nextUpKicker">NEXT UP</span><b>Play the Panov position yourself</b><span>Test the idea before seeing the answer.</span></div>
+        <button type="button" onclick="startLearningGame('caro')">Practice position</button>
       </div>
     </main>
   </div>
 
+  <div class="courseSectionNav" aria-label="Course sections">
+    <span class="active">Courses</span><span>Practice</span><span>Videos</span><span>Repertoire</span>
+  </div>
   <div class="courseCatalog">
     <div class="catalogHead"><div><span class="catalogKicker">YOUR OPENING LIBRARY</span><h2>Keep learning</h2></div><span>18 lessons · 4 courses</span></div>
     <div class="catalogGrid">
