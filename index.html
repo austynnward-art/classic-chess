@@ -257,6 +257,19 @@ function fallbackComputerMove(){
     if(target)v+=val[target.t]*1.5;
     if(next.b[m.t[0]][m.t[1]]?.t==="p"&&(m.t[0]===0||m.t[0]===7))v+=800;
     v+=(3.5-Math.max(Math.abs(m.t[0]-3.5),Math.abs(m.t[1]-3.5)))*3;
+
+    // Look one move ahead so the emergency fallback does not casually hang
+    // the queen or another valuable piece.
+    const replies=all(next,opp(aiSide));
+    let biggestLoss=0;
+    for(const reply of replies){
+      const captured=next.b[reply.t[0]][reply.t[1]];
+      if(captured&&captured.c===aiSide) biggestLoss=Math.max(biggestLoss,val[captured.t]||0);
+    }
+    v-=biggestLoss*1.35;
+
+    // Prefer moves that give check or win material.
+    if(check(next,opp(aiSide)))v+=55;
     if(v>bestScore){bestScore=v;best=m;}
   }
   return best;
@@ -293,7 +306,7 @@ function computer(){
   };
 
   // Always guarantee a Black move, even if Stockfish/CDN is unavailable.
-  computerMoveTimer=setTimeout(()=>{computerMoveTimer=null;playFallback();},1200);
+  computerMoveTimer=setTimeout(()=>{computerMoveTimer=null;playFallback();},3500);
 
   if(!engineReady||engineBusy)return;
 
