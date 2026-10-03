@@ -142,7 +142,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   <div id="coachLessonText">Play a few moves and your coach will identify the main skill to work on.</div>
   <div class="coachChecklist"><span>1. Checks?</span><span>2. Captures?</span><span>3. Opponent threats?</span><span>4. King safety?</span></div>
   <div id="coachNextGoal">Next goal: build a consistent move-checking routine.</div>
-</div><div class="reviewBreakdown" id="reviewBreakdown"><b>Game summary</b><div class="reviewBreakdownGrid"><span>Accuracy <b id="reviewAccuracy">—</b></span><span>Great <b id="reviewGreat">0</b></span><span>Good <b id="reviewGood">0</b></span><span>Mistakes <b id="reviewMistakes">0</b></span><span>Blunders <b id="reviewBlunders">0</b></span></div><div id="reviewKeyMistakes">Key mistakes will appear here when the game ends.</div><div class="criticalMoments" id="criticalMoments"><b>⭐ Critical moments</b><div id="criticalMomentList">Play more moves to build your critical-moment list.</div></div><div style="margin-top:9px"><b>Move timeline</b><div class="reviewTimeline" id="reviewTimeline"></div></div></div><div class="reviewBest"><b>Best move now: <span id="reviewBestMove">—</span></b><div class="reviewWhy" id="reviewWhy">Stockfish will show the strongest move it finds and draw an arrow to it.</div></div><div class="reviewLast"><b>Last move: <span id="reviewLastMove">—</span> · <span id="reviewLastGrade">—</span></b><div class="reviewWhy" id="reviewLastWhy">Play a move to get a Stockfish-based grade.</div></div><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:8px"><button class="btn" id="reviewFilter" type="button">Show mistakes only</button><span class="small" id="reviewSummary">0 reviewed</span></div><div class="reviewMoveList" id="reviewMoveList"></div><div class="mistakePractice" id="mistakePractice"><div class="mistakePracticeHead"><span class="mistakePracticeTitle">🎯 Mistake Practice</span><span class="mistakePracticeMeta" id="mistakePracticeCount">0 positions</span></div><div class="mistakePracticeStatus" id="mistakePracticeStatus">Mistakes and Blunders from this game will become replayable positions here.</div><div class="mistakePracticeControls"><button class="btn" id="startMistakePractice" type="button" disabled>Practice mistakes</button><button class="btn" id="prevMistakePractice" type="button" disabled>← Previous</button><button class="btn" id="nextMistakePractice" type="button" disabled>Next →</button><button class="btn" id="showBestPractice" type="button" disabled>Show best move</button><button class="btn" id="exitMistakePractice" type="button" disabled>Exit practice</button></div></div><div class="reviewText" id="reviewText">Live review updates after every move.</div></div><div class="analysisGraph"><canvas id="evalGraph"></canvas></div>
+</div><div class="reviewBreakdown" id="reviewBreakdown"><b>Game summary</b><div class="reviewBreakdownGrid"><span>Coach score <b id="reviewAccuracy">—</b></span><span>Great <b id="reviewGreat">0</b></span><span>Good <b id="reviewGood">0</b></span><span>Mistakes <b id="reviewMistakes">0</b></span><span>Blunders <b id="reviewBlunders">0</b></span></div><div id="reviewKeyMistakes">Key mistakes will appear here when the game ends.</div><div class="criticalMoments" id="criticalMoments"><b>⭐ Critical moments</b><div id="criticalMomentList">Play more moves to build your critical-moment list.</div></div><div style="margin-top:9px"><b>Move timeline</b><div class="reviewTimeline" id="reviewTimeline"></div></div></div><div class="reviewBest"><b>Best move now: <span id="reviewBestMove">—</span></b><div class="reviewWhy" id="reviewWhy">Stockfish will show the strongest move it finds and draw an arrow to it.</div></div><div class="reviewLast"><b>Last move: <span id="reviewLastMove">—</span> · <span id="reviewLastGrade">—</span></b><div class="reviewWhy" id="reviewLastWhy">Play a move to get a Stockfish-based grade.</div></div><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:8px"><button class="btn" id="reviewFilter" type="button">Show mistakes only</button><span class="small" id="reviewSummary">0 reviewed</span></div><div class="reviewMoveList" id="reviewMoveList"></div><div class="mistakePractice" id="mistakePractice"><div class="mistakePracticeHead"><span class="mistakePracticeTitle">🎯 Mistake Practice</span><span class="mistakePracticeMeta" id="mistakePracticeCount">0 positions</span></div><div class="mistakePracticeStatus" id="mistakePracticeStatus">Mistakes and Blunders from this game will become replayable positions here.</div><div class="mistakePracticeControls"><button class="btn" id="startMistakePractice" type="button" disabled>Practice mistakes</button><button class="btn" id="prevMistakePractice" type="button" disabled>← Previous</button><button class="btn" id="nextMistakePractice" type="button" disabled>Next →</button><button class="btn" id="showBestPractice" type="button" disabled>Show best move</button><button class="btn" id="exitMistakePractice" type="button" disabled>Exit practice</button></div></div><div class="reviewText" id="reviewText">Live review updates after every move.</div></div><div class="analysisGraph"><canvas id="evalGraph"></canvas></div>
   <div class="small" style="margin-top:5px">Positions analyzed: <span id="movesAnalyzed">0</span></div>
 </div>
 </main>
@@ -546,15 +546,18 @@ function requestLiveReview(moveJustPlayed,mover,playedUci,baselinePosition){
     if(token!==reviewToken||!s)return;
     if(!engineReady){if($("reviewWhy"))$("reviewWhy").textContent="Waiting for Stockfish…";return;}
     if(engineBusy){setTimeout(run,250);return;}
-    if(moveJustPlayed&&reviewBaselineWhite===null&&baselinePosition){
-      engineSearch(baselinePosition,mv=>{
-        if(token!==reviewToken||!s)return;
-        reviewPositionBefore=clone(baselinePosition);
-        reviewBaselineBestMove=mv&&mv.length>=4?mv.slice(0,4):null;
-        reviewBaselineWhite=baselinePosition.turn==="w"?lastEval:-lastEval;
-        requestLiveReview(moveJustPlayed,mover,playedUci,null);
-      });
-      return;
+    if(moveJustPlayed&&baselinePosition){
+      reviewPositionBefore=clone(baselinePosition);
+      if(reviewBaselineWhite===null){
+        engineSearch(baselinePosition,mv=>{
+          if(token!==reviewToken||!s)return;
+          reviewBaselineBestMove=mv&&mv.length>=4?mv.slice(0,4):null;
+          reviewBaselineWhite=baselinePosition.turn==="w"?lastEval:-lastEval;
+          requestLiveReview(moveJustPlayed,mover,playedUci,null);
+        });
+        return;
+      }
+      reviewBaselineBestMove=bestEngineMoveBefore||null;
     }
     const positionToAnalyze=clone(s);
     engineSearch(positionToAnalyze,mv=>{
