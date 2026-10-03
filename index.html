@@ -999,7 +999,14 @@ function setBotFeedback(grade,detail){
   el.textContent=grade?grade+" — "+detail:"Make your move — I’ll review it.";
 }
 function updateMistakePracticeUI(){const count=mistakePracticePositions.length;if($("mistakePracticeCount"))$("mistakePracticeCount").textContent=count+" position"+(count===1?"":"s");if($("startMistakePractice"))$("startMistakePractice").disabled=count===0||mistakePracticeActive;if($("prevMistakePractice"))$("prevMistakePractice").disabled=!mistakePracticeActive||mistakePracticeIndex<=0;if($("nextMistakePractice"))$("nextMistakePractice").disabled=!mistakePracticeActive||mistakePracticeIndex>=count-1;if($("showBestPractice"))$("showBestPractice").disabled=!mistakePracticeActive||!mistakePracticePositions[mistakePracticeIndex]?.bestMove;if($("exitMistakePractice"))$("exitMistakePractice").disabled=!mistakePracticeActive;}
-function renderMistakePracticePosition(){const item=mistakePracticePositions[mistakePracticeIndex];if(!item)return;s=clone(item.position);sel=null;legal=[];over=false;thinking=false;const side=s.turn==="w"?"White":"Black";$("status").textContent="🎯 Practice "+(mistakePracticeIndex+1)+"/"+mistakePracticePositions.length+" — "+side+" to move. Replay the position and find a better move than "+item.move+".";$("result").textContent="Mistake Practice";if($("reviewLastMove"))$("reviewLastMove").textContent=item.move;if($("reviewLastGrade"))$("reviewLastGrade").textContent=item.grade;if($("reviewLastWhy"))$("reviewLastWhy").textContent=item.detail;if($("mistakePracticeStatus"))$("mistakePracticeStatus").textContent="Position "+(mistakePracticeIndex+1)+" of "+mistakePracticePositions.length+" · "+item.grade+" · Your original move was "+item.move+(item.bestMove?" · Engine alternative: "+item.bestMove:"");render();updateMistakePracticeUI();}
+function renderMistakePracticePosition(){const item=mistakePracticePositions[mistakePracticeIndex];if(!item)return;s=clone(item.position);sel=null;legal=[];over=false;thinking=false;const side=s.turn==="w"?"White":"Black";$("status").textContent="🎯 Practice "+(mistakePracticeIndex+1)+"/"+mistakePracticePositions.length+" — "+side+" to move. Replay the position and find a better move than "+item.move+".";$("result").textContent="Mistake Practice";if($("reviewLastMove"))$("reviewLastMove").textContent=item.move;if($("reviewLastGrade"))$("reviewLastGrade").textContent=item.grade;if($("reviewLastWhy"))$("reviewLastWhy").textContent=item.detail;if($("mistakePracticeStatus"))$("mistakePracticeStatus").textContent="Position "+(mistakePracticeIndex+1)+" of "+mistakePracticePositions.length+" · "+item.grade+" · Your original move was "+item.move+(item.bestMove?" · Engine alternative: "+item.bestMove:"");render();updateMistakePracticeUI();
+const MULTI_PLAYERS={
+  red:{name:"Red",dir:[1,0],pawnStart:1,promo:function(r,c){return r===13;}},
+  blue:{name:"Blue",dir:[0,-1],pawnStart:12,promo:function(r,c){return c===0;}},
+  yellow:{name:"Yellow",dir:[-1,0],pawnStart:12,promo:function(r,c){return r===0;}},
+  green:{name:"Green",dir:[0,1],pawnStart:1,promo:function(r,c){return c===13;}}
+};
+const MULTI_ORDER=["red","blue","yellow","green"];}
 function startMistakePractice(){if(!mistakePracticePositions.length)return;if(!mistakePracticeActive){mistakePracticeReturnState={s:clone(s),history:history.slice(),snapshots:snapshots.map(clone),over:over,thinking:thinking,aiSide:aiSide,clock:{w:clock.w,b:clock.b},result:$("result")?.textContent||"",status:$("status")?.textContent||""};computerRequestToken++;reviewToken++;reviewPending=false;if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}if(engine){try{engine.postMessage("stop")}catch(e){}}engineBusy=false;engineQueue=null;mistakePracticeActive=true;mistakePracticeIndex=0;}renderMistakePracticePosition();}
 function exitMistakePractice(){if(!mistakePracticeActive)return;reviewPending=false;clearArrow();const saved=mistakePracticeReturnState;mistakePracticeActive=false;mistakePracticeReturnState=null;if(saved){s=clone(saved.s);history=saved.history.slice();snapshots=saved.snapshots.map(clone);over=saved.over;thinking=false;aiSide=saved.aiSide;clock={w:saved.clock.w,b:saved.clock.b};$("result").textContent=saved.result;$("status").textContent=saved.status;}sel=null;legal=[];updateMistakePracticeUI();render();}
 function showBestPracticeMove(){const item=mistakePracticePositions[mistakePracticeIndex];if(!item||!item.bestMove)return;drawArrow(item.bestMove.slice(0,2),item.bestMove.slice(2,4));$("status").textContent="🎯 Best move: "+item.bestMove+" — now try it yourself.";updateMistakePracticeUI();}
@@ -1557,13 +1564,7 @@ $("fourBoardStyle").onchange=function(){ document.body.dataset.boardStyle=this.v
 setLearningOpening("e4");
 showPage("play");
 
-const MULTI_PLAYERS={
-  red:{name:"Red",dir:[1,0],pawnStart:1,promo:function(r,c){return r===13;}},
-  blue:{name:"Blue",dir:[0,-1],pawnStart:12,promo:function(r,c){return c===0;}},
-  yellow:{name:"Yellow",dir:[-1,0],pawnStart:12,promo:function(r,c){return r===0;}},
-  green:{name:"Green",dir:[0,1],pawnStart:1,promo:function(r,c){return c===13;}}
-};
-const MULTI_ORDER=["red","blue","yellow","green"];
+
 
 function multiPlayable(r,c){return r>=0&&r<14&&c>=0&&c<14&&!((r<3||r>10)&&(c<3||c>10));}
 function multiNextAlive(){
