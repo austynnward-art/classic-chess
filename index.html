@@ -292,6 +292,38 @@ body.contentPage .ytShell{display:none!important}
 body.contentPage .courseLanding .pageCards{grid-template-columns:repeat(2,1fr)}
 @media(max-width:760px){body.focusHome.fourPlayerView .app{padding:0 5px 10px}body.focusHome.fourPlayerView .layout{grid-template-columns:112px minmax(0,1fr) 124px;gap:5px}body.focusHome.fourPlayerView .fourControls{padding:6px}body.focusHome.fourPlayerView .fourBoardWrap{padding:11px 15px}body.focusHome.fourPlayerView .botAvatar{width:86px;height:86px}body.contentPage .learnLandingTop,body.contentPage .courseLandingTop{grid-template-columns:1fr 1fr;min-height:185px}body.contentPage .pageIntro{padding:16px 14px}.contentPage .pageIntro h2{font-size:21px}.contentPage .pageIntro p{font-size:8px}.contentPage .pageArt,.contentPage .pageArt svg{min-height:185px}.contentPage .pageCards{grid-template-columns:repeat(3,1fr)}body.contentPage .trainerGrid{grid-template-columns:1fr 180px}}
 
+
+/* FINAL CLEAN DASHBOARD — keep Page 1 focused on the four-player design */
+body.focusHome{background:#eef2f6}
+body.focusHome .layout{grid-template-columns:150px minmax(500px,1fr) 180px;gap:8px;margin-top:7px;align-items:start}
+body.focusHome .frame,
+body.focusHome .controls,
+body.focusHome .options,
+body.focusHome .status,
+body.focusHome .analysisCard,
+body.focusHome .legacyState{display:none!important}
+body.focusHome .center{min-width:0}
+body.focusHome .multiFrame{display:block!important;margin-top:0;padding:6px;background:transparent;border:0;box-shadow:none}
+body.focusHome .multiControls,
+body.focusHome .multiNote{display:none!important}
+body.focusHome .multiInfo{margin:0 0 5px;justify-content:flex-start}
+body.focusHome .multiBoard{width:min(100%,650px);border-width:3px;border-radius:18px;box-shadow:0 8px 20px rgba(30,40,55,.16)}
+body.focusHome .fourBottomGrid{margin-top:6px}
+body.focusHome .bottomCard{padding:7px;border-radius:8px}
+body.focusHome .fourMoveList{max-height:55px}
+body.focusHome .right{min-width:0}
+body.focusHome .fourCoach{position:sticky;top:8px}
+body.focusHome .coachHero{padding:8px}
+body.focusHome .coachTips{padding:7px}
+body.focusHome .gameProgressCard{padding:7px}
+@media(max-width:950px){body.focusHome .layout{grid-template-columns:1fr}.focusHome .fourControls{order:1}.focusHome .center{order:2}.focusHome .right{order:3}}
+
+/* Course resource cards with public video/live links */
+.courseResourcePanel{margin-top:18px;padding:18px;background:#f7f4f1;border:1px solid #e2d9d2;border-radius:14px}
+.courseResourcePanel h3{margin:0 0 5px;font-size:19px}.courseResourcePanel>p{margin:0 0 12px;color:#6d6864;font-size:12px;line-height:1.45}
+.courseResourceGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.courseResource{background:#fff;border:1px solid #e3ddd7;border-radius:11px;padding:12px}.courseResource b{display:block;font-size:14px}.courseResource span{display:block;margin:4px 0 9px;color:#777;font-size:11px;line-height:1.35}.courseResourceLinks{display:flex;gap:6px;flex-wrap:wrap}.courseResourceLinks a{display:inline-block;padding:7px 9px;border-radius:8px;background:#222;color:#fff;text-decoration:none;font-size:11px;font-weight:800}.courseResourceLinks a.secondary{background:#f0ece8;color:#332c27}
+.courseVideo{margin-top:12px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#111}.courseVideo iframe{width:100%;height:100%;border:0;display:block}
+@media(max-width:700px){.courseResourceGrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -450,6 +482,30 @@ body.contentPage .courseLanding .pageCards{grid-template-columns:repeat(2,1fr)}
     <div class="resourceNote">The course cards link to official course platforms rather than copying paid lesson content into Classic Chess.</div>
   </div>
 </section>
+<div class="courseResourcePanel" id="courseVideoResources">
+  <h3>🎥 Video Courses & Live Chess</h3>
+  <p>Public lessons and live chess you can open from Classic Chess. The links go to the creators' own YouTube or Twitch pages.</p>
+  <div class="courseResourceGrid">
+    <article class="courseResource">
+      <b>Beginner Chess Lessons</b><span>Rules, openings, tactics and practical games.</span>
+      <div class="courseResourceLinks"><a href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener">YouTube · GothamChess</a><a class="secondary" href="https://www.twitch.tv/gothamchess" target="_blank" rel="noopener">Twitch · GothamChess</a></div>
+      <div class="courseVideo"><iframe src="https://www.youtube.com/embed/XtaEnxG2lbg" title="GothamChess How To Win At Chess Episode 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+    </article>
+    <article class="courseResource">
+      <b>Chess.com Video Library</b><span>How-to-play lessons, commentary, puzzles and chess education videos.</span>
+      <div class="courseResourceLinks"><a href="https://www.youtube.com/@chess" target="_blank" rel="noopener">YouTube · Chess.com</a><a class="secondary" href="https://www.twitch.tv/chess" target="_blank" rel="noopener">Twitch · Chess</a></div>
+      <div class="courseVideo"><iframe src="https://www.youtube.com/embed/AgTQJUhK2MY" title="Chess.com introduction video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+    </article>
+    <article class="courseResource">
+      <b>Chessly</b><span>Use the existing Chessly course link for structured paid courses and lessons.</span>
+      <div class="courseResourceLinks"><a href="https://chessly.com/" target="_blank" rel="noopener">Open Chessly</a><a class="secondary" href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener">Free YouTube Lessons</a></div>
+    </article>
+    <article class="courseResource">
+      <b>Live Chess Category</b><span>Browse current chess streams and past broadcasts on Twitch.</span>
+      <div class="courseResourceLinks"><a href="https://www.twitch.tv/directory/category/chess" target="_blank" rel="noopener">Open Twitch Chess</a><a class="secondary" href="https://www.twitch.tv/gothamchess/videos?filter=archives" target="_blank" rel="noopener">GothamChess VODs</a></div>
+    </article>
+  </div>
+</div>
 
 <section class="ytShell" id="youtubeChess">
   <div class="ytHeader"><div><h2>♟ Chess Videos + Systems</h2><p>More public videos for beginner, intermediate and advanced study, plus opening-system practice.</p></div><span class="ytBadge">ALL LEVELS</span></div>
