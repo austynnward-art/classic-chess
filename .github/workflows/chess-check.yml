@@ -13,7 +13,7 @@ jobs:
           node-version: '24'
       - name: Extract JavaScript
         run: |
-          awk '/<script>/{f=1;next}/<\\/script>/{f=0}f' index.html > /tmp/app.js
+          awk '/<script>/{f=1;next}/<\/script>/{f=0}f' index.html > /tmp/app.js
           node --check /tmp/app.js
       - name: Install DOM test runner
         run: npm install --no-save jsdom@26.1.0
