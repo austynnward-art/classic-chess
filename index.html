@@ -292,6 +292,8 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
     </div>
   </div>
 
+  <div class="resourceNote"><b>Network access note:</b> The app includes official video embeds and direct links. I can’t bypass a school or network block on YouTube or another external site. The built-in chess boards and original drills remain available inside the app when external videos are unavailable.</div>
+
   <div class="resourceNote"><b>Important:</b> Chessly’s paid lessons are not copied here. The local boards use original practice lines, while the official Chessly, Utah Chess and US Chess links open their own material.</div>
 </section>
 <section class="ytShell" id="youtubeChess">
@@ -312,16 +314,27 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
     </article>
     <article class="ytCard">
       <div class="ytVideo"><iframe src="https://www.youtube.com/embed/ECMMct_jnEM" title="How to WIN with the London System" loading="lazy" allowfullscreen></iframe></div>
-      <div class="ytCardBody"><h3>Systems · London System</h3><p>How to build a London setup and use the resulting plans in real games.</p></div>
+      <div class="ytCardBody"><h3>Systems · London System</h3><p>How to build a London setup and use the resulting plans in real games.</p><a class="ytLink" href="https://www.youtube.com/watch?v=ECMMct_jnEM" target="_blank" rel="noopener">Watch London System →</a></div>
     </article>
     <article class="ytCard">
       <div class="ytVideo"><iframe src="https://www.youtube.com/embed/Nc8rzTIfFCw" title="Want To Crush The London System" loading="lazy" allowfullscreen></iframe></div>
-      <div class="ytCardBody"><h3>Systems · Playing Against London</h3><p>Practical ideas for recognizing and challenging the London setup.</p></div>
+      <div class="ytCardBody"><h3>Systems · Playing Against London</h3><p>Practical ideas for recognizing and challenging the London setup.</p><a class="ytLink" href="https://www.youtube.com/watch?v=Nc8rzTIfFCw" target="_blank" rel="noopener">Watch London Defense →</a></div>
     </article>
     <article class="ytCard">
       <div class="ytVideo"><iframe src="https://www.youtube.com/embed/ivxXd__504o" title="GothamChess practical chess games" loading="lazy" allowfullscreen></iframe></div>
-      <div class="ytCardBody"><h3>Intermediate / Advanced · Model Games</h3><p>Use complete games to study calculation, plans and transitions.</p></div>
+      <div class="ytCardBody"><h3>Intermediate / Advanced · Model Games</h3><p>Use complete games to study calculation, plans and transitions.</p><a class="ytLink" href="https://www.youtube.com/watch?v=ivxXd__504o" target="_blank" rel="noopener">Watch Model Games →</a></div>
     </article>
+  </div>
+
+  <div class="resourceSection">
+    <div class="resourceSectionHead"><h3>Verified GothamChess videos</h3><span>Official YouTube</span></div>
+    <div class="resourceGrid">
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=ebfzL_GwiIE" target="_blank" rel="noopener"><b>Caro-Kann: How to CRUSH with the Caro-Kann</b><span>Opening theory and model games.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=rmbU97iftC8" target="_blank" rel="noopener"><b>Caro-Kann Defense · 10-Minute Opening</b><span>Quick opening introduction.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=ECMMct_jnEM" target="_blank" rel="noopener"><b>How to WIN with the London System</b><span>Theory plus complete games.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=Nc8rzTIfFCw" target="_blank" rel="noopener"><b>Want to Crush the London System?</b><span>How to play against the system.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=IvxhIozo_zo" target="_blank" rel="noopener"><b>Play Chess Endgames Like Magnus Carlsen</b><span>Queen, rook, knight and bishop endgame study.</span></a>
+    </div>
   </div>
 
   <div class="resourceSection">
@@ -351,7 +364,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"}},F="abcdefgh".split("");
 let s,history=[],snapshots=[],sel=null,legal=[],flip=false,over=false,thinking=false,aiSide="b",timer=null,clock={w:600,b:600};
 let computerRetryTimer=null,computerMoveTimer=null,computerRequestToken=0;
-let gameMode="computer",multiState=null,multiSelected=null,multiLegal=[];
+let gameMode="computer",multiState=null,multiSelected=null,multiLegal=[],clockTimer=null;
 const $=id=>document.getElementById(id),opp=c=>c==="w"?"b":"w",inside=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
 function initial(){let b=Array.from({length:8},()=>Array(8).fill(null)),a=["r","n","b","q","k","b","n","r"];for(let c=0;c<8;c++){b[0][c]={c:"b",t:a[c]};b[1][c]={c:"b",t:"p"};b[6][c]={c:"w",t:"p"};b[7][c]={c:"w",t:a[c]}}return{b,turn:"w",castle:{wk:1,wq:1,bk:1,bq:1},ep:null,last:null,captured:{w:[],b:[]},halfmove:0}}
 function clone(x){return JSON.parse(JSON.stringify(x))}
