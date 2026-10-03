@@ -1589,6 +1589,87 @@ body.contentPage .chesslyCourseDash{display:none!important}
   .courseRefBottom{grid-template-columns:1fr}
 }
 
+
+/* FIRST-PAGE BOARD — MATCH REFERENCE CROSS */
+body.focusHome.fourPlayerView .multiFrame{
+  background:#0b2f50!important;
+  border:0!important;
+  padding:8px!important;
+}
+body.focusHome.fourPlayerView .fourBoardWrap{
+  background:#0a3153!important;
+  padding:13px 18px!important;
+  border-radius:8px!important;
+  grid-template-columns:18px 1fr 18px!important;
+  grid-template-rows:18px 1fr 18px!important;
+}
+body.focusHome.fourPlayerView .multiBoard{
+  clip-path:none!important;
+  width:100%!important;
+  max-width:700px!important;
+  aspect-ratio:1!important;
+  border:3px solid #244f6e!important;
+  border-radius:4px!important;
+  overflow:hidden!important;
+  background:#0a3153!important;
+  box-shadow:0 10px 22px rgba(0,17,31,.38)!important;
+}
+body.focusHome.fourPlayerView .multiSq.void{
+  background:#0a3153!important;
+  border:0!important;
+  cursor:default!important;
+}
+body.focusHome.fourPlayerView .multiSq.playable{
+  border:0!important;
+  border-radius:0!important;
+  transition:filter .12s ease,background .12s ease!important;
+}
+body.focusHome.fourPlayerView .multiSq.redZone.light{background:#f05f5b!important}
+body.focusHome.fourPlayerView .multiSq.redZone.dark{background:#dd4848!important}
+body.focusHome.fourPlayerView .multiSq.blueZone.light{background:#5db0ee!important}
+body.focusHome.fourPlayerView .multiSq.blueZone.dark{background:#4898d8!important}
+body.focusHome.fourPlayerView .multiSq.greenZone.light{background:#73d98a!important}
+body.focusHome.fourPlayerView .multiSq.greenZone.dark{background:#5fc776!important}
+body.focusHome.fourPlayerView .multiSq.yellowZone.light{background:#f7d45d!important}
+body.focusHome.fourPlayerView .multiSq.yellowZone.dark{background:#e9c44b!important}
+body.focusHome.fourPlayerView .multiSq.selected{
+  outline:3px solid rgba(255,255,255,.95)!important;
+  outline-offset:-3px!important;
+  filter:brightness(1.08)!important;
+}
+body.focusHome.fourPlayerView .multiSq.legal:after{
+  width:17%!important;height:17%!important;
+  background:rgba(255,255,255,.54)!important;
+  box-shadow:0 0 0 2px rgba(0,0,0,.12)!important;
+}
+body.focusHome.fourPlayerView .multiSq.capture:after{
+  inset:7%!important;
+  border:3px solid rgba(255,255,255,.80)!important;
+}
+body.focusHome.fourPlayerView .multiPiece{
+  width:84%!important;
+  height:84%!important;
+  transform:scale(.88)!important;
+  filter:drop-shadow(0 2px 1px rgba(0,0,0,.38))!important;
+}
+body.focusHome.fourPlayerView .multiSq:hover .multiPiece{
+  transform:scale(.94)!important;
+}
+body.focusHome.fourPlayerView .boardFiles,
+body.focusHome.fourPlayerView .boardRank{
+  color:#b8d0e4!important;
+  font-size:8px!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.25)
+}
+@media(max-width:900px){
+  body.focusHome.fourPlayerView .fourBoardWrap{padding:11px 12px!important}
+}
+@media(max-width:600px){
+  body.focusHome.fourPlayerView .fourBoardWrap{padding:9px 8px!important}
+  body.focusHome.fourPlayerView .boardFiles,
+  body.focusHome.fourPlayerView .boardRank{font-size:7px!important}
+}
+
 </style>
 </head>
 <body>
