@@ -1164,7 +1164,7 @@ function newGame(){
   if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}
   if(engine){try{engine.postMessage("stop")}catch(e){}}
   engineBusy=false;engineQueue=null;s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;
-  clock={w:+$("time").value,b:+$("time").value};evalHistory=[];lastEval=0;reviewToken++;reviewBaselineWhite=null;reviewMoveGrades=[];bestEngineMoveBefore=null;if($("movesAnalyzed"))$("movesAnalyzed").textContent="0";if($("accuracy"))$("accuracy").textContent="—";clearArrow();setBotFeedback();render();startClock();if(engineReady)setTimeout(()=>{if(!history.length&&!over)requestLiveReview();},60);if(aiSide==="w")computer();
+  clock={w:+$("time").value,b:+$("time").value};evalHistory=[];lastEval=0;reviewToken++;reviewBaselineWhite=null;reviewMoveGrades=[];bestEngineMoveBefore=null;if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";if($("movesAnalyzed"))$("movesAnalyzed").textContent="0";if($("accuracy"))$("accuracy").textContent="—";clearArrow();setBotFeedback();render();startClock();if(engineReady)setTimeout(()=>{if(!history.length&&!over)requestLiveReview();},60);if(aiSide==="w")computer();
 }
 $("side").onchange=function(){
   if(gameMode!=="computer")return;
