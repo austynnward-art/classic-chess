@@ -2,6 +2,7 @@ const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: '.',
+  testMatch: 'e2e.spec.js',
   timeout: 30000,
   fullyParallel: true,
   reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }], ['list']],
