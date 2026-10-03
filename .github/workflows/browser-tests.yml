@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Validate application JavaScript
+        run: node -e "const fs=require('fs');const c=fs.readFileSync('index.html','utf8');const m=c.match(/<script>([\\s\\S]*)<\\/script>/);if(!m)throw new Error('No application script found');new Function(m[1]);console.log('Application JavaScript syntax OK')"
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
