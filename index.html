@@ -741,7 +741,7 @@ function showPage(which){
   if($("result"))$("result").textContent=learn?"Page 2 · Learn + Videos":"Page 1 · Play";
   document.title=learn?"Classic Chess — Learn + Videos":"Classic Chess";
   if(learn){window.scrollTo({top:0,behavior:"smooth"});}
-  else render();
+  else if(s) render();
 }
 $("playPage").onclick=()=>showPage("play");setLearningOpening("e4");
 $("learnPage").onclick=()=>showPage("learn");
