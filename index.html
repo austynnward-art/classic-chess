@@ -533,17 +533,18 @@ function setBotFeedback(grade,detail){
 }
 function updateMistakePracticeUI(){const count=mistakePracticePositions.length;if($("mistakePracticeCount"))$("mistakePracticeCount").textContent=count+" position"+(count===1?"":"s");if($("startMistakePractice"))$("startMistakePractice").disabled=count===0||mistakePracticeActive;if($("prevMistakePractice"))$("prevMistakePractice").disabled=!mistakePracticeActive||mistakePracticeIndex<=0;if($("nextMistakePractice"))$("nextMistakePractice").disabled=!mistakePracticeActive||mistakePracticeIndex>=count-1;if($("showBestPractice"))$("showBestPractice").disabled=!mistakePracticeActive||!mistakePracticePositions[mistakePracticeIndex]?.bestMove;if($("exitMistakePractice"))$("exitMistakePractice").disabled=!mistakePracticeActive;}
 function renderMistakePracticePosition(){const item=mistakePracticePositions[mistakePracticeIndex];if(!item)return;s=clone(item.position);sel=null;legal=[];over=false;thinking=false;const side=s.turn==="w"?"White":"Black";$("status").textContent="🎯 Practice "+(mistakePracticeIndex+1)+"/"+mistakePracticePositions.length+" — "+side+" to move. Replay the position and find a better move than "+item.move+".";$("result").textContent="Mistake Practice";if($("reviewLastMove"))$("reviewLastMove").textContent=item.move;if($("reviewLastGrade"))$("reviewLastGrade").textContent=item.grade;if($("reviewLastWhy"))$("reviewLastWhy").textContent=item.detail;if($("mistakePracticeStatus"))$("mistakePracticeStatus").textContent="Position "+(mistakePracticeIndex+1)+" of "+mistakePracticePositions.length+" · "+item.grade+" · Your original move was "+item.move+(item.bestMove?" · Engine alternative: "+item.bestMove:"");render();updateMistakePracticeUI();}
-function startMistakePractice(){if(!mistakePracticePositions.length)return;if(!mistakePracticeActive){mistakePracticeReturnState={s:clone(s),history:history.slice(),snapshots:snapshots.map(clone),over:over,thinking:thinking,aiSide:aiSide,clock:{w:clock.w,b:clock.b},result:$("result")?.textContent||"",status:$("status")?.textContent||""};computerRequestToken++;reviewToken++;if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}if(engine){try{engine.postMessage("stop")}catch(e){}}engineBusy=false;engineQueue=null;mistakePracticeActive=true;mistakePracticeIndex=0;}renderMistakePracticePosition();}
-function exitMistakePractice(){if(!mistakePracticeActive)return;const saved=mistakePracticeReturnState;mistakePracticeActive=false;mistakePracticeReturnState=null;if(saved){s=clone(saved.s);history=saved.history.slice();snapshots=saved.snapshots.map(clone);over=saved.over;thinking=false;aiSide=saved.aiSide;clock={w:saved.clock.w,b:saved.clock.b};$("result").textContent=saved.result;$("status").textContent=saved.status;}sel=null;legal=[];updateMistakePracticeUI();render();}
+function startMistakePractice(){if(!mistakePracticePositions.length)return;if(!mistakePracticeActive){mistakePracticeReturnState={s:clone(s),history:history.slice(),snapshots:snapshots.map(clone),over:over,thinking:thinking,aiSide:aiSide,clock:{w:clock.w,b:clock.b},result:$("result")?.textContent||"",status:$("status")?.textContent||""};computerRequestToken++;reviewToken++;reviewPending=false;if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}if(engine){try{engine.postMessage("stop")}catch(e){}}engineBusy=false;engineQueue=null;mistakePracticeActive=true;mistakePracticeIndex=0;}renderMistakePracticePosition();}
+function exitMistakePractice(){if(!mistakePracticeActive)return;reviewPending=false;clearArrow();const saved=mistakePracticeReturnState;mistakePracticeActive=false;mistakePracticeReturnState=null;if(saved){s=clone(saved.s);history=saved.history.slice();snapshots=saved.snapshots.map(clone);over=saved.over;thinking=false;aiSide=saved.aiSide;clock={w:saved.clock.w,b:saved.clock.b};$("result").textContent=saved.result;$("status").textContent=saved.status;}sel=null;legal=[];updateMistakePracticeUI();render();}
 function showBestPracticeMove(){const item=mistakePracticePositions[mistakePracticeIndex];if(!item||!item.bestMove)return;drawArrow(item.bestMove.slice(0,2),item.bestMove.slice(2,4));$("status").textContent="🎯 Best move: "+item.bestMove+" — now try it yourself.";updateMistakePracticeUI();}
 function goToMistakePractice(index){if(!mistakePracticePositions.length)return;if(!mistakePracticeActive)startMistakePractice();mistakePracticeIndex=Math.max(0,Math.min(index,mistakePracticePositions.length-1));renderMistakePracticePosition();}
 function stepMistakePractice(delta){if(!mistakePracticeActive)return;const next=mistakePracticeIndex+delta;if(next<0||next>=mistakePracticePositions.length)return;mistakePracticeIndex=next;renderMistakePracticePosition();}
 function recordMoveGrade(move,grade,detail){const number=reviewMoveGrades.length+1;reviewMoveGrades.push({number,move,grade,detail});if((grade==="Mistake"||grade==="Blunder")&&reviewPositionBefore){mistakePracticePositions.push({position:clone(reviewPositionBefore),move,grade,detail,bestMove:reviewBaselineBestMove||""});}setBotFeedback(grade,detail);if($("reviewLastMove"))$("reviewLastMove").textContent=move;if($("reviewLastGrade"))$("reviewLastGrade").textContent=grade;if($("reviewLastWhy"))$("reviewLastWhy").textContent=detail;renderReviewMoveList();updateMistakePracticeUI();}
 function requestLiveReview(moveJustPlayed,mover,playedUci,baselinePosition){
+  if(moveJustPlayed)reviewPending=true;
   const token=++reviewToken;
   const run=()=>{
     if(token!==reviewToken||!s)return;
-    if(!engineReady){if($("reviewWhy"))$("reviewWhy").textContent="Waiting for Stockfish…";return;}
+    if(!engineReady){reviewPending=false;if($("reviewWhy"))$("reviewWhy").textContent="Waiting for Stockfish…";return;}
     if(engineBusy){setTimeout(run,250);return;}
     if(moveJustPlayed&&baselinePosition){
       reviewPositionBefore=clone(baselinePosition);
@@ -566,7 +567,7 @@ function requestLiveReview(moveJustPlayed,mover,playedUci,baselinePosition){
       if(moveJustPlayed&&reviewBaselineWhite!==null){
         const loss=Math.max(0,mover==="w"?reviewBaselineWhite-afterWhite:afterWhite-reviewBaselineWhite);
         const grade=gradeMove(loss,!!playedUci&&playedUci===reviewBaselineBestMove);
-        const detail=coachExplanation(grade,loss,playedUci,bestEngineMoveBefore)+" Estimated engine change: "+loss.toFixed(2)+" pawns.";
+        const detail=coachExplanation(grade,loss,playedUci,reviewBaselineBestMove||bestEngineMoveBefore)+" Estimated engine change: "+loss.toFixed(2)+" pawns.";
         recordMoveGrade(moveJustPlayed,grade,detail);
       }
       if(mv&&mv.length>=4){
@@ -583,7 +584,7 @@ function requestLiveReview(moveJustPlayed,mover,playedUci,baselinePosition){
       }
       reviewBaselineWhite=afterWhite;
       reviewGame();
-      if(moveJustPlayed){reviewPositionBefore=null;reviewBaselineBestMove=null;}
+      if(moveJustPlayed){reviewPending=false;reviewPositionBefore=null;reviewBaselineBestMove=null;}
       if(moveJustPlayed&&!over&&s.turn===aiSide)computer();
     });
   };
@@ -661,11 +662,11 @@ function coachBeforeMove(){
   $("status").textContent="🧠 Coach checklist: "+checks+" checking move"+(checks===1?"":"s")+", "+captures+" capture"+(captures===1?"":"s")+". Now ask: what is the opponent threatening?";
 }
 if($("coachCheckBtn"))$("coachCheckBtn").onclick=coachBeforeMove;
-function tap(r,c){if(over||thinking||(!mistakePracticeActive&&s.turn===aiSide))return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));const playedSan=san(old,{f:sel,t:[r,c]}),playedUci=String.fromCharCode(97+sel[1])+(8-sel[0])+String.fromCharCode(97+c)+(8-r),mover=old.turn;s=apply(s,sel,[r,c]);history.push(playedSan);recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];if(mistakePracticeActive){render();$("status").textContent="🎯 Practice move played: "+playedSan+" · "+(playedUci===mistakePracticePositions[mistakePracticeIndex]?.bestMove?"That matches the engine alternative.":"Compare your idea with the original mistake and try another line.");return}render();finish();requestLiveReview(playedSan,mover,playedUci,old);return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
+function tap(r,c){if(over||thinking||reviewPending||(!mistakePracticeActive&&s.turn===aiSide))return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));const playedSan=san(old,{f:sel,t:[r,c]}),playedUci=String.fromCharCode(97+sel[1])+(8-sel[0])+String.fromCharCode(97+c)+(8-r),mover=old.turn;s=apply(s,sel,[r,c]);history.push(playedSan);recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];if(mistakePracticeActive){render();$("status").textContent="🎯 Practice move played: "+playedSan+" · "+(playedUci===mistakePracticePositions[mistakePracticeIndex]?.bestMove?"That matches the engine alternative.":"Compare your idea with the original mistake and try another line.");return}render();finish();requestLiveReview(playedSan,mover,playedUci,old);return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
 const val={p:100,n:320,b:330,r:500,q:900,k:20000};
 function score(x,c){let sc=0;for(let r=0;r<8;r++)for(let q=0;q<8;q++){let p=x.b[r][q];if(p)sc+=(p.c===c?1:-1)*val[p.t]}return sc}
 function eloDepth(){const e=+$("elo")?.value||+$("level")?.value||1800;return Math.max(10,Math.min(24,Math.round(10+(e-800)/220)))}
-let engineQueue=null;
+let engineQueue=null,reviewPending=false;
 function engineStrengthCommands(){
   const elo=+$("elo")?.value||+$("level")?.value||1800;
   if(elo<1320){
@@ -850,7 +851,7 @@ function computer(){
 }
 
 $("new").onclick=()=>newGame();
-$("undo").onclick=()=>{if(snapshots.length&&!thinking){s=clone(snapshots.pop());history.pop();sel=null;legal=[];over=false;reviewToken++;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;updateMistakePracticeUI();if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();render();reviewGame();if(gameMode==="computer"&&s.turn===aiSide&&!over){computer();}else{requestLiveReview();}};
+$("undo").onclick=()=>{if(snapshots.length&&!thinking){s=clone(snapshots.pop());history.pop();sel=null;legal=[];over=false;reviewToken++;reviewPending=false;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;updateMistakePracticeUI();if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();render();reviewGame();if(gameMode==="computer"&&s.turn===aiSide&&!over){computer();}else{requestLiveReview();}};
 $("flip").onclick=()=>{flip=!flip;render();};
 $("resign").onclick=()=>{if(!over){over=true;thinking=false;$("status").textContent=(s.turn==="w"?"White":"Black")+" resigned";render();reviewGame();}};
 $("hint").onclick=()=>{if(over||thinking||s.turn===aiSide)return;engineSearch(s,mv=>{if(mv&&mv.length>=4){drawArrow([mv[0],mv[1]],[mv[2],mv[3]]);if($("best-move"))$("best-move").textContent=mv}})};
@@ -1237,7 +1238,7 @@ function renderMulti(){
   if(alive)alive.textContent="Players alive: "+multiState.activeColors.length;
 }
 function startMultiGame(count){
-  reviewToken++;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;updateMistakePracticeUI();if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();
+  reviewToken++;reviewPending=false;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;updateMistakePracticeUI();if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();
   multiState=multiInitial(count);multiSelected=null;multiLegal=[];renderMulti();
   $("multiFrame").classList.add("active");
   $("board").parentElement.classList.add("hiddenStandardBoard");
@@ -1281,7 +1282,7 @@ function newGame(){
   if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}
   if(engine){try{engine.postMessage("stop")}catch(e){}}
   engineBusy=false;engineQueue=null;s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;
-  clock={w:+$("time").value,b:+$("time").value};evalHistory=[];lastEval=0;reviewToken++;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";reviewMistakesOnly=false;updateMistakePracticeUI();if($("reviewSummary"))$("reviewSummary").textContent="0 reviewed";if($("movesAnalyzed"))$("movesAnalyzed").textContent="0";if($("accuracy"))$("accuracy").textContent="—";clearArrow();setBotFeedback();render();startClock();if(engineReady)setTimeout(()=>{if(!history.length&&!over)requestLiveReview();},60);if(aiSide==="w")computer();
+  clock={w:+$("time").value,b:+$("time").value};evalHistory=[];lastEval=0;reviewToken++;reviewPending=false;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";reviewMistakesOnly=false;updateMistakePracticeUI();if($("reviewSummary"))$("reviewSummary").textContent="0 reviewed";if($("movesAnalyzed"))$("movesAnalyzed").textContent="0";if($("accuracy"))$("accuracy").textContent="—";clearArrow();setBotFeedback();render();startClock();if(engineReady)setTimeout(()=>{if(!history.length&&!over)requestLiveReview();},60);if(aiSide==="w")computer();
 }
 $("side").onchange=function(){
   if(gameMode!=="computer")return;
