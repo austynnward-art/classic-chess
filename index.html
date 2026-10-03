@@ -168,6 +168,32 @@ body.fourPlayerView .layout{grid-template-columns:203px minmax(500px,1fr) 210px;
 .pageAction{display:inline-block;margin-top:11px;padding:9px 12px;border-radius:8px;background:#222;color:#fff;text-decoration:none;font-size:12px;font-weight:800;border:0;cursor:pointer}.pageAction.secondary{background:#fff;color:#222;border:1px solid #d8d0ca}
 @media(max-width:800px){.courseLandingTop,.learnLandingTop{grid-template-columns:1fr}.pageCards{grid-template-columns:1fr}}
 
+
+/* HOME-DASHBOARD-V2 */
+body.contentPage{background:linear-gradient(135deg,#0b3157,#174e7f 48%,#28689d);min-height:100vh}
+body.contentPage .app{max-width:1180px;padding:0 14px 28px}
+body.contentPage .top{height:82px;margin:0;border:0;border-radius:0 0 14px 14px;background:linear-gradient(100deg,#173b60,#123556);color:#fff;box-shadow:0 6px 22px #001a3338}
+body.contentPage .brand h1{color:#fff;font-size:30px}body.contentPage .brand small{color:#b8d0e5}body.contentPage .brand .horse{color:#fff}
+body.contentPage .pageNav{gap:12px}body.contentPage .pageBtn{border:0;background:#2467a6;color:#fff;border-radius:10px;padding:11px 18px}body.contentPage .pageBtn.active{background:#2c76bd}
+body.contentPage .iconBtn{background:#082a4b;color:#fff}
+body.contentPage .layout.learnPageMode,body.contentPage .layout.coursesPageMode{margin-top:18px}
+body.contentPage .learnShell,body.contentPage .coursesShell{max-width:1120px;margin:0 auto;background:transparent;border:0;padding:0;box-shadow:none}
+body.contentPage .learnLanding,body.contentPage .courseLanding{background:#f7fafc;border:0;border-radius:18px;padding:24px;box-shadow:0 14px 36px #001c3530;overflow:hidden}
+body.contentPage .courseLandingTop,body.contentPage .learnLandingTop{grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}
+body.contentPage .pageIntro{padding:18px 10px 14px 4px}
+body.contentPage .pageIntro .kicker{color:#1f6cae;letter-spacing:1.7px}
+body.contentPage .pageIntro h2{font-size:42px;line-height:1.02;color:#143a5e;margin:9px 0 12px}
+body.contentPage .pageIntro p{color:#526779;font-size:15px;line-height:1.6}
+body.contentPage .pagePill{background:#e4f0fa;color:#1e659e}
+body.contentPage .pageArt{border:0;border-radius:16px;background:#dcebf5;box-shadow:inset 0 0 0 1px #c9deec,0 10px 24px #001c3518}
+body.contentPage .pageCards{gap:14px;margin-top:20px}
+body.contentPage .pageTile{border:1px solid #dbe5ed;border-radius:14px;min-height:165px;padding:17px;box-shadow:0 5px 16px #001c3510;transition:transform .18s ease,box-shadow .18s ease}
+body.contentPage .pageTile:hover{transform:translateY(-3px);box-shadow:0 10px 24px #001c3520}
+body.contentPage .pageTile h3{color:#173b60;font-size:17px}body.contentPage .pageTile p{color:#637586}
+body.contentPage .pageAction{background:#1984ef;border-radius:9px;padding:10px 14px}body.contentPage .pageAction.secondary{background:#fff;color:#173b60;border-color:#cbdbe7}
+body.contentPage .learningTrainer{margin-top:20px;border-color:#dbe5ed;box-shadow:0 5px 16px #001c3510}
+body.contentPage .resourceNote{background:#edf4f9;color:#637586}
+@media(max-width:800px){body.contentPage .courseLandingTop,body.contentPage .learnLandingTop{grid-template-columns:1fr}body.contentPage .pageIntro h2{font-size:34px}}
 </style>
 </head>
 <body>
@@ -237,7 +263,8 @@ body.fourPlayerView .layout{grid-template-columns:203px minmax(500px,1fr) 210px;
 </div>
 <div class="options">
 <label>Players: <select class="select" id="gameMode">
-<option value="computer" selected>2 Player · Computer</option>
+<option value="local4" selected>4 Player · Local</option>
+<option value="computer">2 Player · Computer</option>
 <option value="local2">2 Player · Local</option>
 <option value="local3">3 Player · Local</option>
 <option value="local4">4 Player · Local</option>
@@ -1061,31 +1088,27 @@ function whyThisMove(){const x=reviewMoveGrades[reviewMoveGrades.length-1];if(!x
 function showPage(which){
   const layout=document.querySelector(".layout");
   if(!layout)return;
-  const learn=which==="learn";
-  const courses=which==="courses";
+  const learn=which==="learn",courses=which==="courses",bot=which==="bot",three=which==="three",four=which==="four";
   const gamePage=!learn&&!courses;
-  const bot=which==="bot";
-  const three=which==="three";
-  const four=which==="four";
   layout.classList.toggle("learnPageMode",learn);
   layout.classList.toggle("coursesPageMode",courses);
+  document.body.classList.toggle("contentPage",learn||courses);
   document.querySelectorAll(".pageBtn").forEach(b=>b.classList.remove("active"));
-  const id={play:"playPage",bot:"botPage",three:"threePage",four:"fourPage",learn:"learnPage",courses:"coursesPage"}[which];
+  const id={play:"playPage",bot:"botPage",three:"threePage",four:"fourPage",learn:"learnTopPage",courses:"coursesTopPage"}[which];
   if(id&&$(id))$(id).classList.add("active");
   if($("result")){
-    $("result").textContent=learn?"Learn Chess":courses?"Chessly Courses":
-      bot?"Page 2 · Play Bot":three?"Page 3 · Three Player":four?"Page 4 · Four Player":"Page 1 · 2 Player";
+    $("result").textContent=learn?"Learn Chess":courses?"Chessly Courses":bot?"Page 2 · Play Bot":three?"Page 3 · Three Player":four?"Page 4 · Four Player":"Page 1 · Four Player";
   }
-  document.title=learn?"Classic Chess — Learn Chess":courses?"Classic Chess — Chessly Courses":
-    bot?"Classic Chess — Play Bot":three?"Classic Chess — Three Player":four?"Classic Chess — Four Player":"Classic Chess";
-  if(learn||courses){layout.classList.toggle("learnPageMode",learn);layout.classList.toggle("coursesPageMode",courses);try{if(typeof window.scrollTo==="function")window.scrollTo({top:0,behavior:"smooth"});}catch(e){}return;}
-  if(gameMode!==(bot?"computer":three?"local3":four?"local4":"local2")){
+  document.title=learn?"Classic Chess — Learn Chess":courses?"Classic Chess — Chessly Courses":bot?"Classic Chess — Play Bot":three?"Classic Chess — Three Player":four?"Classic Chess — Four Player":"Classic Chess";
+  if(learn||courses){
+    try{if(typeof window.scrollTo==="function")window.scrollTo({top:0,behavior:"smooth"});}catch(e){}
+    return;
+  }
+  if(gamePage && gameMode!==(bot?"computer":three?"local3":four?"local4":"local2")){
     gameMode=bot?"computer":three?"local3":four?"local4":"local2";
     $("gameMode").value=gameMode;
     syncGameMode();
-  }else{
-    syncGameMode();
-  }
+  }else syncGameMode();
 }
 $("reviewFilter").onclick=toggleReviewFilter;
 $("coachMemoryBtn").onclick=coachMemoryView;$("blunderRescueBtn").onclick=startBlunderRescue;$("tacticalTrainerBtn").onclick=startTacticalTrainer;$("whyMoveBtn").onclick=whyThisMove;updateCoachMemory();
@@ -1095,17 +1118,17 @@ $("nextMistakePractice").onclick=()=>stepMistakePractice(1);
 $("showBestPractice").onclick=showBestPracticeMove;
 $("exitMistakePractice").onclick=exitMistakePractice;
 updateMistakePracticeUI();
-$("playPage").onclick=()=>showPage("play");
+$("playPage").onclick=()=>{ $("gameMode").value="local4"; showPage("play"); };
 $("botPage").onclick=()=>showPage("bot");
 $("threePage").onclick=()=>showPage("three");
 $("fourPage").onclick=()=>showPage("four");
 $("learnTopPage").onclick=()=>showPage("learn");
 $("coursesTopPage").onclick=()=>showPage("courses");
-$("fourStartBtn").onclick=function(){ $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
-$("fourResetBtn").onclick=function(){ startMultiGame(4); };
-$("twoModeBtn").onclick=function(){ $("gameMode").value="local2"; showPage("play"); syncGameMode(); };
+$("fourStartBtn").onclick=function(){ $("gameMode").value="local4"; showPage("play"); startMultiGame(4); };
+$("fourResetBtn").onclick=function(){ $("gameMode").value="local4"; startMultiGame(4); };
+$("fourModeBtn").onclick=function(){ $("gameMode").value="local4"; showPage("play"); startMultiGame(4); };\n$("twoModeBtn").onclick=function(){ $("gameMode").value="local2"; showPage("play"); syncGameMode(); };
 $("botModeBtn").onclick=function(){ $("gameMode").value="computer"; showPage("bot"); syncGameMode(); };
-$("friendModeBtn").onclick=function(){ $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
+$("friendModeBtn").onclick=function(){ $("gameMode").value="local4"; showPage("play"); startMultiGame(4); };
 $("coachModeBtn").onclick=function(){
   const b=$("coachModeBtn"),tips=document.querySelector(".coachTips");
   const on=b.classList.toggle("off");
