@@ -51,11 +51,11 @@ jobs:
             // Exercise the actual UI in local two-player mode.
             const local2=dom.window.document.querySelector('[data-mode="local2"]');
             local2.click();
-            const squares=[...dom.window.document.querySelectorAll("#board .sq")];
             const move=(from,to)=>{
               const file=c=>c.charCodeAt(0)-97;
               const idx=algebraic=>{const f=file(algebraic[0]),r=8-Number(algebraic[1]);return r*8+f;};
-              squares[idx(from)].click(); squares[idx(to)].click();
+              const squares=()=>[...dom.window.document.querySelectorAll("#board .sq")];
+              squares()[idx(from)].click(); squares()[idx(to)].click();
             };
             move("e2","e4"); move("e7","e5");
             move("g1","f3"); move("g8","f6");
