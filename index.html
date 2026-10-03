@@ -510,12 +510,20 @@ function recordMoveGrade(move,grade,detail){
   if($("reviewLastWhy"))$("reviewLastWhy").textContent=detail;
   renderReviewMoveList();
 }
-function requestLiveReview(moveJustPlayed,mover,playedUci){
+function requestLiveReview(moveJustPlayed,mover,playedUci,baselinePosition){
   const token=++reviewToken;
   const run=()=>{
     if(token!==reviewToken||!s)return;
     if(!engineReady){if($("reviewWhy"))$("reviewWhy").textContent="Waiting for Stockfish…";return;}
     if(engineBusy){setTimeout(run,250);return;}
+    if(moveJustPlayed&&reviewBaselineWhite===null&&baselinePosition){
+      engineSearch(baselinePosition,()=>{
+        if(token!==reviewToken||!s)return;
+        reviewBaselineWhite=baselinePosition.turn==="w"?lastEval:-lastEval;
+        requestLiveReview(moveJustPlayed,mover,playedUci,null);
+      });
+      return;
+    }
     const positionToAnalyze=clone(s);
     engineSearch(positionToAnalyze,mv=>{
       if(token!==reviewToken||!s)return;
@@ -560,7 +568,7 @@ $("whiteCard").classList.toggle("active",s.turn==="w"&&!over);$("blackCard").cla
 renderCourseBoard();
 }
 function renderCourseBoard(){const B=$("courseBoard");if(!B)return;B.innerHTML="";for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.type="button";e.className="courseSq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="coursePiece "+(p.c==="w"?"whitePiece":"blackPiece");z.innerHTML=pieceSVG(p.c,p.t);e.appendChild(z)}e.onclick=()=>tap(r,c);B.appendChild(e)}}
-function tap(r,c){if(over||thinking||s.turn===aiSide)return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));const playedSan=san(old,{f:sel,t:[r,c]}),playedUci=String.fromCharCode(97+sel[1])+(8-sel[0])+String.fromCharCode(97+c)+(8-r),mover=old.turn;s=apply(s,sel,[r,c]);history.push(playedSan);recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];render();finish();requestLiveReview(playedSan,mover,playedUci);return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
+function tap(r,c){if(over||thinking||s.turn===aiSide)return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));const playedSan=san(old,{f:sel,t:[r,c]}),playedUci=String.fromCharCode(97+sel[1])+(8-sel[0])+String.fromCharCode(97+c)+(8-r),mover=old.turn;s=apply(s,sel,[r,c]);history.push(playedSan);recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];render();finish();requestLiveReview(playedSan,mover,playedUci,old);return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
 const val={p:100,n:320,b:330,r:500,q:900,k:20000};
 function score(x,c){let sc=0;for(let r=0;r<8;r++)for(let q=0;q<8;q++){let p=x.b[r][q];if(p)sc+=(p.c===c?1:-1)*val[p.t]}return sc}
 function eloDepth(){const e=+$("elo")?.value||+$("level")?.value||1800;return Math.max(10,Math.min(24,Math.round(10+(e-800)/220)))}
@@ -695,12 +703,13 @@ function computer(){
     thinking=false;
     render();
     finish();
-    if(history.length)requestLiveReview(history[history.length-1],aiSide,String.fromCharCode(97+bookMove.f[1])+(8-bookMove.f[0])+String.fromCharCode(97+bookMove.t[1])+(8-bookMove.t[0]));
+    if(history.length)requestLiveReview(history[history.length-1],aiSide,String.fromCharCode(97+bookMove.f[1])+(8-bookMove.f[0])+String.fromCharCode(97+bookMove.t[1])+(8-bookMove.t[0]),before);
     return;
   }
 
   const playFallback=()=>{
     if(request!==computerRequestToken||over||!s||s.turn!==aiSide)return;
+    const reviewBefore=clone(s);
     try{
       const moves=all(s,s.turn);
       if(!moves.length){thinking=false;render();finish();return;}
@@ -721,7 +730,7 @@ function computer(){
     thinking=false;
     render();
     finish();
-    if(history.length)requestLiveReview(history[history.length-1],aiSide,null);
+    if(history.length)requestLiveReview(history[history.length-1],aiSide,null,reviewBefore);
   };
 
   // Always guarantee a Black move, even if Stockfish/CDN is unavailable.
@@ -743,7 +752,7 @@ function computer(){
     }
     if(!played){playFallback();return;}
     thinking=false;render();finish();
-    if(history.length)requestLiveReview(history[history.length-1],aiSide,mv);
+    if(history.length)requestLiveReview(history[history.length-1],aiSide,mv,before);
   });
 }
 
