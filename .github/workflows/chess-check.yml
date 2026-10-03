@@ -46,7 +46,7 @@ jobs:
             if(errors.length) { console.error(errors.join("\n---\n")); process.exit(1); }
             if(board!==64) { console.error("Main board has",board,"squares"); process.exit(1); }
             if(course!==64) { console.error("Course board has",course,"squares"); process.exit(1); }
-const initialPieces=[...dom.window.document.querySelectorAll("#board svg[data-piece]")].map(x=>x.getAttribute("data-piece"));
+            const initialPieces=[...dom.window.document.querySelectorAll("#board svg[data-piece]")].map(x=>x.getAttribute("data-piece"));
             const requiredPieces=["wk","wq","wr","wb","wn","wp","bk","bq","br","bb","bn","bp"];
             if(requiredPieces.some(p=>!initialPieces.includes(p))) { console.error("Initial piece SVG set incomplete"); process.exit(1); }
             if(!dom.window.document.querySelector("#playPage") || !dom.window.document.querySelector("#learnPage") || !dom.window.document.querySelector("#coursesPage")) { console.error("Page navigation missing"); process.exit(1); }
