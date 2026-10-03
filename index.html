@@ -827,7 +827,7 @@ function learningTap(r,c){
     }
   }
   const p=learningState.b[r][c];
-  if(p&&p.c==="w"){learningSel=[r,c];learningLegal=all(learningState,"w").filter(m=>m.fr===r&&m.fc===c);}
+  if(p&&p.c==="w"){learningSel=[r,c];learningLegal=all(learningState,"w").filter(m=>m.f[0]===r&&m.f[1]===c);}
   else{learningSel=null;learningLegal=[];}
   renderLearningBoard();
 }
