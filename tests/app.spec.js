@@ -1,6 +1,17 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('Classic Chess smoke tests', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      class TestWorker {
+        constructor(){ this.onmessage=null; this.onerror=null; }
+        postMessage(message){ if(message==='uci' && this.onmessage) setTimeout(()=>this.onmessage({data:'uciok'}),0); }
+        terminate(){}
+      }
+      window.Worker = TestWorker;
+    });
+  });
+
   test('home page loads without a visible fatal error', async ({ page }) => {
     const errors = [];
     page.on('pageerror', err => errors.push(err.message));
