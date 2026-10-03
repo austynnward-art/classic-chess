@@ -12,15 +12,7 @@ jobs:
         with:
           node-version: '24'
       - name: Extract JavaScript
-        run: python3 - <<'PY'
-          from pathlib import Path
-          import re
-          s=Path("index.html").read_text()
-          m=re.search(r"<script>([\\s\\S]*?)</script>",s)
-          if not m:
-            raise SystemExit("No inline script found")
-          Path("/tmp/app.js").write_text(m.group(1))
-          print("Extracted",len(m.group(1)),"characters")
-        PY
+        run: |
+          node -e 'const fs=require("fs"); const s=fs.readFileSync("index.html","utf8"); const m=s.match(/<script>([\\s\\S]*?)<\\/script>/); if(!m) throw new Error("No inline script found"); fs.writeFileSync("/tmp/app.js",m[1]); console.log("Extracted",m[1].length,"characters");'
       - name: Check JavaScript syntax
         run: node --check /tmp/app.js
