@@ -421,7 +421,13 @@ function legalFrom(x,r,c){let p=x.b[r][c];if(!p||p.c!==x.turn)return[];return ps
 function all(x,c=x.turn){let old=x.turn;x.turn=c;let a=[];for(let r=0;r<8;r++)for(let q=0;q<8;q++)if(x.b[r][q]?.c===c)for(let t of legalFrom(x,r,q))a.push({f:[r,q],t});x.turn=old;return a}
 function san(before,m){
   const p=before.b[m.f[0]][m.f[1]],q=before.b[m.t[0]][m.t[1]],dest=F[m.t[1]]+(8-m.t[0]);
-  if(p.t==="k"&&Math.abs(m.t[1]-m.f[1])===2)return m.t[1]>m.f[1]?"O-O":"O-O-O";
+  const isCastle=p.t==="k"&&Math.abs(m.t[1]-m.f[1])===2;
+  if(isCastle){
+    let a=m.t[1]>m.f[1]?"O-O":"O-O-O";
+    const after=apply(before,m.f,m.t),reply=after.turn;
+    if(check(after,reply))a+=all(after,reply).length?"+":"#";
+    return a;
+  }
   let a=p.t==="p"?"":p.t.toUpperCase();
   const epCapture=p.t==="p"&&before.ep&&m.t[0]===before.ep[0]&&m.t[1]===before.ep[1]&&!q;
   const capture=!!q||epCapture;
