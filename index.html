@@ -571,6 +571,66 @@ body.focusHome.fourPlayerView[data-board-style="dark"] .multiSq.redZone{backgrou
 body.focusHome.fourPlayerView[data-board-style="dark"] .multiSq.blueZone{background:#285d8e}
 body.focusHome.fourPlayerView[data-board-style="dark"] .multiSq.greenZone{background:#39734a}
 body.focusHome.fourPlayerView[data-board-style="dark"] .multiSq.yellowZone{background:#927528}
+
+/* COURSES SPACING — DEEP PASS */
+body.contentPage .coursesShell{max-width:1160px;margin:10px auto 0}
+body.contentPage .chesslyCourseDash{grid-template-columns:270px minmax(0,1fr);gap:16px;margin-top:10px}
+body.contentPage .courseProfileCard{padding:18px 17px;min-height:0}
+body.contentPage .courseGreeting{font-size:20px;margin-bottom:11px}
+body.contentPage .xpPanel{margin-top:17px;padding:11px 11px 9px}
+body.contentPage .xpChart{height:150px;margin:10px 3px 3px}
+body.contentPage .xpLegend{margin-top:13px}
+body.contentPage .profileMiniStats{margin-top:11px;gap:6px}
+body.contentPage .profileMiniStats div{padding:8px 3px}
+body.contentPage .courseMainCard{min-height:0}
+body.contentPage .courseMainHeader{padding:17px 18px 13px;gap:12px}
+body.contentPage .courseTitleWrap{gap:10px}
+body.contentPage .courseIcon{width:43px;height:43px;font-size:25px}
+body.contentPage .courseTitleWrap h1{font-size:17px}
+body.contentPage .courseTitleWrap span{font-size:8px;margin-top:3px}
+body.contentPage .courseHeaderActions{gap:7px}
+body.contentPage .courseGhostBtn,body.contentPage .courseContinueBtn{height:34px;padding:0 13px;font-size:9px}
+body.contentPage .courseWorkspace{grid-template-columns:42px minmax(0,1fr) 42px;gap:7px;padding:3px 15px 0}
+body.contentPage .courseArrow{height:40px;font-size:22px}
+body.contentPage .courseChapter{min-height:318px}
+body.contentPage .chapterTop{padding:8px 8px 2px;font-size:8px}
+body.contentPage .courseChapter h2{padding:0 8px 8px;font-size:13px}
+body.contentPage .courseLessonList{padding:8px 30px 0;gap:6px}
+body.contentPage .courseLesson{height:34px;grid-template-columns:94px minmax(0,1fr) 18px;padding:0 7px}
+body.contentPage .courseLesson b{font-size:9px}
+body.contentPage .courseLesson strong{font-size:11px}
+body.contentPage .lessonBadge{padding:4px 6px;font-size:7px}
+body.contentPage .coursePath{height:175px;padding-top:16px;margin-top:3px}
+body.contentPage .coursePath:before{top:20px;height:136px}
+body.contentPage .pathNode{width:58px;height:44px}
+body.contentPage .pathNode.aqua{width:70px;height:51px}
+body.contentPage .pathNode span{font-size:17px}
+body.contentPage .pathNode b{top:16px;left:48px;padding:6px 11px;font-size:7px}
+body.contentPage .courseBottomStrip{grid-template-columns:145px minmax(0,1fr) 115px;gap:10px;padding:10px 15px}
+body.contentPage .courseCatalog{margin-top:12px;padding:14px 16px}
+body.contentPage .catalogGrid{gap:8px;margin-top:9px}
+body.contentPage .catalogCard{padding:8px;gap:7px}
+body.contentPage .courseVideoResources{margin-top:12px!important;padding:15px!important}
+body.contentPage .courseOpeningGrid{gap:9px!important;margin-top:10px}
+@media(max-width:900px){
+  body.contentPage .chesslyCourseDash{grid-template-columns:1fr;gap:10px}
+  body.contentPage .courseProfileCard{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+  body.contentPage .courseGreeting,body.contentPage .courseLevel{margin-bottom:0}
+  body.contentPage .xpPanel{grid-column:1/-1;margin-top:2px}
+  body.contentPage .profileMiniStats{grid-column:1/-1;margin-top:0}
+}
+@media(max-width:700px){
+  body.contentPage .courseProfileCard{display:block}
+  body.contentPage .courseGreeting{margin-bottom:10px}
+  body.contentPage .xpPanel{margin-top:12px}
+  body.contentPage .courseWorkspace{grid-template-columns:30px minmax(0,1fr) 30px;padding-left:8px;padding-right:8px}
+  body.contentPage .courseLessonList{padding-left:10px;padding-right:10px}
+  body.contentPage .courseLesson{grid-template-columns:76px minmax(0,1fr) 16px}
+  body.contentPage .courseHeaderActions{flex-direction:row}
+  body.contentPage .courseMainHeader{align-items:flex-start;padding:14px 13px 11px}
+  body.contentPage .courseBottomStrip{grid-template-columns:1fr;gap:7px}
+  body.contentPage .courseCatalog{padding:12px}
+}
 </style>
 </head>
 <body>
