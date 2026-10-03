@@ -1121,6 +1121,7 @@ function renderMulti(){
   if(alive)alive.textContent="Players alive: "+multiState.activeColors.length;
 }
 function startMultiGame(count){
+  reviewToken++;reviewBaselineWhite=null;reviewMoveGrades=[];bestEngineMoveBefore=null;if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();
   multiState=multiInitial(count);multiSelected=null;multiLegal=[];renderMulti();
   $("multiFrame").classList.add("active");
   $("board").parentElement.classList.add("hiddenStandardBoard");
