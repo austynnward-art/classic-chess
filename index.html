@@ -719,7 +719,92 @@ body.contentPage .lessonCard p{font-size:12px}
  body.contentPage .trainerGrid{grid-template-columns:1fr}
 }
 
-</style>
+
+/* RESTORE CHESSLY COURSES + VIDEO HUB */
+body.contentPage .coursesShell{display:none!important}
+body.contentPage .learnShell{display:none!important}
+body.contentPage .layout.coursesPageMode{display:block;max-width:1280px;margin:0 auto}
+body.contentPage .layout.coursesPageMode>.left,
+body.contentPage .layout.coursesPageMode>.right,
+body.contentPage .layout.coursesPageMode>.center>.frame,
+body.contentPage .layout.coursesPageMode>.center>.multiFrame,
+body.contentPage .layout.coursesPageMode>.center>.fourBottomGrid,
+body.contentPage .layout.coursesPageMode>.center>.controls,
+body.contentPage .layout.coursesPageMode>.center>.options,
+body.contentPage .layout.coursesPageMode>.center>.status,
+body.contentPage .layout.coursesPageMode>.center>.analysisPanel,
+body.contentPage .layout.coursesPageMode>.center>.gameReview{display:none!important}
+body.contentPage .layout.coursesPageMode>.center{display:block;width:100%;max-width:none}
+body.contentPage .layout.coursesPageMode .chesslyCourseDash{display:grid!important;grid-template-columns:300px minmax(0,1fr);gap:18px;max-width:1180px;margin:18px auto 0}
+body.contentPage .layout.coursesPageMode .courseProfileCard,
+body.contentPage .layout.coursesPageMode .courseMainCard{min-height:0}
+body.contentPage .layout.coursesPageMode .courseProfileCard{padding:24px 22px}
+body.contentPage .layout.coursesPageMode .courseGreeting{font-size:25px}
+body.contentPage .layout.coursesPageMode .courseMainHeader{padding:24px 26px 18px}
+body.contentPage .layout.coursesPageMode .courseTitleWrap h1{font-size:22px}
+body.contentPage .layout.coursesPageMode .courseWorkspace{padding:8px 26px 0}
+body.contentPage .layout.coursesPageMode .courseLessonList{padding:12px 52px 0}
+body.contentPage .layout.coursesPageMode .courseLesson{height:46px}
+body.contentPage .layout.coursesPageMode .courseLesson b{font-size:11px}
+body.contentPage .layout.coursesPageMode .courseLesson strong{font-size:14px}
+body.contentPage .layout.coursesPageMode .courseCatalog{margin:0 26px 18px}
+body.contentPage .layout.coursesPageMode .ytShell{display:block!important;max-width:1180px;margin:18px auto 28px}
+body.contentPage .layout.coursesPageMode .ytGrid{grid-template-columns:repeat(3,1fr)}
+body.contentPage .layout.coursesPageMode .resourceSection{margin-top:22px}
+body.contentPage .layout.coursesPageMode .resourceCard{min-height:94px}
+body.contentPage .layout.coursesPageMode .gothamGrid{grid-template-columns:repeat(2,1fr)}
+@media(max-width:900px){
+  body.contentPage .layout.coursesPageMode .chesslyCourseDash{grid-template-columns:1fr;margin-left:10px;margin-right:10px}
+  body.contentPage .layout.coursesPageMode .ytShell{margin-left:10px;margin-right:10px}
+}
+@media(max-width:620px){
+  body.contentPage .layout.coursesPageMode .courseWorkspace{grid-template-columns:38px minmax(0,1fr) 38px;padding-left:10px;padding-right:10px}
+  body.contentPage .layout.coursesPageMode .courseLessonList{padding-left:10px;padding-right:10px}
+  body.contentPage .layout.coursesPageMode .ytGrid,
+  body.contentPage .layout.coursesPageMode .gothamGrid{grid-template-columns:1fr}
+}
+
+/* FIRST PAGE — strong board-first layout */
+body.focusHome.fourPlayerView{background:#071e34;color:#eaf5ff}
+body.focusHome.fourPlayerView .app{max-width:1480px;padding:0 16px 24px}
+body.focusHome.fourPlayerView .top{height:70px;background:#0c3153;border:0;border-radius:0 0 14px 14px;padding:10px 18px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+body.focusHome.fourPlayerView .brand h1{font-size:29px;color:#fff}
+body.focusHome.fourPlayerView .brand small{font-size:13px;color:#a9c7df}
+body.focusHome.fourPlayerView .brand .horse{font-size:49px;color:#f4c95d}
+body.focusHome.fourPlayerView .pageBtn{background:#164568;color:#dcefff;border-color:#28597a}
+body.focusHome.fourPlayerView .pageBtn.active{background:#2f9bea;border-color:#2f9bea;color:#fff}
+body.focusHome.fourPlayerView .layout{grid-template-columns:245px minmax(620px,1fr) 290px;gap:18px;margin-top:16px;align-items:start}
+body.focusHome.fourPlayerView .fourControls{background:#0e3558;border:1px solid #275779;box-shadow:0 10px 26px rgba(0,0,0,.18);border-radius:16px;padding:18px;color:#fff}
+body.focusHome.fourPlayerView .fourControls h2{font-size:13px;color:#9ec5df;margin:4px 0 8px}
+body.focusHome.fourPlayerView .fourModeBtn{min-height:58px;border-radius:11px;background:#123d60;border:1px solid #2a5c7d;color:#dcefff}
+body.focusHome.fourPlayerView .fourModeBtn.active{background:#2f9bea;border-color:#5db8f2;color:#fff}
+body.focusHome.fourPlayerView .dashboardSelect{height:42px;border-radius:10px;background:#0a2945;color:#fff;border:1px solid #315f7d}
+body.focusHome.fourPlayerView .startDashboardBtn{height:46px;border-radius:11px;margin-top:12px}
+body.focusHome.fourPlayerView .resetDashboardBtn{height:42px;border-radius:11px}
+body.focusHome.fourPlayerView .multiFrame{background:#0b2a46;border:1px solid #2a5a78;border-radius:18px;padding:14px;box-shadow:0 14px 35px rgba(0,0,0,.22)}
+body.focusHome.fourPlayerView .multiBoard{max-width:760px;border-width:4px;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.3)}
+body.focusHome.fourPlayerView .multiPiece{transform:scale(.94)}
+body.focusHome.fourPlayerView .multiBadge{background:#123d60;color:#e8f6ff;border:1px solid #2d6385}
+body.focusHome.fourPlayerView .multiControls .btn{border-radius:10px}
+body.focusHome.fourPlayerView .fourCoach{background:#0e3558;border:1px solid #275779;border-radius:16px;box-shadow:0 10px 26px rgba(0,0,0,.18);color:#fff}
+body.focusHome.fourPlayerView .botBadge{background:#123d60;border:1px solid #2b607f}
+body.focusHome.fourPlayerView .coachName b{font-size:15px}
+body.focusHome.fourPlayerView .coachName span{color:#a9c7df}
+body.focusHome.fourPlayerView .botSpeech,
+body.focusHome.fourPlayerView .coachQuickTips,
+body.focusHome.fourPlayerView .coachTips{background:#123d60;border-color:#2b607f;color:#eaf5ff}
+body.focusHome.fourPlayerView .botSpeech:before{background:#123d60;border-color:#2b607f}
+body.focusHome.fourPlayerView .fourBottomGrid{margin-top:14px}
+body.focusHome.fourPlayerView .bottomCard{background:#0e3558;border-color:#275779;color:#eaf5ff;border-radius:13px}
+@media(max-width:1100px){
+  body.focusHome.fourPlayerView .layout{grid-template-columns:210px minmax(0,1fr) 240px;gap:12px}
+}
+@media(max-width:800px){
+  body.focusHome.fourPlayerView .layout{grid-template-columns:1fr}
+  body.focusHome.fourPlayerView .fourCoach{grid-column:auto}
+  body.focusHome.fourPlayerView .multiBoard{width:100%}
+}
+\n</style>
 <style>
 /* HOME VISUAL SPACING — DEEP PASS */
 body.focusHome.fourPlayerView .app{max-width:1240px;padding:0 16px 24px}
