@@ -48,7 +48,7 @@ test.describe('Classic Chess smoke tests', () => {
     await expect(page.locator('.ytShell')).toBeVisible();
     await expect(page.locator('.ytShell iframe')).toHaveCount(6);
     await expect(page.locator('.ytShell iframe').first()).toHaveAttribute('src', /youtube\.com\/embed\//);
-    await expect(page.locator('.resourceCard')).toHaveCount(17);
+    await expect(page.locator('.resourceCard')).toHaveCount(16);
 
     await page.locator('#learnTopPage').click();
     await expect(page.locator('#learningBoard')).toBeVisible();
