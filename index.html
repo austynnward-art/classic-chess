@@ -586,7 +586,7 @@ function handleTimeLoss(side){
   over=true;thinking=false;$("status").textContent=(side==="w"?"White":"Black")+" lost on time";render();
 }
 function updateClock(){
-  if(over||thinking||!s||!clock)return;
+  if(over||!s||!clock)return;
   const side=s.turn;
   clock[side]=Math.max(0,clock[side]-0.1);
   if(clock[side]<=0){clock[side]=0;handleTimeLoss(side);return;}
