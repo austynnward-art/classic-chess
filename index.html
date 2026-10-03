@@ -884,9 +884,36 @@ function multiNextAlive(){
   const start=MULTI_ORDER.indexOf(multiState.turn);
   for(let i=1;i<=4;i++){
     const col=MULTI_ORDER[(start+i)%4];
-    if((multiState.activeColors||[]).includes(col))return col;
+    if((multiState.activeColors||[]).includes(col)&&!(multiState.stalemated||{})[col])return col;
   }
   return null;
+}
+function multiKingSquare(st,color){
+  for(let r=0;r<14;r++)for(let c=0;c<14;c++){
+    const p=st.board[r][c];if(p&&p.c===color&&p.t==="k")return [r,c];
+  }
+  return null;
+}
+function multiAttacksSquare(st,r,c,tr,tc){
+  const p=st.board[r][c];if(!p||!st.alive[p.c])return false;
+  if(p.t==="p"){
+    const d=MULTI_PLAYERS[p.c].dir;
+    const targets=d[0]!==0?[[r+d[0],c-1],[r+d[0],c+1]]:[[r-1,c+d[1]],[r+1,c+d[1]]];
+    return targets.some(q=>q[0]===tr&&q[1]===tc&&multiPlayable(q[0],q[1]));
+  }
+  return multiPseudoRaw(st,r,c).some(m=>m[0]===tr&&m[1]===tc);
+}
+function multiInCheck(st,color){
+  const k=multiKingSquare(st,color);if(!k)return false;
+  return (st.activeColors||[]).filter(x=>x!==color&&st.alive[x]).some(enemy=>{
+    for(let r=0;r<14;r++)for(let c=0;c<14;c++){
+      const p=st.board[r][c];if(p&&p.c===enemy&&multiAttacksSquare(st,r,c,k[0],k[1]))return true;
+    }
+    return false;
+  });
+}
+function multiClone(st){
+  return {board:st.board.map(row=>row.map(p=>p?{c:p.c,t:p.t}:null)),turn:st.turn,activeColors:[...st.activeColors],alive:{...st.alive},ply:st.ply,winner:st.winner,stalemated:{...(st.stalemated||{})}};
 }
 function multiInitial(count){
   const board=Array.from({length:14},()=>Array(14).fill(null));
@@ -910,9 +937,9 @@ function multiInitial(count){
     }
   }
   place("red");place("blue");place("yellow");if(count===4)place("green");
-  return {board:board,turn:"red",activeColors:colors,alive:Object.fromEntries(colors.map(function(x){return [x,true];})),ply:0,winner:null};
+  return {board:board,turn:"red",activeColors:colors,alive:Object.fromEntries(colors.map(function(x){return [x,true];})),ply:0,winner:null,stalemated:{},drawOffer:null};
 }
-function multiPseudo(st,r,c){
+function multiPseudoRaw(st,r,c){
   const piece=st.board[r][c]; if(!piece||!st.alive[piece.c])return [];
   const out=[],own=piece.c;
   function add(rr,cc){
@@ -956,19 +983,44 @@ function multiPseudo(st,r,c){
   }
   return out;
 }
+function multiPseudo(st,r,c){
+  const piece=st.board[r][c];if(!piece||!st.alive[piece.c])return [];
+  const raw=multiPseudoRaw(st,r,c),legal=[];
+  for(const m of raw){
+    const target=st.board[m[0]][m[1]];
+    if(target&&target.t==="k")continue;
+    const cp=multiClone(st);
+    cp.board[m[0]][m[1]]=cp.board[r][c];cp.board[r][c]=null;
+    if(cp.board[m[0]][m[1]]&&cp.board[m[0]][m[1]].t==="p"&&MULTI_PLAYERS[piece.c].promo(m[0],m[1]))cp.board[m[0]][m[1]].t="q";
+    if(!multiInCheck(cp,piece.c))legal.push(m);
+  }
+  return legal;
+}
 function multiApply(r,c,tr,tc){
-  const p=multiState.board[r][c]; if(!p||p.c!==multiState.turn)return;
+  const p=multiState.board[r][c];if(!p||p.c!==multiState.turn)return;
   if(!multiLegal.some(function(m){return m[0]===tr&&m[1]===tc;}))return;
   const target=multiState.board[tr][tc];
+  if(target&&target.t==="k")return;
   multiState.board[tr][tc]=p;multiState.board[r][c]=null;multiState.ply++;
   if(p.t==="p"&&MULTI_PLAYERS[p.c].promo(tr,tc))p.t="q";
-  if(target&&target.t==="k"){
-    multiState.alive[target.c]=false;
-    multiState.activeColors=multiState.activeColors.filter(function(x){return x!==target.c;});
-    for(let rr=0;rr<14;rr++)for(let cc=0;cc<14;cc++)if(multiState.board[rr][cc]&&multiState.board[rr][cc].c===target.c)multiState.board[rr][cc]=null;
-    if(multiState.activeColors.length===1)multiState.winner=multiState.activeColors[0];
+  multiState.drawOffer=null;
+  const checked=[];
+  for(const col of multiState.activeColors){
+    if(col===p.c)continue;
+    const moves=[];
+    for(let rr=0;rr<14;rr++)for(let cc=0;cc<14;cc++){
+      const z=multiState.board[rr][cc];if(z&&z.c===col)moves.push(...multiPseudo(multiState,rr,cc));
+    }
+    const inChk=multiInCheck(multiState,col);
+    if(inChk&&!moves.length){multiState.winner=p.c;checked.push(col);}
+    else if(!moves.length)multiState.stalemated[col]=true;
+    else delete multiState.stalemated[col];
   }
-  if(!multiState.winner)multiState.turn=multiNextAlive();
+  if(!multiState.winner){
+    multiState.stalemated[multiState.turn]=false;
+    const next=multiNextAlive();
+    multiState.turn=next||p.c;
+  }
   multiSelected=null;multiLegal=[];renderMulti();
 }
 function renderMulti(){
@@ -993,7 +1045,11 @@ function renderMulti(){
     B.appendChild(e);
   }
   const turn=$("multiTurn"),alive=$("multiAlive");
-  if(turn)turn.textContent=multiState.winner?MULTI_PLAYERS[multiState.winner].name+" wins!":MULTI_PLAYERS[multiState.turn].name+" to move";
+  if(turn){
+    if(multiState.winner)turn.textContent=MULTI_PLAYERS[multiState.winner].name+" wins by checkmate!";
+    else if(multiState.drawOffer)turn.textContent=MULTI_PLAYERS[multiState.drawOffer].name+" offered a draw";
+    else turn.textContent=MULTI_PLAYERS[multiState.turn].name+(multiInCheck(multiState,multiState.turn)?" — CHECK":"")+" to move";
+  }
   if(alive)alive.textContent="Players alive: "+multiState.activeColors.length;
 }
 function startMultiGame(count){
@@ -1003,8 +1059,8 @@ function startMultiGame(count){
   $("analysisPanel").classList.add("hiddenStandardBoard");
   $("analysisPanel").setAttribute("aria-hidden","true");
   $("multiNote").textContent=count===4?
-    "4-player local pass-and-play: Red, Blue, Yellow, Green. Standard piece movement is used; a captured king eliminates that army and the last army wins.":
-    "3-player local pass-and-play: Red, Blue, Yellow. Standard piece movement is used on the three-arm board; a captured king eliminates that army and the last army wins.";
+    "4-player local pass-and-play remains a separate local variant.":
+    "3-player local pass-and-play: check is enforced, your king may not be left exposed, checkmate ends the game, and stalemated players skip their turns. Draw offers require every other active player to accept. The current board geometry is a local approximation; the official Dekle version uses a 96-cell hexagonal board.";
 }
 function stopMultiGame(){
   $("multiFrame").classList.remove("active");
@@ -1064,6 +1120,23 @@ document.querySelectorAll(".modeBtn").forEach(function(btn){
 $("multiNew").onclick=function(){startMultiGame(gameMode==="local4"?4:3);};
 $("multiReset").onclick=function(){startMultiGame(gameMode==="local4"?4:3);};
 $("time").onchange=()=>{newGame()};
+$("draw").onclick=function(){
+  if(gameMode!=="local3"&&gameMode!=="local4")return;
+  if(!multiState||multiState.winner)return;
+  const offerer=multiState.turn,others=multiState.activeColors.filter(x=>x!==offerer);
+  if(!others.length)return;
+  const accepted=others.every(x=>window.confirm(MULTI_PLAYERS[offerer].name+" offers a draw. "+MULTI_PLAYERS[x].name+", accept?"));
+  if(accepted){
+    multiState.drawOffer=offerer;multiState.winner=null;multiSelected=null;multiLegal=[];
+    $("multiTurn").textContent="Draw agreed — game over";
+    $("status").textContent="½ Draw agreed by all active players";
+    renderMulti();
+  }else{
+    multiState.drawOffer=null;
+    $("status").textContent=MULTI_PLAYERS[offerer].name+" draw offer declined";
+    renderMulti();
+  }
+};
 function formatTime(n){n=Math.max(0,Math.floor(n));return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
 function opponentCanWin(side){
   for(let r=0;r<8;r++)for(let c=0;c<8;c++){
