@@ -31,7 +31,9 @@ test.describe('Rebuild app smoke tests', () => {
     await expect(page.locator('#videos iframe').first()).toHaveAttribute('src', /youtube\.com\/embed\/XtaEnxG2lbg/);
     await expect(page.locator('#courses a[href="https://chessly.com/"]').first()).toBeVisible();
     await expect(page.locator('#courses a[href="https://www.gothamchess.com/"]').first()).toBeVisible();
-    await expect(page.locator('#videos iframe').nth(4)).toHaveAttribute('src', /youtube\.com\/embed\/ebfzL_GwiIE/);\n    await expect(page.locator('#videos iframe').nth(5)).toHaveAttribute('src', /youtube\.com\/embed\/rmbU97iftC8/);\n    await expect(page.locator('#courses a[href^="https://chessly.com/courses/"]')).toHaveCount(4);
+    await expect(page.locator('#videos iframe').nth(4)).toHaveAttribute('src', /youtube\.com\/embed\/ebfzL_GwiIE/);
+    await expect(page.locator('#videos iframe').nth(5)).toHaveAttribute('src', /youtube\.com\/embed\/rmbU97iftC8/);
+    await expect(page.locator('#courses a[href^="https://chessly.com/courses/"]')).toHaveCount(4);
   });
 
   test('learn page has trainer board', async ({ page }) => {
