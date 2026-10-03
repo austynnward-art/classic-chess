@@ -44,7 +44,8 @@ test.describe('Classic Chess smoke tests', () => {
   test('courses and learn navigation render', async ({ page }) => {
     await page.goto('/');
     await page.locator('#coursesTopPage').click();
-    await expect(page.locator('#courseReferenceDashboard')).toBeVisible();
+    await expect(page.locator('.chesslyCourseDash')).toBeVisible();
+  await expect(page.locator('.ytShell')).toBeVisible();
 
     await page.locator('#learnTopPage').click();
     await expect(page.locator('#learningBoard')).toBeVisible();
