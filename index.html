@@ -28,34 +28,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .selected{outline:4px solid #3b82f6;outline-offset:-4px}.last{background-image:linear-gradient(#e5bd5366,#e5bd5366) !important}
 .legal:after{content:"";position:absolute;width:16%;height:16%;border-radius:50%;background:#5b4635aa}
 .capture:after{content:"";position:absolute;inset:6%;border:4px solid #d69b52aa;border-radius:50%}
-.piece{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:88%;
-  height:88%;
-  transform:scale(1);
-  font-family:"Times New Roman",serif;
-  font-weight:700;
-  line-height:1;
-  filter:drop-shadow(0 3px 2px rgba(35,20,10,.42));
-  transition:transform .12s ease,filter .12s ease;
-}
-.sq:hover .piece{transform:scale(1.04);filter:drop-shadow(0 4px 3px rgba(35,20,10,.5))}
-.whitePiece{
-  color:#fffdf8;
-  text-shadow:
-    1px 1px 0 #7d5a38,
-    -1px 1px 0 #7d5a38,
-    0 3px 1px rgba(70,43,22,.42);
-}
-.blackPiece{
-  color:#17120e;
-  text-shadow:
-    1px 1px 0 #000,
-    -1px 1px 0 #000,
-    0 3px 2px rgba(0,0,0,.48);
-}
+.piece{display:flex;align-items:center;justify-content:center;width:88%;height:88%;transform:scale(1);filter:drop-shadow(0 3px 2px rgba(35,20,10,.42));transition:transform .12s ease,filter .12s ease}.pieceSvg{display:block;width:100%;height:100%;overflow:visible}.sq:hover .piece{transform:scale(1.04);filter:drop-shadow(0 4px 3px rgba(35,20,10,.5))}.whitePiece{color:#fffdf8}.blackPiece{color:#17120e}.coursePiece .pieceSvg,.learningPiece .pieceSvg,.multiPiece .pieceSvg{width:100%;height:100%;display:block}.coursePiece,.learningPiece,.multiPiece{display:flex;align-items:center;justify-content:center;line-height:1}
 .coord{position:absolute;font:700 12px Arial;color:#f4dfbd;pointer-events:none;text-shadow:0 1px 1px #3f2616;z-index:8}.rank{top:50%;transform:translateY(-50%)}.rankLeft{left:-18px}.rankRight{right:-18px}.file{left:50%;transform:translateX(-50%)}.fileTop{top:-19px}.fileBottom{bottom:-19px}
 .controls{display:grid;grid-template-columns:1.25fr 1.15fr 1.15fr 1.15fr 1.15fr;gap:12px;margin-top:13px}
 .btn{border:1px solid #c3aa7c;background:linear-gradient(#fffaf0,#f0e0c0);border-radius:7px;padding:13px 7px;cursor:pointer;font:16px Georgia;color:#27313d;box-shadow:0 2px 4px rgba(30,40,55,.08)}.btn:hover{background:#ead9b7}.primary{background:#2563eb;color:#fff;border-color:#2563eb}
@@ -398,7 +371,19 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 </div>
 <script>
 (()=> {
-const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"}},F="abcdefgh".split("");
+const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"}},F="abcdefgh".split("");\nfunction pieceSVG(color,type){
+  const fill=color==="w"?"#fffdf8":color==="b"?"#17120e":"currentColor";
+  const stroke=color==="w"?"#7d5a38":color==="b"?"#000":"currentColor";
+  const common='<path d="M20 90Q22 82 31 80L35 76H65L69 80Q78 82 80 90Q82 96 74 97H26Q18 96 20 90Z"/>';
+  const shapes={
+    p:'<circle cx="50" cy="29" r="10"/><path d="M43 38H57L60 57Q61 66 68 74H32Q39 66 40 57Z"/>',
+    r:'<path d="M31 76V49H35V35H42V43H48V35H55V43H62V35H69V49H73V76Z"/>',
+    b:'<path d="M50 16Q39 22 43 34Q46 42 50 47Q54 42 57 34Q61 22 50 16Z"/><path d="M43 51Q40 62 33 74H67Q60 62 57 51Z"/><path d="M47 19L54 34L46 40Z" fill="'+(color==="w"?"#7d5a38":"#000")+'" stroke="none"/>',
+    q:'<path d="M30 24L38 37L50 22L62 37L70 24L65 55Q64 64 70 74H30Q36 64 35 55Z"/><circle cx="30" cy="21" r="4"/><circle cx="50" cy="18" r="4"/><circle cx="70" cy="21" r="4"/>',
+    k:'<rect x="46" y="8" width="8" height="23" rx="2"/><rect x="39" y="15" width="22" height="8" rx="2"/><path d="M38 31Q42 39 50 45Q58 39 62 31L66 55Q65 64 71 74H29Q35 64 34 55Z"/>'
+  };
+  return '<svg class="pieceSvg" viewBox="0 0 100 100" aria-hidden="true" focusable="false" style="color:'+fill+'"><g fill="'+fill+'" stroke="'+stroke+'" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">'+common+(type==="n"?'<path d="M30 76Q33 66 31 54Q29 42 39 31Q48 21 64 24Q72 26 78 34Q68 32 64 39Q61 44 67 51Q72 58 66 66Q61 73 58 76Z"/><path d="M42 34Q48 39 53 44Q58 49 63 55" fill="none" stroke="'+stroke+'" stroke-width="3"/><circle cx="61" cy="34" r="2.8" fill="'+(color==="w"?"#17120e":"#fffdf8")+'" stroke="none"/><path d="M37 51Q47 49 55 54" fill="none" stroke="'+stroke+'" stroke-width="2.4"/>':shapes[type]||shapes.p)+'</g></svg>';
+}
 let s,history=[],snapshots=[],sel=null,legal=[],flip=false,over=false,thinking=false,aiSide="b",timer=null,clock={w:600,b:600};
 let computerRetryTimer=null,computerMoveTimer=null,computerRequestToken=0;
 let gameMode="computer",multiState=null,multiSelected=null,multiLegal=[],clockTimer=null;
@@ -498,14 +483,14 @@ function updateAccuracy(){if(!evalHistory.length){$("accuracy").textContent="—
 function render(){
 const B=$("board");
 B.innerHTML="";
-for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.className="sq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="piece "+(p.c==="w"?"whitePiece":"blackPiece");z.textContent=U[p.c][p.t];e.appendChild(z)}if(vc===0){let ra=document.createElement("span");ra.className="coord rank rankLeft";ra.textContent=8-r;e.appendChild(ra)}if(vc===7){let ra=document.createElement("span");ra.className="coord rank rankRight";ra.textContent=8-r;e.appendChild(ra)}if(vr===0){let fi=document.createElement("span");fi.className="coord file fileTop";fi.textContent=F[c];e.appendChild(fi)}if(vr===7){let fi=document.createElement("span");fi.className="coord file fileBottom";fi.textContent=F[c];e.appendChild(fi)}e.onclick=()=>tap(r,c);B.appendChild(e)}
+for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.className="sq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="piece "+(p.c==="w"?"whitePiece":"blackPiece");z.innerHTML=pieceSVG(p.c,p.t);e.appendChild(z)}if(vc===0){let ra=document.createElement("span");ra.className="coord rank rankLeft";ra.textContent=8-r;e.appendChild(ra)}if(vc===7){let ra=document.createElement("span");ra.className="coord rank rankRight";ra.textContent=8-r;e.appendChild(ra)}if(vr===0){let fi=document.createElement("span");fi.className="coord file fileTop";fi.textContent=F[c];e.appendChild(fi)}if(vr===7){let fi=document.createElement("span");fi.className="coord file fileBottom";fi.textContent=F[c];e.appendChild(fi)}e.onclick=()=>tap(r,c);B.appendChild(e)}
 $("status").textContent=thinking?"Computer is thinking…":(s.turn==="w"?"White":"Black")+" to move"+(check(s,s.turn)?" · Check":"");
 $("moves").innerHTML=history.map((m,i)=>`<div class="move"><span>${i%2===0?Math.floor(i/2)+1+".":""}</span><span>${i%2===0?m:""}</span><span>${i%2?m:""}</span></div>`).join("");
 $("wcap").textContent=s.captured.b.map(t=>U.b[t]).join(" ")||"—";$("bcap").textContent=s.captured.w.map(t=>U.w[t]).join(" ")||"—";
 $("whiteCard").classList.toggle("active",s.turn==="w"&&!over);$("blackCard").classList.toggle("active",s.turn==="b"&&!over);
 renderCourseBoard();
 }
-function renderCourseBoard(){const B=$("courseBoard");if(!B)return;B.innerHTML="";for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.type="button";e.className="courseSq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="coursePiece "+(p.c==="w"?"whitePiece":"blackPiece");z.textContent=U[p.c][p.t];e.appendChild(z)}e.onclick=()=>tap(r,c);B.appendChild(e)}}
+function renderCourseBoard(){const B=$("courseBoard");if(!B)return;B.innerHTML="";for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.type="button";e.className="courseSq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="coursePiece "+(p.c==="w"?"whitePiece":"blackPiece");z.innerHTML=pieceSVG(p.c,p.t);e.appendChild(z)}e.onclick=()=>tap(r,c);B.appendChild(e)}}
 function tap(r,c){if(over||thinking||s.turn===aiSide)return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));s=apply(s,sel,[r,c]);history.push(san(old,{f:sel,t:[r,c]}));updateOpening();sel=null;legal=[];render();finish();if(!over&&s.turn===aiSide)computer();return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
 const val={p:100,n:320,b:330,r:500,q:900,k:20000};
 function score(x,c){let sc=0;for(let r=0;r<8;r++)for(let q=0;q<8;q++){let p=x.b[r][q];if(p)sc+=(p.c===c?1:-1)*val[p.t]}return sc}
@@ -835,7 +820,7 @@ function renderLearningBoard(){
     if(learningSel?.[0]===r&&learningSel?.[1]===c)e.classList.add("selected");
     if(learningLegal.some(m=>m.tr===r&&m.tc===c))e.classList.add("hint");
     const p=learningState.b[r][c];
-    if(p){const z=document.createElement("span");z.className="learningPiece "+(p.c==="w"?"whitePiece":"blackPiece");z.textContent=U[p.c][p.t];e.appendChild(z);}
+    if(p){const z=document.createElement("span");z.className="learningPiece "+(p.c==="w"?"whitePiece":"blackPiece");z.innerHTML=pieceSVG(p.c,p.t);e.appendChild(z);}
     e.onclick=()=>learningTap(r,c);B.appendChild(e);
   }
 }
@@ -1030,7 +1015,7 @@ function renderMulti(){
     if(multiSelected&&multiSelected[0]===r&&multiSelected[1]===c)e.classList.add("selected");
     if(multiLegal.some(function(m){return m[0]===r&&m[1]===c;}))e.classList.add(multiState.board[r][c]?"capture":"legal");
     const p=multiState.board[r][c];
-    if(p){const z=document.createElement("span");z.className="multiPiece "+p.c;z.textContent=U.w[p.t];e.appendChild(z);}
+    if(p){const z=document.createElement("span");z.className="multiPiece "+p.c;z.innerHTML=pieceSVG(p.c,p.t);e.appendChild(z);}
     e.onclick=function(){
       if(multiState.winner)return;
       const p=multiState.board[r][c];
