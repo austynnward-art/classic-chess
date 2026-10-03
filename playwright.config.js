@@ -1,7 +1,7 @@
 const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
-  testDir: './tests',
+  testDir: '.',
   timeout: 30000,
   fullyParallel: true,
   reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }], ['list']],
@@ -12,7 +12,7 @@ module.exports = defineConfig({
     video: 'retain-on-failure'
   },
   webServer: {
-    command: 'node tests/server.js',
+    command: 'node test-server.js',
     url: 'http://127.0.0.1:4173',
     reuseExistingServer: !process.env.CI
   },
