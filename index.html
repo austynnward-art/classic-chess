@@ -194,6 +194,69 @@ body.contentPage .pageAction{background:#1984ef;border-radius:9px;padding:10px 1
 body.contentPage .learningTrainer{margin-top:20px;border-color:#dbe5ed;box-shadow:0 5px 16px #001c3510}
 body.contentPage .resourceNote{background:#edf4f9;color:#637586}
 @media(max-width:800px){body.contentPage .courseLandingTop,body.contentPage .learnLandingTop{grid-template-columns:1fr}body.contentPage .pageIntro h2{font-size:34px}}
+
+/* FOCUSED VISUAL HOME / COURSE / LEARN */
+body.focusHome{background:#fff;color:#17202a;min-height:100vh}
+body.focusHome .app{max-width:1440px;padding:0 18px 28px}
+body.focusHome .top{height:76px;background:#fff;border:0;border-bottom:1px solid #e7ebef;border-radius:0;box-shadow:none;padding:8px 18px}
+body.focusHome .brand h1{color:#173b60;font-size:28px}
+body.focusHome .brand small{color:#7b8794;font-size:13px}
+body.focusHome .brand .horse{color:#173b60;font-size:48px}
+body.focusHome .pageNav{gap:8px}
+body.focusHome .pageNav .pageBtn{border:0;background:transparent;color:#526272;padding:10px 15px;border-radius:9px}
+body.focusHome .pageNav .pageBtn.active{background:#eef6fd;color:#1675c5}
+body.focusHome .topTools{display:none}
+body.focusHome .legacyNavBtn{display:none!important}
+body.focusHome .layout{grid-template-columns:235px minmax(560px,1fr) 285px;gap:16px;margin-top:16px}
+body.focusHome .layout>.left,body.focusHome .layout>.center,body.focusHome .layout>.right{display:block}
+body.focusHome .layout>.left>.card:not(.fourControls),
+body.focusHome .layout>.left>.analysisCard,
+body.focusHome .layout>.right>.card:not(.fourCoachCard),
+body.focusHome .layout>.right>.analysisCard,
+body.focusHome .layout>.center>.controls,
+body.focusHome .layout>.center>.options,
+body.focusHome .layout>.center>.status,
+body.focusHome .layout>.center>#analysisPanel{display:none!important}
+body.focusHome .fourControls{display:block!important;background:#fff;border:1px solid #e3e9ef;border-radius:14px;box-shadow:0 5px 20px #102a3b0b}
+body.focusHome .multiFrame{margin:0!important;background:#fff;border:1px solid #e3e9ef;border-radius:14px;box-shadow:0 5px 20px #102a3b0b;padding:12px}
+body.focusHome .fourBottomGrid{margin-top:10px}
+body.focusHome .fourBottomGrid .bottomCard{background:#fff;color:#173b60;border:1px solid #e3e9ef;box-shadow:0 5px 20px #102a3b0b}
+body.focusHome .fourBottomGrid .fourMoveList{background:#f7fafc;border-color:#e2eaf1;color:#526272}
+body.focusHome .fourPlayerView .multiBoard{max-width:650px}
+body.focusHome .fourPlayerView .fourBoardWrap{background:#f8fafc;border:1px solid #e7edf2}
+body.focusHome .fourPlayerView .right .fourCoachCard{background:#fff;border:1px solid #e3e9ef;box-shadow:0 5px 20px #102a3b0b;color:#173b60}
+body.focusHome .fourPlayerView .coachTips,
+body.focusHome .fourPlayerView .coachProgress{background:#f7fafc;color:#173b60;border:1px solid #e2eaf1}
+body.focusHome .fourPlayerView .botSpeech{box-shadow:0 4px 12px #102a3b12}
+body.focusHome .fourPlayerView .tipRow span,
+body.focusHome .fourPlayerView .coachProgress span{color:#657789}
+body.focusHome .fourPlayerView .coachTipsHead{color:#173b60}
+body.focusHome .fourPlayerView .coachModeBtn{background:#edf5fb;color:#176ca8;border-color:#cfe0ec}
+body.focusHome .fourPlayerView .multiInfo .multiBadge{background:#eef6fd;color:#176ca8;border-color:#d3e4f0}
+body.focusHome .fourPlayerView .multiControls,.focusHome .fourPlayerView .multiNote{display:none!important}
+
+/* Keep Courses and Learn visual-first: one large illustration + focused cards */
+body.contentPage .ytShell{display:none!important}
+body.contentPage .learnShell,body.contentPage .coursesShell{max-width:1160px}
+body.contentPage .pageArt{min-height:420px;display:flex;align-items:stretch}
+body.contentPage .pageArt svg{width:100%;height:100%;min-height:420px;object-fit:cover}
+body.contentPage .pageCards{grid-template-columns:repeat(3,1fr)}
+body.contentPage .pageTile{background:#fff}
+@media(max-width:1000px){
+  body.focusHome .layout{grid-template-columns:220px minmax(0,1fr)}
+  body.focusHome .right{grid-column:1/-1}
+  body.focusHome .fourCoach{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  body.focusHome .gameProgressCard{grid-column:1/-1}
+}
+@media(max-width:760px){
+  body.focusHome .app{padding:0 8px 20px}
+  body.focusHome .top{height:auto;min-height:72px;flex-wrap:wrap}
+  body.focusHome .layout{grid-template-columns:1fr}
+  body.focusHome .right{grid-column:auto}
+  body.focusHome .fourCoach{display:block}
+  body.focusHome .pageNav{width:100%;justify-content:center}
+  body.contentPage .pageArt,.body.contentPage .pageArt svg{min-height:260px}
+}
 </style>
 </head>
 <body>
@@ -1093,6 +1156,8 @@ function showPage(which){
   layout.classList.toggle("learnPageMode",learn);
   layout.classList.toggle("coursesPageMode",courses);
   document.body.classList.toggle("contentPage",learn||courses);
+  document.body.classList.toggle("focusHome",which==="play");
+  if(which==="play") $("gameMode").value="local4";
   document.querySelectorAll(".pageBtn").forEach(b=>b.classList.remove("active"));
   const id={play:"playPage",bot:"botPage",three:"threePage",four:"fourPage",learn:"learnTopPage",courses:"coursesTopPage"}[which];
   if(id&&$(id))$(id).classList.add("active");
@@ -2302,7 +2367,7 @@ $("nextMistakePractice").onclick=()=>stepMistakePractice(1);
 $("showBestPractice").onclick=showBestPracticeMove;
 $("exitMistakePractice").onclick=exitMistakePractice;
 updateMistakePracticeUI();
-$("playPage").onclick=()=>showPage("play");
+$("playPage").onclick=()=>{ $("gameMode").value="local4"; showPage("play"); startMultiGame(4); };
 $("botPage").onclick=()=>showPage("bot");
 $("threePage").onclick=()=>showPage("three");
 $("fourPage").onclick=()=>showPage("four");
