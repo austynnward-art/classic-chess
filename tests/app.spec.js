@@ -36,13 +36,14 @@ test.describe('Rebuild app smoke tests', () => {
 
   test('learn page has trainer board', async ({ page }) => {
     await page.goto('/');
+    const homeSize = await page.locator('#board').boundingBox();
+    expect(homeSize).not.toBeNull();
     await page.locator('[data-page="learn"]').first().click();
     await expect(page.locator('#learn')).toBeVisible();
     await expect(page.locator('#learnBoard .sq')).toHaveCount(64);
     await expect(page.locator('#learnBoard .pieceImg')).toHaveCount(32);
     await expect(page.locator('#learnBoard .rankLabel').first()).toHaveAttribute('data-rank', '8');
     await expect(page.locator('#learnBoard .fileLabel').last()).toHaveAttribute('data-file', 'h');
-    const homeSize = await page.locator('#board').boundingBox();
     const learnSize = await page.locator('#learnBoard').boundingBox();
     expect(Math.abs(homeSize.width-learnSize.width)).toBeLessThanOrEqual(1);
     expect(Math.abs(homeSize.height-learnSize.height)).toBeLessThanOrEqual(1);
