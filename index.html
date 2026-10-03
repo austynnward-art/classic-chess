@@ -398,19 +398,104 @@ body.contentPage #courseVideoResources{display:block!important;max-width:1160px;
 .courseResource b{display:block;color:#173b60;font-size:15px}.courseResource span{display:block;color:#68798a;font-size:12px;line-height:1.4;margin:5px 0 10px}
 .courseResourceLinks{display:flex;gap:7px;flex-wrap:wrap}.courseResourceLinks a{display:inline-block;padding:8px 10px;border-radius:8px;background:#1984ef;color:#fff;text-decoration:none;font-size:11px;font-weight:800}.courseResourceLinks a.secondary{background:#fff;color:#173b60;border:1px solid #cbdbe7}
 @media(max-width:850px){.courseResourceGrid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.courseResourceGrid{grid-template-columns:1fr}}
-</style>
+/* BUTTERY THREE-PAGE POLISH — final visual layer */
+html{scroll-behavior:smooth}
+body{transition:background-color .25s ease,color .25s ease}
+.pageNav .legacyNavBtn{display:none!important}
+.pageNav{gap:6px}
+.pageBtn{transition:transform .16s ease,background .16s ease,color .16s ease,box-shadow .16s ease}
+.pageBtn:hover{transform:translateY(-1px)}
+.navDivider{display:block;width:1px;height:20px;background:#d8e0e7;margin:0 3px}
+body.focusHome.fourPlayerView .app{max-width:1240px;padding:0 14px 22px}
+body.focusHome.fourPlayerView .top{height:68px;padding:8px 16px}
+body.focusHome.fourPlayerView .brand{gap:9px}
+body.focusHome.fourPlayerView .brand .horse{font-size:38px}
+body.focusHome.fourPlayerView .brand h1{font-size:22px}
+body.focusHome.fourPlayerView .brand small{font-size:9px}
+body.focusHome.fourPlayerView .pageNav{gap:4px}
+body.focusHome.fourPlayerView .pageNav .pageBtn{font-size:10px;padding:8px 12px}
+body.focusHome.fourPlayerView .navDivider{height:22px;background:#24547a}
+body.focusHome.fourPlayerView .layout{grid-template-columns:178px minmax(520px,1fr) 270px;gap:14px;margin-top:12px}
+body.focusHome.fourPlayerView .fourControls{padding:12px;border-radius:12px}
+body.focusHome.fourPlayerView .fourControls h2{font-size:10px;margin:0 0 7px}
+body.focusHome.fourPlayerView .fourModeGrid{gap:6px;margin-bottom:10px}
+body.focusHome.fourPlayerView .fourModeBtn{min-height:43px;font-size:9px;border-radius:8px;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+body.focusHome.fourPlayerView .fourModeBtn:hover{transform:translateY(-1px)}
+body.focusHome.fourPlayerView .dashboardSelect{height:31px;font-size:9px;margin-bottom:9px}
+body.focusHome.fourPlayerView .startDashboardBtn{height:34px;font-size:9px;transition:transform .16s ease,filter .16s ease}
+body.focusHome.fourPlayerView .resetDashboardBtn{height:32px;font-size:9px;transition:transform .16s ease,filter .16s ease}
+body.focusHome.fourPlayerView .startDashboardBtn:hover,body.focusHome.fourPlayerView .resetDashboardBtn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+body.focusHome.fourPlayerView .multiFrame{padding:10px;border-radius:12px}
+body.focusHome.fourPlayerView .fourBoardWrap{padding:20px 30px}
+body.focusHome.fourPlayerView .multiBoard{max-width:690px;border-radius:12px;box-shadow:0 10px 26px #001b2e66}
+body.focusHome.fourPlayerView .multiSq{transition:transform .16s ease,filter .16s ease,background-color .2s ease}
+body.focusHome.fourPlayerView .multiSq.playable:hover{transform:scale(1.012)}
+body.focusHome.fourPlayerView .multiPiece{transition:transform .16s cubic-bezier(.2,.8,.2,1),filter .16s ease}
+body.focusHome.fourPlayerView .multiSq:hover .multiPiece{transform:scale(1.06)}
+body.focusHome.fourPlayerView .boardFiles,body.focusHome.fourPlayerView .boardRank{font-size:8px}
+body.focusHome.fourPlayerView .fourBottomGrid{gap:10px;margin-top:10px}
+body.focusHome.fourPlayerView .bottomCard{padding:9px;border-radius:9px;min-height:50px}
+body.focusHome.fourPlayerView .bottomCard h3{font-size:9px;margin-bottom:5px}
+body.focusHome.fourPlayerView .fourMoveList{font-size:8px;max-height:36px}
+body.focusHome.fourPlayerView .legendItem{font-size:8px}
+body.focusHome.fourPlayerView .legendItem span{font-size:7px}
+body.focusHome.fourPlayerView .right .fourCoachCard{padding:11px;border-radius:12px}
+body.focusHome.fourPlayerView .fourCoach{position:sticky;top:10px}
+body.focusHome.fourPlayerView .botAvatar{width:150px;height:150px;margin:0 auto}
+body.focusHome.fourPlayerView .coachName{font-size:10px;margin-top:6px}
+body.focusHome.fourPlayerView .coachRole{font-size:8px}
+body.focusHome.fourPlayerView .botSpeech{font-size:8.5px;line-height:1.45;margin:8px 3px;padding:9px 10px;border-radius:8px}
+body.focusHome.fourPlayerView .coachTips{margin-top:9px;padding:9px;border-radius:9px}
+body.focusHome.fourPlayerView .coachTipsHead{font-size:10px;margin-bottom:7px}
+body.focusHome.fourPlayerView .tipRow{gap:6px;margin:6px 0}
+body.focusHome.fourPlayerView .tipIcon,body.focusHome.fourPlayerView .tipRow i{width:22px;height:22px;font-size:9px}
+body.focusHome.fourPlayerView .tipRow b{font-size:8.5px}
+body.focusHome.fourPlayerView .tipRow span{font-size:7.5px;line-height:1.35}
+body.focusHome.fourPlayerView .askCoachBtn{font-size:8.5px;min-height:31px;padding:6px;margin-top:7px}
+body.focusHome.fourPlayerView .coachReason{font-size:7.5px;line-height:1.4;padding:7px 8px}
+body.focusHome.fourPlayerView .coachModeBtn{height:26px;font-size:7.5px;margin-top:6px}
+body.focusHome.fourPlayerView .gameProgressCard{margin-top:8px;padding:8px;border-radius:8px}
+body.focusHome.fourPlayerView .gameProgressCard b{font-size:8.5px}
+body.focusHome.fourPlayerView .gameProgressCard span{font-size:7.5px}
+body.focusHome.fourPlayerView .layout>.left>.fourControls,body.focusHome.fourPlayerView .layout>.center>.multiFrame,body.focusHome.fourPlayerView .layout>.right>.fourCoachCard,body.focusHome.fourPlayerView .fourBottomGrid .bottomCard{animation:panelIn .35s ease both}
+@keyframes panelIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+body.contentPage{background:#f7f2f2}
+body.contentPage .app{max-width:1180px;padding:0 12px 30px}
+body.contentPage .top{height:68px}
+body.contentPage .pageNav .pageBtn{font-size:10px;padding:9px 13px}
+body.contentPage .navDivider{display:none}
+body.contentPage .learnShell,body.contentPage .coursesShell{max-width:1120px;margin:14px auto 0}
+body.contentPage .courseLanding,body.contentPage .learnLanding{border-radius:18px;box-shadow:0 12px 34px #173b6018}
+body.contentPage .courseLandingTop,body.contentPage .learnLandingTop{min-height:330px}
+body.contentPage .pageIntro{padding:30px 30px 24px}
+body.contentPage .pageIntro h2{font-size:36px}
+body.contentPage .pageIntro p{font-size:13px;max-width:500px}
+body.contentPage .pageArt svg{min-height:330px}
+body.contentPage .pageCards{gap:12px;padding:12px}
+body.contentPage .pageTile{min-height:145px;padding:14px}
+body.contentPage .courseVideoResources{margin-top:14px;padding:16px;border-radius:14px}
+body.contentPage .courseOpeningGrid{grid-template-columns:repeat(3,1fr);gap:10px}
+body.contentPage .courseOpening{min-height:120px;transition:transform .16s ease,box-shadow .16s ease}
+body.contentPage .courseOpening:hover{transform:translateY(-2px);box-shadow:0 7px 18px #17466b18}
+body.contentPage .courseResourceGrid{gap:10px}
+body.contentPage .courseResource{transition:transform .16s ease,box-shadow .16s ease}
+body.contentPage .courseResource:hover{transform:translateY(-2px);box-shadow:0 7px 18px #17466b12}
+@media(max-width:980px){body.focusHome.fourPlayerView .layout{grid-template-columns:165px minmax(0,1fr) 235px;gap:10px}body.focusHome.fourPlayerView .fourBoardWrap{padding:16px 22px}}
+@media(max-width:760px){body.focusHome.fourPlayerView .top{height:auto;min-height:68px}body.focusHome.fourPlayerView .layout{grid-template-columns:1fr;gap:8px}body.focusHome.fourPlayerView .right{grid-column:auto}body.focusHome.fourPlayerView .fourCoach{position:static}body.focusHome.fourPlayerView .fourBoardWrap{padding:12px 16px}body.focusHome.fourPlayerView .botAvatar{width:125px;height:125px}body.contentPage .courseLandingTop,body.contentPage .learnLandingTop{grid-template-columns:1fr;min-height:0}body.contentPage .pageArt,body.contentPage .pageArt svg{min-height:250px}body.contentPage .pageIntro h2{font-size:29px}body.contentPage .courseOpeningGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){body.contentPage .courseOpeningGrid{grid-template-columns:1fr}body.focusHome.fourPlayerView .pageNav{width:auto;justify-content:flex-end}}</style>
 </head>
 <body>
 <div class="app">
 <header class="top">
   <div class="brand"><div class="horse">♞</div><div><h1>Classic Chess</h1><small>Strategy · Focus · Victory</small></div></div>
-  <nav class="pageNav" aria-label="Chess game pages">
+  <nav class="pageNav" aria-label="Main chess navigation">
     <button class="pageBtn active" id="playPage" type="button">⌂ <span>Home</span></button>
     <button class="pageBtn" id="coursesTopPage" type="button">🎓 <span>Courses</span></button>
+    <button class="pageBtn" id="learnTopPage" type="button">📖 <span>Learn</span></button>
+    <span class="navDivider" aria-hidden="true"></span>
     <button class="pageBtn legacyNavBtn" id="botPage" type="button">2 · Play Bot</button>
     <button class="pageBtn legacyNavBtn" id="threePage" type="button">3 · Three Player</button>
     <button class="pageBtn legacyNavBtn" id="fourPage" type="button">4 · Four Player</button>
-    <button class="pageBtn" id="learnTopPage" type="button">📖 <span>Learn</span></button>
   </nav>
   <div class="topTools"><button type="button" class="iconBtn" id="settingsBtn" aria-label="Settings">⚙</button><button type="button" class="iconBtn" id="profileBtn" aria-label="Profile">●</button></div>
 </header>
