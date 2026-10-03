@@ -57,7 +57,8 @@ jobs:
             const initialPieces=[...dom.window.document.querySelectorAll("#board svg[data-piece]")].map(x=>x.getAttribute("data-piece"));
             const requiredPieces=["wk","wq","wr","wb","wn","wp","bk","bq","br","bb","bn","bp"];
             if(requiredPieces.some(p=>!initialPieces.includes(p))) { console.error("Initial piece SVG set incomplete"); process.exit(1); }
-            if(!dom.window.document.querySelector("#playPage") || !dom.window.document.querySelector("#learnPage") || !dom.window.document.querySelector("#coursesPage")) { console.error("Page navigation missing"); process.exit(1); }
+            if(!dom.window.document.querySelector("#playPage") || !dom.window.document.querySelector("#botPage") || !dom.window.document.querySelector("#threePage") || !dom.window.document.querySelector("#fourPage") || !dom.window.document.querySelector("#learnPage") || !dom.window.document.querySelector("#coursesPage")) { console.error("Page navigation missing"); process.exit(1); }
+            if(!dom.window.document.querySelector('[data-mode="computer"]') || !dom.window.document.querySelector('[data-mode="local2"]') || !dom.window.document.querySelector('[data-mode="local3"]') || !dom.window.document.querySelector('[data-mode="local4"]')) { console.error("Game mode controls missing"); process.exit(1); }
 
             // Exercise the actual UI in local two-player mode.
             const local2=dom.window.document.querySelector('[data-mode="local2"]');
@@ -89,11 +90,19 @@ jobs:
             if(!kingG1 || !rookF1) { console.error("Castling UI test failed"); process.exit(1); }
 
             // Exercise the page switching and 3/4-player board creation.
+            dom.window.document.querySelector("#botPage").click();
+            if(dom.window.document.querySelector("#gameMode").value!=="computer") { console.error("Bot page did not select computer mode"); process.exit(1); }
+            dom.window.document.querySelector("#threePage").click();
+            if(dom.window.document.querySelector("#gameMode").value!=="local3") { console.error("Three-player page did not select 3-player mode"); process.exit(1); }
+            if(dom.window.document.querySelectorAll("#multiBoard .multiSq").length!==196) { console.error("Three-player board was not created"); process.exit(1); }
+            dom.window.document.querySelector("#fourPage").click();
+            if(dom.window.document.querySelector("#gameMode").value!=="local4") { console.error("Four-player page did not select 4-player mode"); process.exit(1); }
+            if(dom.window.document.querySelectorAll("#multiBoard .multiSq").length!==196) { console.error("Four-player board was not created"); process.exit(1); }
             dom.window.document.querySelector("#learnPage").click();
             if(!dom.window.document.querySelector(".layout").classList.contains("learnPageMode")) { console.error("Learn page switch failed"); process.exit(1); }
             dom.window.document.querySelector("#coursesPage").click();
             if(!dom.window.document.querySelector(".layout").classList.contains("coursesPageMode")) { console.error("Courses page switch failed"); process.exit(1); }
-            dom.window.document.querySelector('[data-mode="local4"]').click();
+            dom.window.document.querySelector("#fourPage").click();
             const multi=dom.window.document.querySelectorAll("#multiBoard .multiSq");
             if(multi.length!==196) { console.error("4-player board has",multi.length,"squares"); process.exit(1); }
 
@@ -109,6 +118,7 @@ jobs:
 
             // Regression: starting a new game must clear the move-review history.
             dom.window.document.querySelector("#playPage").click();
+            if(dom.window.document.querySelector("#gameMode").value!=="local2") { console.error("Page 1 did not select local 2-player mode"); process.exit(1); }
             dom.window.document.querySelector("#new").click();
             if((dom.window.document.querySelector("#reviewMoveList")?.textContent||"").trim()!=="") { console.error("New game did not clear review history"); process.exit(1); }
             console.log("DEEP UI TEST PASSED: startup, SVG pieces, live review, bot feedback, analysis callback, local moves, castling, pages, 4-player board, learning trainer, review reset");
