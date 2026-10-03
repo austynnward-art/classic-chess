@@ -482,7 +482,35 @@ body.contentPage .courseResource{transition:transform .16s ease,box-shadow .16s 
 body.contentPage .courseResource:hover{transform:translateY(-2px);box-shadow:0 7px 18px #17466b12}
 @media(max-width:980px){body.focusHome.fourPlayerView .layout{grid-template-columns:165px minmax(0,1fr) 235px;gap:10px}body.focusHome.fourPlayerView .fourBoardWrap{padding:16px 22px}}
 @media(max-width:760px){body.focusHome.fourPlayerView .top{height:auto;min-height:68px}body.focusHome.fourPlayerView .layout{grid-template-columns:1fr;gap:8px}body.focusHome.fourPlayerView .right{grid-column:auto}body.focusHome.fourPlayerView .fourCoach{position:static}body.focusHome.fourPlayerView .fourBoardWrap{padding:12px 16px}body.focusHome.fourPlayerView .botAvatar{width:125px;height:125px}body.contentPage .courseLandingTop,body.contentPage .learnLandingTop{grid-template-columns:1fr;min-height:0}body.contentPage .pageArt,body.contentPage .pageArt svg{min-height:250px}body.contentPage .pageIntro h2{font-size:29px}body.contentPage .courseOpeningGrid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){body.contentPage .courseOpeningGrid{grid-template-columns:1fr}body.focusHome.fourPlayerView .pageNav{width:auto;justify-content:flex-end}}</style>
+@media(max-width:520px){body.contentPage .courseOpeningGrid{grid-template-columns:1fr}body.focusHome.fourPlayerView .pageNav{width:auto;justify-content:flex-end}}/* CHESSLY-STYLE COURSES DASHBOARD */
+body.contentPage .chesslyCourseDash{display:grid;grid-template-columns:285px minmax(0,1fr);gap:14px;align-items:start;margin-top:14px}
+body.contentPage .courseProfileCard{background:#fff;border-radius:18px;padding:22px 20px;box-shadow:0 10px 30px #12243a12;border:1px solid #eee5e2;min-height:470px}
+body.contentPage .courseGreeting{font-size:23px;font-weight:850;color:#171c26;margin-bottom:14px}
+body.contentPage .courseLevel{display:flex;align-items:center;gap:7px;background:#dffbd8;border-radius:999px;padding:8px 10px;width:max-content;color:#1b4221;font-size:11px}
+body.contentPage .courseLevel strong{font-size:11px}.courseLevel span{font-weight:800}.courseLevel b{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#6d43a8;color:#fff;margin-left:2px}
+body.contentPage .xpPanel{margin-top:22px;border:1px solid #dbe2e8;border-radius:9px;padding:13px 13px 10px}
+body.contentPage .xpHead{display:flex;justify-content:space-between;gap:8px;font-size:9px;color:#2a3340}.xpHead strong{font-size:10px}
+body.contentPage .xpChart{height:190px;margin:12px 4px 4px;position:relative;background:repeating-linear-gradient(to bottom,transparent 0 47px,#dce3e8 48px)}
+body.contentPage .xpChart:before{content:"";position:absolute;inset:0 0 0 0;background:linear-gradient(165deg,transparent 0 8%,#149dcc 8.3% 8.8%,transparent 9.1% 20%,#149dcc 20.3% 20.8%,transparent 21.1% 29%,#149dcc 29.3% 29.8%,transparent 30.1% 49%,#149dcc 49.3% 49.8%,transparent 50.1% 100%);opacity:.95}
+body.contentPage .xpChart:after{content:"";position:absolute;left:0;right:0;bottom:0;border-bottom:1px solid #dce3e8}
+body.contentPage .xpChart i{position:absolute;width:5px;height:5px;background:#149dcc;border-radius:50%;z-index:2;transform:translate(-50%,-50%)}
+body.contentPage .xpDays{display:flex;justify-content:space-between;color:#8b97a3;font-size:6px;padding:0 4px}
+body.contentPage .xpLegend{display:flex;justify-content:space-between;margin-top:18px;font-size:8px;color:#179bc7}.xpLegend span{display:flex;gap:5px;align-items:center}.xpLegend i{width:12px;height:1px;background:#179bc7}.xpLegend b{font-size:9px}
+body.contentPage .profileMiniStats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:14px}.profileMiniStats div{text-align:center;background:#f7f9fa;border-radius:9px;padding:9px 4px}.profileMiniStats b{display:block;font-size:14px;color:#18212c}.profileMiniStats span{font-size:7px;color:#7a8692}
+body.contentPage .courseMainCard{background:#fff;border-radius:18px;box-shadow:0 10px 30px #12243a12;border:1px solid #eee5e2;overflow:hidden;min-height:470px}
+body.contentPage .courseMainHeader{display:flex;justify-content:space-between;align-items:center;padding:21px 22px 17px}.courseTitleWrap{display:flex;align-items:center;gap:13px}.courseIcon{width:47px;height:47px;border-radius:8px;background:linear-gradient(145deg,#3d39b8,#28238d);color:#fff;display:grid;place-items:center;font-size:28px;box-shadow:inset 0 0 0 1px #ffffff24}.courseTitleWrap h1{font-size:18px;margin:0;color:#171d27}.courseTitleWrap span{display:block;margin-top:4px;font-size:8px;color:#7d8791}
+body.contentPage .courseHeaderActions{display:flex;gap:8px}.courseGhostBtn,.courseContinueBtn{height:38px;padding:0 17px;border-radius:8px;font-size:9px;font-weight:850;cursor:pointer}.courseGhostBtn{background:#fff;border:1px solid #252d3a;color:#252d3a}.courseContinueBtn{background:#292f3d;color:#fff;border:1px solid #292f3d}
+body.contentPage .courseWorkspace{display:grid;grid-template-columns:54px minmax(0,1fr) 54px;gap:4px;align-items:start;padding:5px 20px 0}.courseArrow{height:47px;border:0;border-radius:9px;background:#f4f7f9;color:#2c3642;font-size:26px;cursor:pointer}.courseArrow:hover{background:#e8eef2}
+body.contentPage .courseChapter{background:linear-gradient(180deg,#fff 0%,#fbfcfc 100%);border-radius:11px 11px 0 0;min-height:350px;overflow:hidden}
+body.contentPage .chapterTop{text-align:center;background:#c9fbf7;color:#75a3a7;font-size:8px;font-weight:900;letter-spacing:1px;padding:9px 8px 3px}.courseChapter h2{text-align:center;background:#c9fbf7;margin:0;padding:0 10px 9px;color:#111c27;font-size:13px}.courseChapter h2 span{font-weight:650}
+body.contentPage .courseLessonList{padding:9px 44px 0;display:grid;gap:7px}.courseLesson{height:37px;border:0;border-radius:9px;background:#c6f3f6;display:grid;grid-template-columns:105px 1fr 20px;align-items:center;text-align:center;padding:0 8px;color:#102b37;cursor:pointer}.courseLesson:hover{transform:translateY(-1px);filter:brightness(1.01)}.courseLesson.current{background:#aeeedd}.courseLesson b{font-size:9px}.courseLesson strong{font-size:12px;color:#008eb4}.lessonBadge{justify-self:start;background:#50dce5;border-radius:7px;padding:5px 7px;font-size:7px;font-weight:900;color:#086a7d}.current .lessonBadge{background:#55e4c3;color:#087866}
+body.contentPage .coursePath{height:198px;position:relative;margin-top:5px;display:flex;flex-direction:column;align-items:center;gap:-1px;padding-top:20px}.coursePath:before{content:"";position:absolute;top:24px;left:50%;height:150px;width:2px;background:linear-gradient(#27d8cb,#b9c2cb);opacity:.45}
+body.contentPage .pathNode{position:relative;z-index:1;width:64px;height:48px;border-radius:10px;transform:rotate(45deg);display:grid;place-items:center;margin:-1px 0;box-shadow:0 12px 22px #1aa8bd25}.pathNode span{transform:rotate(-45deg);font-size:19px;color:#fff}.pathNode.teal{background:#35d4c8}.pathNode.aqua{background:#19cfc0;width:78px;height:56px}.pathNode.dark{background:#68788a}.pathNode.pale{background:#e4e8eb;color:#6d7b89}.pathNode b{position:absolute;transform:rotate(-45deg);top:18px;left:53px;background:#52dfd0;color:#17545a;padding:7px 13px;border-radius:20px;font-size:8px;white-space:nowrap;box-shadow:0 7px 15px #20bfb633}
+body.contentPage .courseBottomStrip{display:grid;grid-template-columns:155px 1fr 125px;gap:13px;align-items:center;border-top:1px solid #edf0f2;padding:12px 20px}.courseBottomStrip b{display:block;font-size:9px;color:#202833}.courseBottomStrip span{font-size:7px;color:#8a949d}.progressBar{height:6px;background:#edf1f3;border-radius:99px;overflow:hidden}.progressBar span{display:block;height:100%;background:#39cdbf;border-radius:99px}.courseBottomStrip button{border:0;background:#e8faf7;color:#087c73;border-radius:7px;padding:8px;font-size:8px;font-weight:850;cursor:pointer}
+body.contentPage .courseCatalog{margin-top:14px;background:#fff;border-radius:15px;padding:16px 18px;border:1px solid #eee5e2;box-shadow:0 8px 25px #12243a0d}.catalogHead{display:flex;justify-content:space-between;align-items:end}.catalogKicker{font-size:7px;font-weight:900;letter-spacing:1px;color:#20a99e}.catalogHead h2{margin:3px 0 0;font-size:18px;color:#17202b}.catalogHead>span{font-size:8px;color:#7f8994}.catalogGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:11px}.catalogCard{display:grid;grid-template-columns:36px 1fr auto;gap:8px;align-items:center;border:1px solid #e5e9eb;border-radius:10px;padding:9px;background:#fff}.catalogCard.active{border-color:#9ee7df;background:#f2fffd}.catalogIcon{width:36px;height:36px;border-radius:8px;background:#eeeafc;display:grid;place-items:center;font-size:19px;color:#4137aa}.catalogCard b{display:block;font-size:9px;color:#202833}.catalogCard span{display:block;font-size:7px;color:#8a949d;margin-top:3px}.catalogCard button{border:0;background:#273040;color:#fff;border-radius:6px;padding:7px 8px;font-size:7px;font-weight:800;cursor:pointer}
+@media(max-width:900px){body.contentPage .chesslyCourseDash{grid-template-columns:1fr}.courseProfileCard{min-height:0}.courseWorkspace{grid-template-columns:38px minmax(0,1fr) 38px!important}.courseLessonList{padding-left:15px!important;padding-right:15px!important}.catalogGrid{grid-template-columns:1fr}.courseMainHeader{align-items:flex-start;gap:12px}.courseHeaderActions{flex-direction:column}}
+@media(max-width:600px){body.contentPage .courseMainHeader{padding:14px}.courseTitleWrap h1{font-size:14px}.courseHeaderActions{display:none}.courseWorkspace{padding-left:8px!important;padding-right:8px!important}.courseLesson{grid-template-columns:75px 1fr 16px}.courseLesson b{font-size:8px}.courseLessonList{padding-left:8px!important;padding-right:8px!important}.courseBottomStrip{grid-template-columns:1fr!important}.courseProfileCard{padding:16px}.coursePath{height:175px!important}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -605,40 +633,73 @@ body.contentPage .courseResource:hover{transform:translateY(-2px);box-shadow:0 7
 </div>
 </main>
 <section class="coursesShell" id="chesslyCourses">
-  <div class="courseLanding">
-    <div class="courseLandingTop">
-      <div class="pageIntro">
-        <span class="pagePill">🎓 CHESS COURSES</span>
-        <div class="kicker">CLASSIC CHESS ACADEMY</div>
-        <h2>Build your chess skills one lesson at a time.</h2>
-        <p>Openings, tactics, middlegames and practical training in a clean course dashboard. Every card gives you a quick way to study or jump into a practice position.</p>
-        <a class="pageAction" href="https://chessly.com/" target="_blank" rel="noopener">Explore Chessly →</a>
-        <button class="pageAction secondary" type="button" onclick="startLearningGame('e4')">Play a practice lesson</button>
+  <div class="chesslyCourseDash">
+    <aside class="courseProfileCard">
+      <div class="courseGreeting">Hi, Chess Player</div>
+      <div class="courseLevel"><strong>LVL 12</strong><span>2,640 XP</span><b>♞</b></div>
+      <div class="xpPanel">
+        <div class="xpHead"><span>XP Earned Last 14 Days</span><strong>830 XP</strong></div>
+        <div class="xpChart" aria-label="XP earned over the last 14 days">
+          <div class="xpLine"></div>
+          <i style="left:8%;top:14%"></i><i style="left:17%;top:73%"></i><i style="left:26%;top:91%"></i><i style="left:37%;top:94%"></i><i style="left:48%;top:79%"></i><i style="left:59%;top:75%"></i><i style="left:69%;top:90%"></i><i style="left:79%;top:84%"></i><i style="left:89%;top:91%"></i>
+        </div>
+        <div class="xpDays"><span>20</span><span>22</span><span>24</span><span>26</span><span>28</span><span>30</span><span>02</span></div>
+        <div class="xpLegend"><span><i></i>Your XP</span><b>830 XP</b></div>
       </div>
-      <div class="pageArt" aria-label="Course illustration">
-        <svg viewBox="0 0 700 440" role="img">
-          <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9c7b7"/><stop offset="1" stop-color="#f7f4f1"/></linearGradient></defs>
-          <rect width="700" height="440" fill="url(#cg)"/>
-          <rect x="54" y="54" width="592" height="332" rx="24" fill="#efe7df"/>
-          <rect x="92" y="88" width="516" height="248" rx="18" fill="#d8c5b4"/>
-          <g transform="translate(162 110)">
-            <rect width="310" height="186" rx="8" fill="#27313d"/>
-            <g fill="#f0d9b5"><rect x="12" y="12" width="36" height="36"/><rect x="84" y="12" width="36" height="36"/><rect x="156" y="12" width="36" height="36"/><rect x="228" y="12" width="36" height="36"/><rect x="48" y="48" width="36" height="36"/><rect x="120" y="48" width="36" height="36"/><rect x="192" y="48" width="36" height="36"/><rect x="264" y="48" width="36" height="36"/><rect x="12" y="84" width="36" height="36"/><rect x="84" y="84" width="36" height="36"/><rect x="156" y="84" width="36" height="36"/><rect x="228" y="84" width="36" height="36"/><rect x="48" y="120" width="36" height="36"/><rect x="120" y="120" width="36" height="36"/><rect x="192" y="120" width="36" height="36"/><rect x="264" y="120" width="36" height="36"/></g>
-            <g fill="#b58863"><rect x="48" y="12" width="36" height="36"/><rect x="120" y="12" width="36" height="36"/><rect x="192" y="12" width="36" height="36"/><rect x="264" y="12" width="36" height="36"/><rect x="12" y="48" width="36" height="36"/><rect x="84" y="48" width="36" height="36"/><rect x="156" y="48" width="36" height="36"/><rect x="228" y="48" width="36" height="36"/><rect x="48" y="84" width="36" height="36"/><rect x="120" y="84" width="36" height="36"/><rect x="192" y="84" width="36" height="36"/><rect x="264" y="84" width="36" height="36"/><rect x="12" y="120" width="36" height="36"/><rect x="84" y="120" width="36" height="36"/><rect x="156" y="120" width="36" height="36"/><rect x="228" y="120" width="36" height="36"/></g>
-            <text x="132" y="132" font-size="80" fill="#fff8ef" font-family="Georgia">♞</text>
-          </g>
-          <circle cx="570" cy="110" r="42" fill="#7bc53f"/><text x="570" y="121" text-anchor="middle" font-size="44" fill="#fff" font-family="Arial">✓</text>
-          <text x="570" y="190" text-anchor="middle" font-size="17" font-weight="800" fill="#493a31" font-family="Arial">LESSON READY</text>
-          <text x="570" y="215" text-anchor="middle" font-size="13" fill="#6f6259" font-family="Arial">Learn • Practice • Review</text>
-        </svg>
+      <div class="profileMiniStats">
+        <div><b>4</b><span>Courses</span></div><div><b>18</b><span>Lessons</span></div><div><b>7</b><span>Day streak</span></div>
       </div>
+    </aside>
+
+    <main class="courseMainCard">
+      <div class="courseMainHeader">
+        <div class="courseTitleWrap">
+          <div class="courseIcon">♟</div>
+          <div><h1>The Caro-Kann Defense</h1><span>Black repertoire · Opening course</span></div>
+        </div>
+        <div class="courseHeaderActions">
+          <button type="button" class="courseGhostBtn" onclick="startLearningGame('caro')">⚑ Practice</button>
+          <button type="button" class="courseContinueBtn" onclick="startLearningGame('caro')">Continue</button>
+        </div>
+      </div>
+
+      <div class="courseWorkspace">
+        <button class="courseArrow" type="button" aria-label="Previous chapter">‹</button>
+        <div class="courseChapter">
+          <div class="chapterTop">CHAPTER 4</div>
+          <h2>The Panov <span>(3. exd5, 4. c4)</span></h2>
+          <div class="courseLessonList">
+            <button class="courseLesson done" type="button" onclick="startLearningGame('caro')"><span class="lessonBadge">▤ STUDY 1</span><b>The Main Line 6. Qb3</b><strong>✓</strong></button>
+            <button class="courseLesson done" type="button" onclick="startLearningGame('caro')"><span class="lessonBadge">▤ STUDY 2</span><b>The Straightforward 6. Cxd5</b><strong>✓</strong></button>
+            <button class="courseLesson current" type="button" onclick="startLearningGame('caro')"><span class="lessonBadge">▤ STUDY 3</span><b>The Meek 6. Nf3 &amp; others</b><strong>●</strong></button>
+          </div>
+
+          <div class="coursePath" aria-label="Course learning path">
+            <div class="pathNode teal"><span>▶</span></div>
+            <div class="pathNode aqua active"><span>♟</span><b>YOU ARE HERE</b></div>
+            <div class="pathNode dark"><span>▮▮</span></div>
+            <div class="pathNode pale"><span>⚑</span></div>
+            <div class="pathNode pale"><span>▤</span></div>
+          </div>
+        </div>
+        <button class="courseArrow" type="button" aria-label="Next chapter">›</button>
+      </div>
+
+      <div class="courseBottomStrip">
+        <div><b>Course progress</b><span>3 of 18 lessons completed</span></div>
+        <div class="progressBar"><span style="width:17%"></span></div>
+        <button type="button" onclick="startLearningGame('caro')">Continue lesson →</button>
+      </div>
+    </main>
+  </div>
+
+  <div class="courseCatalog">
+    <div class="catalogHead"><div><span class="catalogKicker">YOUR OPENING LIBRARY</span><h2>Keep learning</h2></div><span>18 lessons · 4 courses</span></div>
+    <div class="catalogGrid">
+      <article class="catalogCard active"><div class="catalogIcon">♟</div><div><b>The Caro-Kann Defense</b><span>Black vs 1.e4 · 18 lessons</span></div><button type="button" onclick="startLearningGame('caro')">Continue</button></article>
+      <article class="catalogCard"><div class="catalogIcon">♙</div><div><b>1.e4 Starter Course</b><span>White repertoire · 12 lessons</span></div><button type="button" onclick="startLearningGame('e4')">Start</button></article>
+      <article class="catalogCard"><div class="catalogIcon">⚡</div><div><b>Tactics Trainer</b><span>Patterns · short practice sets</span></div><button type="button" onclick="startLearningGame('utah')">Train</button></article>
     </div>
-    <div class="pageCards">
-      <article class="pageTile"><div class="tileIcon">♟</div><h3>E4 Part 1</h3><p>Build a reliable first-move repertoire and practice the key ideas on a board.</p><button class="pageAction" type="button" onclick="startLearningGame('e4')">Practice</button></article>
-      <article class="pageTile"><div class="tileIcon">🛡️</div><h3>Caro-Kann</h3><p>Study the setup, development plans and tactical patterns for Black.</p><button class="pageAction" type="button" onclick="startLearningGame('caro')">Practice</button></article>
-      <article class="pageTile"><div class="tileIcon">⚡</div><h3>Tactics Masterclass</h3><p>Turn tactical ideas into repeatable habits with short practice positions.</p><button class="pageAction" type="button" onclick="startLearningGame('utah')">Train</button></article>
-    </div>
-    <div class="resourceNote">The course cards link to official course platforms rather than copying paid lesson content into Classic Chess.</div>
   </div>
 </section>
 <div class="courseResourcePanel" id="courseVideoResources">
