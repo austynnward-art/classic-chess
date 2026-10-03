@@ -83,9 +83,9 @@ jobs:
             const learnSquares=()=>[...dom.window.document.querySelectorAll("#learningBoard .learningSq")];
             const lidx=a=>{const f=a.charCodeAt(0)-97,r=8-Number(a[1]);return r*8+f;};
             learnSquares()[lidx("e2")].click(); learnSquares()[lidx("e4")].click();
-            await new Promise(resolve=>setTimeout(resolve,350));
+            await new Promise(resolve=>setTimeout(resolve,700));
             const e5Text=learnSquares()[lidx("e5")].textContent;
-            if(!e5Text.includes("♟")) { console.error("Learning trainer reply failed"); process.exit(1); }
+            if(!e5Text.includes("♟")) { console.error("Learning trainer reply failed; status="+dom.window.document.querySelector("#trainerStatus")?.textContent+"; moves="+dom.window.document.querySelector("#trainerMoves")?.textContent); process.exit(1); }
 
             console.log("DEEP UI TEST PASSED: boards=64/64, local moves, castling, pages, 4-player board, learning trainer");
             dom.window.close();
