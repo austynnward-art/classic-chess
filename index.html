@@ -88,6 +88,39 @@ body.fourPlayerView .brand h1{font-size:32px;color:#fff}.fourPlayerView .brand s
 .fourPlayerView .pageNav .legacyNavBtn{display:none}
 @media(max-width:1100px){.fourPlayerView .layout{grid-template-columns:260px minmax(430px,1fr)}.fourPlayerView .right{grid-column:1 / -1}.fourPlayerView .fourCoach{display:grid;grid-template-columns:1fr 1fr;gap:12px}.fourPlayerView .gameProgressCard{grid-column:1/-1}}
 @media(max-width:760px){.fourPlayerView .top{padding:10px 14px}.fourPlayerView .pageNav{gap:6px}.fourPlayerView .pageBtn{padding:10px 12px}.fourPlayerView .layout{grid-template-columns:1fr;padding:10px}.fourControls{border-radius:14px}.fourBottomGrid{grid-template-columns:1fr}.playerLegend{flex-wrap:wrap}.fourPlayerView .fourCoach{display:block}}
+ 
+.fourPlayerView{--dash-bg:#0b3157;--dash-panel:#0b3157;--dash-blue:#1984ef}
+.fourPlayerView *{box-sizing:border-box}
+.fourPlayerView .layout{animation:dashIn .42s ease both}
+@keyframes dashIn{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:none}}
+.fourPlayerView .fourModeBtn,.fourPlayerView .startDashboardBtn,.fourPlayerView .resetDashboardBtn,.fourPlayerView .askCoachBtn,.fourPlayerView .coachModeBtn,.fourPlayerView .iconBtn{transition:transform .16s ease,filter .16s ease,box-shadow .16s ease,background .16s ease}
+.fourPlayerView button:not(:disabled):hover{transform:translateY(-2px);filter:brightness(1.06)}
+.fourPlayerView button:not(:disabled):active{transform:translateY(0) scale(.985)}
+.fourBoardWrap{position:relative;width:min(100%,720px);margin:auto;padding:30px 28px;display:grid;grid-template-columns:18px 1fr 18px;grid-template-rows:18px 1fr 18px;align-items:center}
+.fourPlayerView .multiBoard{grid-column:2;grid-row:2;width:100%;aspect-ratio:1;transition:box-shadow .25s ease,transform .25s ease}
+.fourPlayerView .multiBoard:hover{box-shadow:0 14px 30px #001b3358;transform:translateY(-1px)}
+.boardFiles,.boardRank{color:#b9d0e3;font:700 12px/1 Arial,sans-serif;user-select:none}
+.boardFiles{display:grid;grid-template-columns:repeat(8,1fr);text-align:center}
+.boardFilesTop{grid-column:2;grid-row:1}.boardFilesBottom{grid-column:2;grid-row:3}
+.boardRank{display:grid;grid-template-rows:repeat(8,1fr);text-align:center;align-items:center}
+.boardRankLeft{grid-column:1;grid-row:2}.boardRankRight{grid-column:3;grid-row:2}
+.fourPlayerView .multiPiece{transform:scale(.9);transition:transform .18s cubic-bezier(.2,.8,.2,1),filter .18s ease}
+.fourPlayerView .multiSq:hover .multiPiece{transform:scale(.97);filter:drop-shadow(0 6px 4px #0007)}
+.fourPlayerView .multiSq.selected .multiPiece{transform:scale(1.02)}
+.fourPlayerView .multiSq{transition:filter .12s ease,background .18s ease}
+.fourPlayerView .multiSq.legal:after{animation:legalPulse 1.2s ease-in-out infinite}
+@keyframes legalPulse{0%,100%{transform:scale(.85);opacity:.65}50%{transform:scale(1.12);opacity:1}}
+.fourPlayerView .pieceSvg{width:100%;height:100%}
+.fourPlayerView .multiSq.capture .multiPiece{animation:captureHint .8s ease-in-out infinite}
+@keyframes captureHint{50%{transform:scale(.98)}}
+.fourPlayerView .coachTips{transition:opacity .2s ease,transform .2s ease}
+.fourPlayerView .coachTips.tipsClosed{opacity:.38;transform:scale(.99)}
+.coachModeBtn{width:100%;height:44px;margin-top:9px;border:1px solid #3d6c95;border-radius:10px;background:#123d63;color:#d9edff;font-weight:800;cursor:pointer}
+.fourPlayerView .coachModeBtn.off{background:#17324c;color:#8ea9bf}
+.fourPlayerView .coachTips.tipsClosed .tipRow{display:none}
+.fourPlayerView .coachTips.tipsClosed .coachTipsHead{margin-bottom:0}
+.fourPlayerView .fourMoveList{max-height:64px;overflow:auto}
+@media(max-width:760px){.fourBoardWrap{padding:22px 16px}.boardFiles,.boardRank{font-size:10px}}
 </style>
 </head>
 <body>
@@ -133,7 +166,13 @@ body.fourPlayerView .brand h1{font-size:32px;color:#fff}.fourPlayerView .brand s
 <div class="frame"><div style="position:relative;width:100%;height:100%"><div class="board" id="board"></div><svg class="arrowLayer" id="arrowLayer" viewBox="0 0 800 800" preserveAspectRatio="none"></svg></div></div>
 <div class="multiFrame" id="multiFrame">
   <div class="multiInfo"><span class="multiBadge" id="multiTurn">Red to move</span><span class="multiBadge" id="multiAlive">Players alive: 4</span></div>
-  <div class="fourBoardWrap"><div id="multiBoard" class="multiBoard" aria-label="Four player chess board"></div></div>
+  <div class="fourBoardWrap">
+  <div class="boardFiles boardFilesTop"><span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span></div>
+  <div class="boardRank boardRankLeft"><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div>
+  <div id="multiBoard" class="multiBoard" aria-label="Four player chess board"></div>
+  <div class="boardRank boardRankRight"><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div>
+  <div class="boardFiles boardFilesBottom"><span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span></div>
+</div>
   <div class="multiControls"><button class="btn primary" id="multiNew" type="button">＋ New Multiplayer Game</button><button class="btn" id="multiReset" type="button">↻ Reset</button></div>
   <div class="multiNote" id="multiNote">Four players share one board. Each side has a full army and a king.</div>
 </div>
@@ -448,6 +487,7 @@ body.fourPlayerView .brand h1{font-size:32px;color:#fff}.fourPlayerView .brand s
       <div class="tipRow"><i>!</i><div><b>Watch all four players</b><span>Don't just focus on one side.</span></div></div>
       <div class="tipRow"><i>♔</i><div><b>Keep your king safe</b><span>Always check threats before moving.</span></div></div>
       <button class="askCoachBtn" id="askCoachBtn" type="button">💬 <span>Ask Coach</span> ›</button>
+      <button class="coachModeBtn" id="coachModeBtn" type="button">🧠 Coach Mode: ON</button>
     </div>
     <div class="gameProgressCard"><b id="fourProgressTitle">Game in progress...</b><span id="fourProgressText">Make your move!</span></div>
   </div>
@@ -1141,6 +1181,13 @@ $("fourResetBtn").onclick=function(){ startMultiGame(4); };
 $("twoModeBtn").onclick=function(){ $("gameMode").value="local2"; showPage("play"); syncGameMode(); };
 $("botModeBtn").onclick=function(){ $("gameMode").value="computer"; showPage("bot"); syncGameMode(); };
 $("friendModeBtn").onclick=function(){ $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
+$("coachModeBtn").onclick=function(){
+  const b=$("coachModeBtn"),tips=document.querySelector(".coachTips");
+  const on=b.classList.toggle("off");
+  b.textContent=on?"🧠 Coach Mode: OFF":"🧠 Coach Mode: ON";
+  if(tips)tips.classList.toggle("tipsClosed",on);
+  if($("botSpeech"))$("botSpeech").textContent=on?"Coach Mode is paused. Turn it back on when you want tips while you play.":"Coach Mode is on — I’ll watch the position and give you a useful tip.";
+};
 $("askCoachBtn").onclick=function(){ if(typeof coachCheck==="function")coachCheck(); else if($("botSpeech"))$("botSpeech").textContent="Before every move: checks, captures, threats — then check what changed."; };
 $("closeTips").onclick=function(){ const p=document.querySelector(".coachTips"); if(p)p.classList.toggle("tipsClosed"); };
 $("fourDifficulty").onchange=function(){ $("level").value=this.value; };
