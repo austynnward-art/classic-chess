@@ -95,6 +95,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 <button class="btn" id="undo">↶ Undo</button>
 <button class="btn" id="flip">⟳ Flip Board</button>
 <button class="btn" id="resign">⚑ Resign</button>
+<button class="btn" id="draw">½ Draw</button>
 <button class="btn" id="hint">💡 Hint</button>
 </div>
 <div class="options">
@@ -178,7 +179,7 @@ const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",
 let s,history=[],snapshots=[],sel=null,legal=[],flip=false,over=false,thinking=false,aiSide="b",timer=null,clock={w:600,b:600};
 let computerRetryTimer=null,computerMoveTimer=null,computerRequestToken=0;
 const $=id=>document.getElementById(id),opp=c=>c==="w"?"b":"w",inside=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
-function initial(){let b=Array.from({length:8},()=>Array(8).fill(null)),a=["r","n","b","q","k","b","n","r"];for(let c=0;c<8;c++){b[0][c]={c:"b",t:a[c]};b[1][c]={c:"b",t:"p"};b[6][c]={c:"w",t:"p"};b[7][c]={c:"w",t:a[c]}}return{b,turn:"w",castle:{wk:1,wq:1,bk:1,bq:1},ep:null,last:null,captured:{w:[],b:[]}}}
+function initial(){let b=Array.from({length:8},()=>Array(8).fill(null)),a=["r","n","b","q","k","b","n","r"];for(let c=0;c<8;c++){b[0][c]={c:"b",t:a[c]};b[1][c]={c:"b",t:"p"};b[6][c]={c:"w",t:"p"};b[7][c]={c:"w",t:a[c]}}return{b,turn:"w",castle:{wk:1,wq:1,bk:1,bq:1},ep:null,last:null,captured:{w:[],b:[]},halfmove:0}}
 function clone(x){return JSON.parse(JSON.stringify(x))}
 function pseudo(x,r,c,attackOnly=false){let p=x.b[r][c],o=[];if(!p)return o;const d=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]],add=(rr,cc)=>{if(!inside(rr,cc))return 0;let q=x.b[rr][cc];if(!q){o.push([rr,cc]);return 1}if(q.c!==p.c)o.push([rr,cc]);return 0};
 if(p.t==="p"){let z=p.c==="w"?-1:1;for(let dx of[-1,1]){let rr=r+z,cc=c+dx;if(inside(rr,cc)&&(x.b[rr][cc]?.c===opp(p.c)||(x.ep&&x.ep[0]===rr&&x.ep[1]===cc)))o.push([rr,cc])}let rr=r+z;if(inside(rr,c)&&!x.b[rr][c]){o.push([rr,c]);if((p.c==="w"&&r===6)||(p.c==="b"&&r===1)){let rr2=r+2*z;if(!x.b[rr2][c])o.push([rr2,c])}}}
@@ -188,7 +189,7 @@ else{let ds=p.t==="b"?d.slice(4):p.t==="r"?d.slice(0,4):d;for(let q of ds){let r
 function king(x,c){for(let r=0;r<8;r++)for(let q=0;q<8;q++)if(x.b[r][q]?.c===c&&x.b[r][q].t==="k")return[r,q]}
 function attacked(x,r,c,by){for(let y=0;y<8;y++)for(let q=0;q<8;q++){let p=x.b[y][q];if(!p||p.c!==by)continue;if(p.t==="p"){let z=by==="w"?-1:1;if(y+z===r&&Math.abs(q-c)===1)return true}else if(p.t==="k"){if(Math.max(Math.abs(y-r),Math.abs(q-c))===1)return true}else if(pseudo(x,y,q,true).some(m=>m[0]===r&&m[1]===c))return true}return false}
 function check(x,c){let k=king(x,c);return k?attacked(x,k[0],k[1],opp(c)):true}
-function apply(x,f,t){let n=clone(x),p=n.b[f[0]][f[1]],q=n.b[t[0]][t[1]];n.b[f[0]][f[1]]=null;if(q)n.captured[p.c].push(q.t);if(p.t==="p"&&n.ep&&t[0]===n.ep[0]&&t[1]===n.ep[1]&&!q){let rr=p.c==="w"?t[0]+1:t[0]-1;if(n.b[rr][t[1]])n.captured[p.c].push(n.b[rr][t[1]].t);n.b[rr][t[1]]=null}if(p.t==="k"&&Math.abs(t[1]-f[1])===2){let rr=f[0],rf=t[1]>f[1]?7:0,rt=t[1]>f[1]?5:3;n.b[rr][rt]=n.b[rr][rf];n.b[rr][rf]=null}if(p.t==="p"&&(t[0]===0||t[0]===7))p.t="q";n.b[t[0]][t[1]]=p;n.ep=null;if(p.t==="p"&&Math.abs(t[0]-f[0])===2)n.ep=[(f[0]+t[0])/2,f[1]];if(p.t==="k"){n.castle[p.c+"k"]=0;n.castle[p.c+"q"]=0}if(p.t==="r"){if(f[0]===7&&f[1]===0)n.castle.wq=0;if(f[0]===7&&f[1]===7)n.castle.wk=0;if(f[0]===0&&f[1]===0)n.castle.bq=0;if(f[0]===0&&f[1]===7)n.castle.bk=0}n.turn=opp(n.turn);n.last=[f[0]*8+f[1],t[0]*8+t[1]];return n}
+function apply(x,f,t){let n=clone(x),p=n.b[f[0]][f[1]],q=n.b[t[0]][t[1]],pawnMove=p?.t==="p",capture=!!q;n.b[f[0]][f[1]]=null;if(q)n.captured[p.c].push(q.t);if(p.t==="p"&&n.ep&&t[0]===n.ep[0]&&t[1]===n.ep[1]&&!q){let rr=p.c==="w"?t[0]+1:t[0]-1;if(n.b[rr][t[1]])n.captured[p.c].push(n.b[rr][t[1]].t);n.b[rr][t[1]]=null}if(p.t==="k"&&Math.abs(t[1]-f[1])===2){let rr=f[0],rf=t[1]>f[1]?7:0,rt=t[1]>f[1]?5:3;n.b[rr][rt]=n.b[rr][rf];n.b[rr][rf]=null}if(p.t==="p"&&(t[0]===0||t[0]===7))p.t="q";n.b[t[0]][t[1]]=p;n.ep=null;if(p.t==="p"&&Math.abs(t[0]-f[0])===2)n.ep=[(f[0]+t[0])/2,f[1]];if(p.t==="k"){n.castle[p.c+"k"]=0;n.castle[p.c+"q"]=0}n.halfmove=(pawnMove||capture)?0:(x.halfmove||0)+1;if(p.t==="r"){if(f[0]===7&&f[1]===0)n.castle.wq=0;if(f[0]===7&&f[1]===7)n.castle.wk=0;if(f[0]===0&&f[1]===0)n.castle.bq=0;if(f[0]===0&&f[1]===7)n.castle.bk=0}n.turn=opp(n.turn);n.last=[f[0]*8+f[1],t[0]*8+t[1]];return n}
 function legalFrom(x,r,c){let p=x.b[r][c];if(!p||p.c!==x.turn)return[];return pseudo(x,r,c).filter(t=>!check(apply(x,[r,c],t),p.c))}
 function all(x,c=x.turn){let old=x.turn;x.turn=c;let a=[];for(let r=0;r<8;r++)for(let q=0;q<8;q++)if(x.b[r][q]?.c===c)for(let t of legalFrom(x,r,q))a.push({f:[r,q],t});x.turn=old;return a}
 function san(before,m){let p=before.b[m.f[0]][m.f[1]],q=before.b[m.t[0]][m.t[1]],a=p.t==="p"?"":p.t.toUpperCase();if(p.t==="k"&&Math.abs(m.t[1]-m.f[1])===2)return m.t[1]>m.f[1]?"O-O":"O-O-O";if(q)a+="x";return a+F[m.t[1]]+(8-m.t[0])}
@@ -439,16 +440,97 @@ $("undo").onclick=()=>{if(snapshots.length&&!thinking){s=clone(snapshots.pop());
 $("flip").onclick=()=>{flip=!flip;render();};
 $("resign").onclick=()=>{if(!over){over=true;thinking=false;$("status").textContent=(s.turn==="w"?"White":"Black")+" resigned";render();}};
 $("hint").onclick=()=>{if(over||thinking||s.turn===aiSide)return;engineSearch(s,mv=>{if(mv&&mv.length>=4){drawArrow([mv[0],mv[1]],[mv[2],mv[3]]);if($("best-move"))$("best-move").textContent=mv}})};
+function positionKey(x){
+  let board="";
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=x.b[r][c];board+=p?(p.c+p.t):"--";}
+  return board+"|"+x.turn+"|"+(x.castle.wk?"K":"")+(x.castle.wq?"Q":"")+(x.castle.bk?"k":"")+(x.castle.bq?"q":"")+"|"+(x.ep?x.ep.join(","):"-");
+}
+function repetitionCount(){
+  const key=positionKey(s);
+  let count=1;
+  for(const snap of snapshots)if(positionKey(snap)===key)count++;
+  return count;
+}
+function isDeadPosition(x){
+  const pieces=[];
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=x.b[r][c];if(p&&p.t!=="k")pieces.push({p,r,c});}
+  if(!pieces.length)return true;
+  if(pieces.some(v=>v.p.t==="p"||v.p.t==="q"||v.p.t==="r"))return false;
+  const nonBishops=pieces.filter(v=>v.p.t!=="b"&&v.p.t!=="n");
+  if(nonBishops.length)return false;
+  if(pieces.length===1)return true;
+  if(pieces.every(v=>v.p.t==="b")){
+    const colors=pieces.map(v=>(v.r+v.c)%2);
+    return colors.every(v=>v===colors[0]);
+  }
+  if(pieces.length===2&&pieces.every(v=>v.p.t==="n")){
+    return true;
+  }
+  return false;
+}
+function drawReason(){
+  if(repetitionCount()>=5)return"Draw — fivefold repetition";
+  if(s.halfmove>=150)return"Draw — 75-move rule";
+  if(isDeadPosition(s))return"Draw — insufficient mating material / dead position";
+  const moves=all(s,s.turn);
+  if(!moves.length&&!check(s,s.turn))return"Draw — stalemate";
+  return null;
+}
+function claimableDrawReason(){
+  if(repetitionCount()>=3)return"Threefold repetition";
+  if(s.halfmove>=100)return"50-move rule";
+  return null;
+}
+function checkAutomaticDraws(){
+  if(over)return true;
+  const reason=drawReason();
+  if(reason){over=true;thinking=false;$("status").textContent=reason;render();return true;}
+  return false;
+}
+function handleDraw(){
+  if(over||thinking)return;
+  const automatic=drawReason();
+  if(automatic){over=true;$("status").textContent=automatic;render();return;}
+  const claim=claimableDrawReason();
+  if(claim){
+    if(confirm("Claim a draw by "+claim+"?")){
+      over=true;$("status").textContent="Draw — "+claim;render();
+    }
+    return;
+  }
+  if(confirm("Offer a draw to the computer? If accepted, the game ends as a draw.")){
+    over=true;thinking=false;$("status").textContent="Draw — agreement";render();
+  }
+}
+function showPage(which){
+  const learn=which==="learn";
+  const layout=document.querySelector(".layout");
+  if(!layout)return;
+  layout.classList.toggle("learnPageMode",learn);
+  $("playPage")?.classList.toggle("active",!learn);
+  $("learnPage")?.classList.toggle("active",learn);
+  if($("result"))$("result").textContent=learn?"Page 2 · Learn + Videos":"Page 1 · Play";
+  document.title=learn?"Classic Chess — Learn + Videos":"Classic Chess";
+  if(learn){updateCourse();renderCourseBoard();}
+  else render();
+}
+$("playPage").onclick=()=>showPage("play");
+$("learnPage").onclick=()=>showPage("learn");
+showPage("play");
+
 function newGame(){computerRequestToken++;if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}if(engine){try{engine.postMessage("stop")}catch(e){}}engineBusy=false;engineQueue=null;s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;clock={w:+$("time").value,b:+$("time").value};render();if(aiSide==="w")computer();}
 $("side").onchange=()=>{aiSide=$("side").value==="w"?"b":"w";$("whiteLabel").textContent=aiSide==="w"?"Computer":"You";$("blackLabel").textContent=aiSide==="b"?"Computer":"You";newGame();};
 $("time").onchange=()=>{newGame()};
 function formatTime(n){n=Math.max(0,Math.floor(n));return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
 function finish(){
+  if(over)return;
+  const automatic=drawReason();
+  if(automatic){over=true;thinking=false;$("status").textContent=automatic;return;}
   const moves=all(s,s.turn);
   if(!moves.length){
     over=true;
     thinking=false;
-    $("status").textContent=check(s,s.turn)?((s.turn==="w"?"White":"Black")+" is checkmated"):"Draw — no legal moves";
+    $("status").textContent=check(s,s.turn)?((s.turn==="w"?"White":"Black")+" is checkmated"):"Draw — stalemate";
   }
 }
 const lessons=[
