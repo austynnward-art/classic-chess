@@ -13,7 +13,7 @@ jobs:
           node-version: '24'
       - name: Extract JavaScript
         run: |
-          sed -n '/<script>/,/<\\/script>/p' index.html | sed '1d;$d' > /tmp/app.js
+          awk '/<script>/{f=1;next}/<\\/script>/{f=0}f' index.html > /tmp/app.js
           node --check /tmp/app.js
       - name: Install DOM test runner
         run: npm install --no-save jsdom@26.1.0
@@ -46,6 +46,9 @@ jobs:
             if(errors.length) { console.error(errors.join("\n---\n")); process.exit(1); }
             if(board!==64) { console.error("Main board has",board,"squares"); process.exit(1); }
             if(course!==64) { console.error("Course board has",course,"squares"); process.exit(1); }
+const initialPieces=[...dom.window.document.querySelectorAll("#board svg[data-piece]")].map(x=>x.getAttribute("data-piece"));
+            const requiredPieces=["wk","wq","wr","wb","wn","wp","bk","bq","br","bb","bn","bp"];
+            if(requiredPieces.some(p=>!initialPieces.includes(p))) { console.error("Initial piece SVG set incomplete"); process.exit(1); }
             if(!dom.window.document.querySelector("#playPage") || !dom.window.document.querySelector("#learnPage") || !dom.window.document.querySelector("#coursesPage")) { console.error("Page navigation missing"); process.exit(1); }
 
             // Exercise the actual UI in local two-player mode.
@@ -64,8 +67,8 @@ jobs:
             const finalSquares=[...dom.window.document.querySelectorAll("#board .sq")];
             if(!dom.window.document.querySelector("#moves").textContent.includes("O-O")) { console.error("Castling SAN test failed"); process.exit(1); }
 
-            const kingG1=finalSquares[6+7*8]?.textContent.includes("♔");
-            const rookF1=finalSquares[5+7*8]?.textContent.includes("♖");
+            const kingG1=finalSquares[6+7*8]?.querySelector('svg[data-piece="wk"]');
+            const rookF1=finalSquares[5+7*8]?.querySelector('svg[data-piece="wr"]');
             if(!kingG1 || !rookF1) { console.error("Castling UI test failed"); process.exit(1); }
 
             // Exercise the page switching and 3/4-player board creation.
@@ -84,8 +87,8 @@ jobs:
             const lidx=a=>{const f=a.charCodeAt(0)-97,r=8-Number(a[1]);return r*8+f;};
             learnSquares()[lidx("e2")].click(); learnSquares()[lidx("e4")].click();
             await new Promise(resolve=>setTimeout(resolve,700));
-            const e5Text=learnSquares()[lidx("e5")].textContent;
-            if(!e5Text.includes("♟")) { console.error("Learning trainer reply failed; status="+dom.window.document.querySelector("#trainerStatus")?.textContent+"; moves="+dom.window.document.querySelector("#trainerMoves")?.textContent); process.exit(1); }
+            const e5Piece=learnSquares()[lidx("e5")]?.querySelector('svg[data-piece="bp"]');
+            if(!e5Piece) { console.error("Learning trainer reply failed; status="+dom.window.document.querySelector("#trainerStatus")?.textContent+"; moves="+dom.window.document.querySelector("#trainerMoves")?.textContent); process.exit(1); }
 
             console.log("DEEP UI TEST PASSED: boards=64/64, local moves, castling, pages, 4-player board, learning trainer");
             dom.window.close();
