@@ -73,7 +73,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 /* YouTube chess hub */
 .ytShell{grid-column:2;margin-top:18px;background:#fff;border:1px solid #d9dee5;border-radius:16px;padding:20px;box-shadow:0 8px 28px rgba(35,30,25,.08)}
 .ytHeader{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.ytHeader h2{margin:0;font-size:24px}.ytHeader p{margin:4px 0 0;color:#6b7280;font-size:13px}.ytBadge{background:#f1f1f1;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700}
-.ytGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ytCard{border:1px solid #e1e4e8;border-radius:12px;overflow:hidden;background:#fff}.ytThumb{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#eee}.ytCardBody{padding:11px}.ytCard h3{font-size:15px;margin:0 0 5px}.ytCard p{font-size:12px;color:#6b7280;margin:0 0 9px;line-height:1.35}.ytLink{display:inline-block;padding:8px 10px;border-radius:8px;background:#222;color:#fff;text-decoration:none;font-size:12px;font-weight:700}.ytPosts{margin-top:16px;padding-top:15px;border-top:1px solid #e5e7eb}.ytPosts h3{margin:0 0 9px;font-size:16px}.ytPostRow{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.ytPost{padding:11px;border:1px solid #e1e4e8;border-radius:10px;background:#fafafa;text-decoration:none;color:#222}.ytPost b{display:block;font-size:13px}.ytPost span{display:block;margin-top:4px;font-size:11px;color:#777}.ytMore{margin-top:12px;text-align:center}.ytMore a{color:#2563eb;font-weight:700;text-decoration:none;font-size:13px}@media(max-width:800px){.ytGrid,.ytPostRow{grid-template-columns:1fr}.ytShell{grid-column:auto}}
+.ytGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ytVideo{position:relative;aspect-ratio:16/9;background:#111}.ytVideo iframe{display:block;width:100%;height:100%;border:0}.ytCard{overflow:hidden}.ytThumb{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#eee}.ytCardBody{padding:11px}.ytCard h3{font-size:15px;margin:0 0 5px}.ytCard p{font-size:12px;color:#6b7280;margin:0 0 9px;line-height:1.35}.ytLink{display:inline-block;padding:8px 10px;border-radius:8px;background:#222;color:#fff;text-decoration:none;font-size:12px;font-weight:700}.ytPosts{margin-top:16px;padding-top:15px;border-top:1px solid #e5e7eb}.ytPosts h3{margin:0 0 9px;font-size:16px}.ytPostRow{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.ytPost{padding:11px;border:1px solid #e1e4e8;border-radius:10px;background:#fafafa;text-decoration:none;color:#222}.ytPost b{display:block;font-size:13px}.ytPost span{display:block;margin-top:4px;font-size:11px;color:#777}.ytMore{margin-top:12px;text-align:center}.ytMore a{color:#2563eb;font-weight:700;text-decoration:none;font-size:13px}@media(max-width:800px){.ytGrid,.ytPostRow{grid-template-columns:1fr}.ytShell{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -140,17 +140,26 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   </div>
 </section>
 <section class="ytShell" id="youtubeChess">
-  <div class="ytHeader"><div><h2>♟ YouTube Chess</h2><p>Chess videos and creator posts to watch alongside your lessons.</p></div><span class="ytBadge">VIDEOS + POSTS</span></div>
+  <div class="ytHeader"><div><h2>♟ Chess Videos</h2><p>Watch the selected chess videos directly inside the app.</p></div><span class="ytBadge">EMBEDDED VIDEOS</span></div>
   <div class="ytGrid">
-    <article class="ytCard"><a href="https://www.youtube.com/watch?v=OCSbzArwB10" target="_blank" rel="noopener"><img class="ytThumb" src="https://i.ytimg.com/vi/OCSbzArwB10/hqdefault.jpg" alt="How To Play Chess beginner video"></a><div class="ytCardBody"><h3>How To Play Chess: Beginner Guide</h3><p>Basics, openings, tactics, endgames, and a simple study plan.</p><a class="ytLink" href="https://www.youtube.com/watch?v=OCSbzArwB10" target="_blank" rel="noopener">Watch on YouTube</a></div></article>
-    <article class="ytCard"><a href="https://www.youtube.com/watch?v=sVn5GiBh4yY" target="_blank" rel="noopener"><img class="ytThumb" src="https://i.ytimg.com/vi/sVn5GiBh4yY/hqdefault.jpg" alt="Chess opening video"></a><div class="ytCardBody"><h3>The Best Beginner/Intermediate Opening</h3><p>An opening-focused chess video from GothamChess.</p><a class="ytLink" href="https://www.youtube.com/watch?v=sVn5GiBh4yY" target="_blank" rel="noopener">Watch on YouTube</a></div></article>
-    <article class="ytCard"><a href="https://www.youtube.com/watch?v=6LAhpNMn3XQ" target="_blank" rel="noopener"><img class="ytThumb" src="https://i.ytimg.com/vi/6LAhpNMn3XQ/hqdefault.jpg" alt="Chess endgame video"></a><div class="ytCardBody"><h3>7 Essential Beginner Endgames</h3><p>King and pawn endings, opposition, passed pawns, and more.</p><a class="ytLink" href="https://www.youtube.com/watch?v=6LAhpNMn3XQ" target="_blank" rel="noopener">Watch on YouTube</a></div></article>
+    <article class="ytCard">
+      <div class="ytVideo"><iframe src="https://www.youtube.com/embed/OCSbzArwB10" title="How To Play Chess: Beginner Guide" loading="lazy" allowfullscreen></iframe></div>
+      <div class="ytCardBody"><h3>How To Play Chess: Beginner Guide</h3><p>Basics, openings, tactics, endgames, and a simple study plan.</p></div>
+    </article>
+    <article class="ytCard">
+      <div class="ytVideo"><iframe src="https://www.youtube.com/embed/sVn5GiBh4yY" title="The Best Beginner/Intermediate Opening" loading="lazy" allowfullscreen></iframe></div>
+      <div class="ytCardBody"><h3>The Best Beginner/Intermediate Opening</h3><p>Opening-focused chess instruction.</p></div>
+    </article>
+    <article class="ytCard">
+      <div class="ytVideo"><iframe src="https://www.youtube.com/embed/6LAhpNMn3XQ" title="7 Essential Beginner Endgames" loading="lazy" allowfullscreen></iframe></div>
+      <div class="ytCardBody"><h3>7 Essential Beginner Endgames</h3><p>King and pawn endings, opposition, passed pawns, and more.</p></div>
+    </article>
   </div>
-  <div class="ytPosts"><h3>GothamChess creator posts</h3><div class="ytPostRow">
-    <a class="ytPost" href="https://www.youtube.com/@GothamChess/community" target="_blank" rel="noopener"><b>GothamChess Community</b><span>Open creator posts →</span></a>
-    <a class="ytPost" href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener"><b>GothamChess Channel</b><span>Open the creator channel →</span></a>
-    <a class="ytPost" href="https://www.youtube.com/@GothamChess/videos" target="_blank" rel="noopener"><b>GothamChess Videos</b><span>Browse chess videos →</span></a>
-  </div><div class="ytMore"><a href="https://www.youtube.com/results?search_query=chess" target="_blank" rel="noopener">Find more chess videos on YouTube →</a></div></div>
+  <div class="ytPosts"><h3>GothamChess</h3><div class="ytPostRow">
+    <a class="ytPost" href="https://www.youtube.com/@GothamChess/community" target="_blank" rel="noopener"><b>Community</b><span>Open creator posts →</span></a>
+    <a class="ytPost" href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener"><b>Channel</b><span>Open GothamChess →</span></a>
+    <a class="ytPost" href="https://www.youtube.com/@GothamChess/videos" target="_blank" rel="noopener"><b>Videos</b><span>Browse videos →</span></a>
+  </div></div>
 </section>
 <aside class="right">
 <div class="card" id="blackCard"><div class="player">Black <span class="small" id="blackLabel">Computer</span></div><div class="clock" id="bc">10:00</div></div>
