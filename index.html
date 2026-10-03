@@ -820,9 +820,9 @@ function trainerOpponent(){
 function learningTap(r,c){
   if(!learningCourse||learningState.turn!=="w")return;
   if(learningSel){
-    const m=learningLegal.find(z=>z.tr===r&&z.tc===c);
+    const m=learningLegal.find(z=>z.t[0]===r&&z.t[1]===c);
     if(m){
-      learningState=apply(learningState,[m.fr,m.fc],[m.tr,m.tc]);learningSel=null;learningLegal=[];learningPly++;
+      learningState=apply(learningState,m.f,m.t);learningSel=null;learningLegal=[];learningPly++;
       renderLearningBoard();renderTrainerMoves();setTimeout(trainerOpponent,280);return;
     }
   }
