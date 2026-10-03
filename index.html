@@ -1932,6 +1932,116 @@ button:focus-visible,a:focus-visible,select:focus-visible{
   *{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
 
+
+/* FINAL SITE POLISH — single source of truth for the visible product */
+:root{--app-blue:#0d3150;--app-blue-2:#164b70;--app-sky:#2f9bea;--app-ink:#17344b;--app-muted:#6e8190;--app-line:#dbe5ec;--app-bg:#f4f7fa}
+html{scroll-behavior:smooth}
+body{min-width:320px}
+button,a{font-family:inherit}
+body.contentPage{background:linear-gradient(180deg,#f5f8fb 0,#eef3f7 100%)!important}
+body.contentPage .layout{width:min(1280px,calc(100% - 28px));max-width:none!important;margin:0 auto!important}
+body.contentPage .layout.coursesPageMode{display:block!important}
+body.contentPage .layout.learnPageMode{display:block!important}
+
+/* Courses: restore the full dashboard and keep the newer reference mockup out of the way. */
+body.contentPage .layout.coursesPageMode .coursesShell,
+body.contentPage .layout.coursesPageMode .courseReferenceDashboard,
+body.contentPage .layout.coursesPageMode .learnShell{display:none!important}
+body.contentPage .layout.coursesPageMode .chesslyCourseDash{
+  display:grid!important;grid-template-columns:300px minmax(0,1fr);gap:20px;
+  width:100%;max-width:1180px;margin:18px auto 0;
+}
+body.contentPage .layout.coursesPageMode .courseProfileCard,
+body.contentPage .layout.coursesPageMode .courseMainCard{min-width:0}
+body.contentPage .layout.coursesPageMode .courseProfileCard{position:sticky;top:14px}
+body.contentPage .layout.coursesPageMode .courseMainCard{overflow:hidden}
+body.contentPage .layout.coursesPageMode .courseWorkspace{min-width:0}
+body.contentPage .layout.coursesPageMode .courseLessonList{overflow:auto}
+body.contentPage .layout.coursesPageMode .ytShell{
+  display:block!important;width:100%;max-width:1180px;margin:20px auto 30px;
+  background:#fff;border:1px solid var(--app-line);border-radius:18px;
+  padding:20px;box-shadow:0 12px 32px rgba(25,55,80,.09);
+}
+body.contentPage .layout.coursesPageMode .ytShell h2{color:var(--app-ink);font-size:22px}
+body.contentPage .layout.coursesPageMode .ytShell>p{color:var(--app-muted);line-height:1.5}
+body.contentPage .layout.coursesPageMode .ytGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+body.contentPage .layout.coursesPageMode .ytCard{
+  overflow:hidden;border:1px solid #dce5ec;border-radius:14px;background:#fff;
+  box-shadow:0 6px 18px rgba(25,55,80,.07);min-width:0;
+}
+body.contentPage .layout.coursesPageMode .ytVideo{aspect-ratio:16/9;min-height:190px;background:#08131d}
+body.contentPage .layout.coursesPageMode .ytEmbed iframe{
+  display:block;width:100%;height:100%;min-height:190px;border:0;
+}
+body.contentPage .layout.coursesPageMode .ytCardBody{padding:12px 14px 14px}
+body.contentPage .layout.coursesPageMode .ytCardBody h3{font-size:13px;line-height:1.25;margin:0;color:#17344b}
+body.contentPage .layout.coursesPageMode .ytCardBody p{font-size:10px;line-height:1.45;color:#71818d;margin:6px 0 10px}
+body.contentPage .layout.coursesPageMode .ytLink{
+  display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:7px;
+  background:#edf6ff;color:#1677b9;font-size:9px;font-weight:800;text-decoration:none;
+}
+body.contentPage .layout.coursesPageMode .resourceGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+body.contentPage .layout.coursesPageMode .resourceCard{min-width:0;min-height:86px}
+body.contentPage .layout.coursesPageMode .courseResource{min-width:0}
+
+/* Learn: make the lesson workspace readable instead of a tiny dashboard. */
+body.contentPage .layout.learnPageMode .coursesShell,
+body.contentPage .layout.learnPageMode .courseReferenceDashboard,
+body.contentPage .layout.learnPageMode .chesslyCourseDash,
+body.contentPage .layout.learnPageMode .ytShell{display:none!important}
+body.contentPage .layout.learnPageMode .learnShell{
+  display:block!important;width:100%;max-width:1180px;margin:18px auto 30px;
+  background:transparent;border:0;padding:0;box-shadow:none;
+}
+body.contentPage .layout.learnPageMode #learningBoard{min-width:0}
+body.contentPage .layout.learnPageMode .learnWorkspace{grid-template-columns:minmax(0,1fr) 300px;gap:18px}
+body.contentPage .layout.learnPageMode .learnBoardCard,
+body.contentPage .layout.learnPageMode .learnLessonRail,
+body.contentPage .layout.learnPageMode .learnFeatureCard{background:#fff;border:1px solid var(--app-line);box-shadow:0 10px 28px rgba(25,55,80,.08)}
+body.contentPage .layout.learnPageMode .learnBoardFrame{width:100%;max-width:680px;margin:0 auto}
+
+/* Home: stable three-column workspace with a larger board. */
+body.focusHome .layout{grid-template-columns:250px minmax(0,1fr) 300px;gap:20px;align-items:start}
+body.focusHome .center{min-width:0}
+body.focusHome .right,.body.focusHome .left{min-width:0}
+body.focusHome.fourPlayerView .multiFrame{width:100%;box-sizing:border-box}
+body.focusHome.fourPlayerView .multiBoard{width:min(100%,720px)!important;max-width:720px!important;margin:0 auto}
+body.focusHome.fourPlayerView .fourBoardWrap{width:100%;box-sizing:border-box}
+body.focusHome .controls{gap:8px}
+body.focusHome .controls button{min-height:38px}
+body.focusHome .panel{border-radius:16px}
+body.focusHome .brand h1{letter-spacing:-.3px}
+
+/* Navigation and cards */
+.pageBtn{transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+.pageBtn:hover{transform:translateY(-1px)}
+.courseProfileCard,.courseMainCard,.ytShell,.resourceSection,.learnHero,.learnWorkspace>*{box-sizing:border-box}
+
+/* Mobile/tablet */
+@media(max-width:1050px){
+  body.focusHome .layout{grid-template-columns:220px minmax(0,1fr);gap:14px}
+  body.focusHome .right{grid-column:1/-1}
+  body.contentPage .layout.coursesPageMode .ytGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.contentPage .layout.coursesPageMode .resourceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  body.focusHome .layout{grid-template-columns:1fr!important}
+  body.focusHome .left,body.focusHome .center,body.focusHome .right{grid-column:auto}
+  body.contentPage .layout{width:min(100% - 18px,1180px)}
+  body.contentPage .layout.coursesPageMode .chesslyCourseDash{grid-template-columns:1fr}
+  body.contentPage .layout.coursesPageMode .courseProfileCard{position:static}
+  body.contentPage .layout.coursesPageMode .ytGrid,
+  body.contentPage .layout.coursesPageMode .resourceGrid{grid-template-columns:1fr}
+  body.contentPage .layout.learnPageMode .learnWorkspace{grid-template-columns:1fr}
+  body.contentPage .layout.learnPageMode .learnLessonRail{order:2}
+}
+@media(max-width:480px){
+  body.contentPage .layout{width:calc(100% - 12px)}
+  body.contentPage .layout.coursesPageMode .ytShell{padding:12px;border-radius:14px}
+  body.contentPage .layout.coursesPageMode .ytVideo,
+  body.contentPage .layout.coursesPageMode .ytEmbed iframe{min-height:180px}
+}
+
 </style>
 <link rel="stylesheet" href="courses-redesign.css"></head>
 <body>
