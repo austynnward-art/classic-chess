@@ -503,17 +503,17 @@ function gradeMove(loss,isBest){
   return "Blunder";
 }
 function coachExplanation(grade,loss,playedUci,bestAlternative){
-  const lossText=loss.toFixed(2);
+  const alt=bestAlternative||"the engine alternative";
   if(grade==="Great move"){
-    return "Coach: Excellent choice. This move matches Stockfish's best idea or stays essentially equal, so you keep the position's strongest plans available.";
+    return "Coach: Excellent choice. "+(bestAlternative&&playedUci===bestAlternative?"You found Stockfish's top move. ":"")+"This move keeps the position's strongest plans available.";
   }
   if(grade==="Good move"){
-    return "Coach: Solid move. You keep most of the position's value and avoid a major problem. A stronger engine move was available, but your choice is still practical.";
+    return "Coach: Solid move. You kept most of the position's value. Stockfish's top alternative was "+alt+", but your move remains practical.";
   }
   if(grade==="Mistake"){
-    return "Coach: This move gives up some advantage. Look for the opponent's new threat before moving again; a better alternative could have kept more of the position under control.";
+    return "Coach: This move gives up some advantage. Stockfish preferred "+alt+". Before moving, check the opponent's new threats and compare candidate moves.";
   }
-  return "Coach: This move loses a significant amount of evaluation. Before playing a move like this, check checks, captures, and threats for both sides, then compare your move with the engine's safer alternative.";
+  return "Coach: This move loses a significant amount of evaluation. Stockfish preferred "+alt+". Before playing, check checks, captures, and threats for both sides.";
 }
 function renderReviewMoveList(){
   const box=$("reviewMoveList");if(!box)return;
@@ -566,7 +566,7 @@ function requestLiveReview(moveJustPlayed,mover,playedUci,baselinePosition){
       const side=s.turn==="w"?"White":"Black";
       if(moveJustPlayed&&reviewBaselineWhite!==null){
         const loss=Math.max(0,mover==="w"?reviewBaselineWhite-afterWhite:afterWhite-reviewBaselineWhite);
-        const grade=gradeMove(loss,!!playedUci&&playedUci===bestEngineMoveBefore);
+        const grade=gradeMove(loss,!!playedUci&&playedUci===reviewBaselineBestMove);
         const detail=coachExplanation(grade,loss,playedUci,bestEngineMoveBefore)+" Estimated engine change: "+loss.toFixed(2)+" pawns.";
         recordMoveGrade(moveJustPlayed,grade,detail);
       }
