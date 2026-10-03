@@ -613,6 +613,9 @@ body.contentPage .learnShell,body.contentPage .coursesShell{margin-top:18px!impo
 .courseSectionNav{position:sticky;top:0;z-index:20;display:flex;gap:8px;padding:8px 10px;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-radius:12px}
 .courseSectionNav span{padding:8px 12px;border-radius:9px;font-weight:800;cursor:pointer}.courseSectionNav span.active{background:#171717;color:#fff}
 @media(max-width:820px){.pageNav{gap:5px}.pageBtn{padding:8px 10px}.legacyNavBtn{display:none}.coachFeatureButtons{grid-template-columns:1fr}.courseSectionNav{overflow-x:auto;white-space:nowrap}}
+
+/* COACH CLARITY — explain the reason without forcing extra scrolling */
+.reviewBest,.reviewLast{border-radius:14px}.reviewWhy{line-height:1.55}.reviewMoveItem{padding:10px 12px;margin-top:7px;border-radius:11px}
 </style>
 <style>
 /* HOME VISUAL SPACING — DEEP PASS */
@@ -1415,7 +1418,7 @@ function requestLiveReview(moveJustPlayed,mover,playedUci,baselinePosition){
       if(mv&&mv.length>=4){
         const u=mv.slice(0,4);
         bestEngineMove=u;bestEngineMoveBefore=u;
-        drawArrow(u.slice(0,2),u.slice(2,4));
+        if(grade==="Mistake"||grade==="Blunder"){drawArrow(u.slice(0,2),u.slice(2,4));}else if($("arrowLayer")){$("arrowLayer").innerHTML="";}
         if($("best-move"))$("best-move").textContent=u;
         if($("reviewBestMove"))$("reviewBestMove").textContent=u;
         if($("reviewWhy"))$("reviewWhy").textContent=side+" to move. Stockfish's top line starts with "+u+".";
@@ -1526,7 +1529,7 @@ function engineStrengthCommands(){
 }
 function engineMoveTime(){
   const elo=+$("elo")?.value||+$("level")?.value||1800;
-  return Math.max(350,Math.min(1800,500+(elo-800)*0.65));
+  return Math.max(500,Math.min(2200,650+(elo-800)*0.75));
 }
 function engineSearch(position,callback){
   if(!engineReady||engineBusy){callback(null);return}
