@@ -40,7 +40,7 @@ jobs:
               window.URL.revokeObjectURL=()=>{};
             }
           });
-          setTimeout(()=>{
+          (async()=>{
             const board=dom.window.document.querySelectorAll("#board .sq").length;
             const course=dom.window.document.querySelectorAll("#courseBoard .courseSq").length;
             if(errors.length) { console.error(errors.join("\n---\n")); process.exit(1); }
@@ -75,7 +75,17 @@ jobs:
             const multi=dom.window.document.querySelectorAll("#multiBoard .multiSq");
             if(multi.length!==196) { console.error("4-player board has",multi.length,"squares"); process.exit(1); }
 
-            console.log("DEEP UI TEST PASSED: boards=64/64, local moves, castling, pages, 4-player board");
+            // Exercise the Learn-page trainer with a real opening move and reply.
+            dom.window.document.querySelector("#learnPage").click();
+            dom.window.document.querySelector('[onclick="startLearningGame(\'e4\')"]').click();
+            const learnSquares=()=>[...dom.window.document.querySelectorAll("#learningBoard .learningSq")];
+            const lidx=a=>{const f=a.charCodeAt(0)-97,r=8-Number(a[1]);return r*8+f;};
+            learnSquares()[lidx("e2")].click(); learnSquares()[lidx("e4")].click();
+            await new Promise(resolve=>setTimeout(resolve,350));
+            const e5Text=learnSquares()[lidx("e5")].textContent;
+            if(!e5Text.includes("♟")) { console.error("Learning trainer reply failed"); process.exit(1); }
+
+            console.log("DEEP UI TEST PASSED: boards=64/64, local moves, castling, pages, 4-player board, learning trainer");
             dom.window.close();
-          },100);
+          })();
           NODE
