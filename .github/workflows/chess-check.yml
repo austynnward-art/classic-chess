@@ -62,6 +62,8 @@ jobs:
             move("f1","e2"); move("f8","e7");
             move("e1","g1");
             const finalSquares=[...dom.window.document.querySelectorAll("#board .sq")];
+            if(!dom.window.document.querySelector("#moves").textContent.includes("O-O")) { console.error("Castling SAN test failed"); process.exit(1); }
+
             const kingG1=finalSquares[6+7*8]?.textContent.includes("♔");
             const rookF1=finalSquares[5+7*8]?.textContent.includes("♖");
             if(!kingG1 || !rookF1) { console.error("Castling UI test failed"); process.exit(1); }
