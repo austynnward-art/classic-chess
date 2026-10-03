@@ -1411,16 +1411,17 @@ function requestLiveReview(moveJustPlayed,mover,playedUci,baselinePosition){
       if(token!==reviewToken||!s)return;
       const afterWhite=positionToAnalyze.turn==="w"?lastEval:-lastEval;
       const side=s.turn==="w"?"White":"Black";
+      let moveGrade=null;
       if(moveJustPlayed&&reviewBaselineWhite!==null){
         const loss=Math.max(0,mover==="w"?reviewBaselineWhite-afterWhite:afterWhite-reviewBaselineWhite);
-        const grade=gradeMove(loss,!!playedUci&&playedUci===reviewBaselineBestMove);
-        const detail=coachExplanation(grade,loss,playedUci,reviewBaselineBestMove||bestEngineMoveBefore)+" Estimated engine change: "+loss.toFixed(2)+" pawns.";
-        recordMoveGrade(moveJustPlayed,grade,detail);
+        moveGrade=gradeMove(loss,!!playedUci&&playedUci===reviewBaselineBestMove);
+        const detail=coachExplanation(moveGrade,loss,playedUci,reviewBaselineBestMove||bestEngineMoveBefore)+" Estimated engine change: "+loss.toFixed(2)+" pawns.";
+        recordMoveGrade(moveJustPlayed,moveGrade,detail);
       }
       if(mv&&mv.length>=4){
         const u=mv.slice(0,4);
         bestEngineMove=u;bestEngineMoveBefore=u;
-        if(grade==="Mistake"||grade==="Blunder"){drawArrow(u.slice(0,2),u.slice(2,4));}else if($("arrowLayer")){$("arrowLayer").innerHTML="";}
+        if(moveGrade==="Mistake"||moveGrade==="Blunder"){drawArrows(drawCoachArrows(u));}else if($("arrowLayer")){$("arrowLayer").innerHTML="";}
         if($("best-move"))$("best-move").textContent=u;
         if($("reviewBestMove"))$("reviewBestMove").textContent=u;
         if($("reviewWhy"))$("reviewWhy").textContent=side+" to move. Stockfish's top line starts with "+u+".";
