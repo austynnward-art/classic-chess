@@ -17,7 +17,8 @@ test('Classic Chess visual walkthrough', async ({ page }) => {
   await page.locator('#fourModeBtn').click();
   await page.waitForTimeout(900);
   await page.locator('#coursesTopPage').click();
-  await expect(page.locator('#courseReferenceDashboard')).toBeVisible();
+  await expect(page.locator('.chesslyCourseDash')).toBeVisible();
+  await expect(page.locator('.ytShell')).toBeVisible();
   await page.waitForTimeout(1400);
   await page.locator('#learnTopPage').click();
   await expect(page.locator('#learningBoard')).toBeVisible();
