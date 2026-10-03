@@ -7,7 +7,7 @@ const port = 4173;
 
 const server = http.createServer((req, res) => {
   const pathname = decodeURIComponent((req.url || '/').split('?')[0]);
-  const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\\/+/, '');
+  const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
   const file = path.resolve(root, relative);
 
   if (!file.startsWith(root) || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
