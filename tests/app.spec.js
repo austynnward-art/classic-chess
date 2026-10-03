@@ -23,8 +23,8 @@ test.describe('Classic Chess rebuilt smoke tests', () => {
     await expect(page.locator('#courses')).toBeVisible();
     await expect(page.locator('#videos iframe')).toHaveCount(6);
     await expect(page.locator('#videos iframe').first()).toHaveAttribute('src', /youtube\.com\/embed\/XtaEnxG2lbg/);
-    await expect(page.locator('a[href="https://chessly.com/"]').first()).toBeVisible();
-    await expect(page.locator('a[href="https://www.gothamchess.com/"]').first()).toBeVisible();
+    await expect(page.locator('#courses a[href="https://chessly.com/"]').first()).toBeVisible();
+    await expect(page.locator('#courses a[href="https://www.gothamchess.com/"]').first()).toBeVisible();
     await expect(page.locator('#videos iframe').first()).toHaveAttribute('src', /youtube\.com\/embed\//);
   });
 
