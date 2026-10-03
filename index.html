@@ -277,7 +277,7 @@ $("undo").onclick=()=>{if(snapshots.length&&!thinking){s=clone(snapshots.pop());
 $("flip").onclick=()=>{flip=!flip;render();};
 $("resign").onclick=()=>{if(!over){over=true;thinking=false;$("status").textContent=(s.turn==="w"?"White":"Black")+" resigned";render();}};
 $("hint").onclick=()=>{if(over||thinking||s.turn===aiSide)return;engineSearch(s,mv=>{if(mv&&mv.length>=4){drawArrow([mv[0],mv[1]],[mv[2],mv[3]]);if($("best-move"))$("best-move").textContent=mv}})};
-function newGame(){s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;clock={w:+$("time").value,b:+$("time").value};render();if(aiSide==="w")computer();}
+function newGame(){if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}if(engine){try{engine.postMessage("stop")}catch(e){}}engineBusy=false;engineQueue=null;s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;clock={w:+$("time").value,b:+$("time").value};render();if(aiSide==="w")computer();}
 $("side").onchange=()=>{aiSide=$("side").value==="w"?"b":"w";$("whiteLabel").textContent=aiSide==="w"?"Computer":"You";$("blackLabel").textContent=aiSide==="b"?"Computer":"You";newGame();};
 $("time").onchange=()=>{newGame()};
 function formatTime(n){n=Math.max(0,Math.floor(n));return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
