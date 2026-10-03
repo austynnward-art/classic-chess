@@ -74,6 +74,15 @@ test.describe('Rebuild app smoke tests', () => {
     }
   });
 
+  test('drills require the learner to find the engine solution', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('[data-drill-filter="easy"]').click();
+    await page.locator('.drill').first().click();
+    await expect(page.locator('#drillStatus')).toBeVisible();
+    await expect(page.locator('#drillMessage')).toContainText('Stockfish');
+    await expect(page.locator('#coach')).toContainText('Drill #');
+  });
+
   test('game review opens and contains coaching links', async ({ page }) => {
     await page.goto('/');
     await page.locator('#endReview').click();
