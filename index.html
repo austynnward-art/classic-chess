@@ -809,7 +809,7 @@ function multiPseudo(st,r,c){
         if(multiPlayable(rr2,cc2)&&!st.board[rr2][cc2])out.push([rr2,cc2]);
       }
     }
-    const caps=d[0]!==0?[[d[0],-1],[d[0],1]],[[-1,d[1]],[1,d[1]]];
+    const caps=d[0]!==0?[[d[0],-1],[d[0],1]]:[[-1,d[1]],[1,d[1]]];
     for(const q of caps){
       const cr=r+q[0],cc2=c+q[1],target=multiPlayable(cr,cc2)?st.board[cr][cc2]:null;
       if(target&&target.c!==own)out.push([cr,cc2]);
