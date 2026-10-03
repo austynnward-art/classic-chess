@@ -7,8 +7,8 @@ test.describe('Classic Chess smoke tests', () => {
 
     await page.goto('/');
     await expect(page.locator('body')).toBeVisible();
-    await expect(page.locator('text=Courses')).toBeVisible();
-    await expect(page.locator('text=Learn')).toBeVisible();
+    await expect(page.locator('#coursesTopPage')).toBeVisible();
+    await expect(page.locator('#learnTopPage')).toBeVisible();
 
     expect(errors).toEqual([]);
   });
@@ -18,21 +18,24 @@ test.describe('Classic Chess smoke tests', () => {
     const fourPlayer = page.locator('#fourModeBtn');
     await expect(fourPlayer).toBeVisible();
     await fourPlayer.click();
-    await expect(page.locator('.fourPlayerView')).toBeVisible();
+    await expect(page.locator('body.fourPlayerView')).toBeVisible();
+    await expect(page.locator('#multiBoard .multiSq')).toHaveCount(196);
   });
 
   test('two-player controls are reachable', async ({ page }) => {
     await page.goto('/');
     await page.locator('#twoModeBtn').click();
-    await expect(page.locator('#gameMode')).toBeVisible();
+    await expect(page.locator('body.focusHome')).toBeVisible();
+    await expect(page.locator('#fourModeBtn')).toBeVisible();
+    await expect(page.locator('#twoModeBtn')).toBeVisible();
   });
 
   test('courses and learn navigation render', async ({ page }) => {
     await page.goto('/');
-    await page.getByText('Courses', { exact: true }).click();
+    await page.locator('#coursesTopPage').click();
     await expect(page.locator('#courseReferenceDashboard')).toBeVisible();
 
-    await page.getByText('Learn', { exact: true }).click();
+    await page.locator('#learnTopPage').click();
     await expect(page.locator('#learningBoard')).toBeVisible();
   });
 });
