@@ -63,7 +63,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .controls{display:grid;grid-template-columns:1.25fr 1.15fr 1.15fr 1.15fr 1.15fr;gap:12px;margin-top:13px}
 .btn{border:1px solid #c3aa7c;background:linear-gradient(#fffaf0,#f0e0c0);border-radius:7px;padding:13px 7px;cursor:pointer;font:16px Georgia;color:#27313d;box-shadow:0 2px 4px rgba(30,40,55,.08)}.btn:hover{background:#ead9b7}.primary{background:#2563eb;color:#fff;border-color:#2563eb}
 .options{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0 auto;justify-content:flex-end;border-left:1px solid #bda477;padding-left:14px}
-.select{padding:8px 25px 8px 9px;border:1px solid #bca887;border-radius:5px;background:#fffaf0;color:#27313d;font:14px Inter,Arial,sans-serif}
+.select{padding:8px 25px 8px 9px;border:1px solid #bca887;border-radius:5px;background:#fffaf0;color:#27313d;font:14px Inter,Arial,sans-serif}.playerModes{display:flex;gap:7px;flex-wrap:wrap;align-items:center;width:100%;justify-content:center;margin-top:9px}.modeBtn{border:1px solid #c3aa7c;background:linear-gradient(#fffaf0,#f0e0c0);border-radius:8px;padding:9px 12px;cursor:pointer;font:700 13px Inter,Arial,sans-serif;color:#27313d}.modeBtn.active{background:#2563eb;color:#fff;border-color:#2563eb}.modeBtn:hover{filter:brightness(1.03)}
 .status{margin-top:10px;padding:11px;background:#ffffff;border:1px solid #d9dee5;border-radius:7px;display:flex;justify-content:space-between;font-size:15px}
 .moves{font:13px monospace;max-height:315px;overflow:auto;margin-top:8px}.move{display:grid;grid-template-columns:30px 1fr 1fr;padding:7px 0;border-bottom:1px solid #e1d3b8}
 @media(max-width:950px){.layout{grid-template-columns:1fr}.center{order:1}.learnShell,.coursesShell{grid-column:auto;order:2}.left{order:3}.right{order:4}.controls{grid-template-columns:repeat(3,1fr)}.options{justify-content:flex-start;border-left:0;padding-left:0}}
@@ -127,6 +127,12 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 <option value="local3">3 Player · Local</option>
 <option value="local4">4 Player · Local</option>
 </select></label>
+<div class="playerModes" aria-label="Choose number of players">
+  <button class="modeBtn active" type="button" data-mode="computer">2 Player</button>
+  <button class="modeBtn" type="button" data-mode="local2">2 Local</button>
+  <button class="modeBtn" type="button" data-mode="local3">3 Player</button>
+  <button class="modeBtn" type="button" data-mode="local4">4 Player</button>
+</div>
 <label>AI Strength: <select class="select" id="level">
 <option value="800">800</option><option value="1000">1000</option><option value="1200">1200</option>
 <option value="1400">1400</option><option value="1600">1600</option><option value="1800" selected>1800</option>
@@ -277,6 +283,15 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
     </div>
   </div>
 
+  <div class="resourceSection">
+    <div class="resourceSectionHead"><h3>📖 Built-in lesson fallback</h3><span>No external video needed</span></div>
+    <div class="resourceGrid">
+      <div class="resourceCard"><b>Beginner lesson</b><span>Use the interactive board to practice legal moves, opening principles, tactics and basic endings without leaving the app.</span></div>
+      <div class="resourceCard"><b>Intermediate lesson</b><span>Use the London, Colle, KIA, Utah and US Chess drills already built into the app when a video is unavailable.</span></div>
+      <div class="resourceCard"><b>Video note</b><span>Official video embeds and direct links are included. Network or school filters can still block external video services; this app does not bypass those restrictions.</span></div>
+    </div>
+  </div>
+
   <div class="resourceNote"><b>Important:</b> Chessly’s paid lessons are not copied here. The local boards use original practice lines, while the official Chessly, Utah Chess and US Chess links open their own material.</div>
 </section>
 <section class="ytShell" id="youtubeChess">
@@ -285,15 +300,15 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   <div class="ytGrid">
     <article class="ytCard">
       <div class="ytVideo"><iframe src="https://www.youtube.com/embed/OCSbzArwB10" title="How To Play Chess: The Ultimate Beginner Guide" loading="lazy" allowfullscreen></iframe></div>
-      <div class="ytCardBody"><h3>Beginner · Complete Chess Guide</h3><p>Rules, openings, tactics, endgames and a study plan from GothamChess.</p></div>
+      <div class="ytCardBody"><h3>Beginner · Complete Chess Guide</h3><p>Rules, openings, tactics, endgames and a study plan from GothamChess.</p><a class="ytLink" href="https://www.youtube.com/watch?v=OCSbzArwB10" target="_blank" rel="noopener">Watch on YouTube →</a></div>
     </article>
     <article class="ytCard">
       <div class="ytVideo"><iframe src="https://www.youtube.com/embed/6LAhpNMn3XQ" title="7 Essential Beginner Endgames" loading="lazy" allowfullscreen></iframe></div>
-      <div class="ytCardBody"><h3>Beginner · Endgames</h3><p>Core king-and-pawn and practical endgame ideas.</p></div>
+      <div class="ytCardBody"><h3>Beginner · Endgames</h3><p>Core king-and-pawn and practical endgame ideas.</p><a class="ytLink" href="https://www.youtube.com/watch?v=6LAhpNMn3XQ" target="_blank" rel="noopener">Watch on YouTube →</a></div>
     </article>
     <article class="ytCard">
       <div class="ytVideo"><iframe src="https://www.youtube.com/embed/sVn5GiBh4yY" title="The Best Beginner Intermediate Opening" loading="lazy" allowfullscreen></iframe></div>
-      <div class="ytCardBody"><h3>Beginner → Intermediate · Openings</h3><p>Opening-focused video study for building a practical repertoire.</p></div>
+      <div class="ytCardBody"><h3>Beginner → Intermediate · Openings</h3><p>Opening-focused video study for building a practical repertoire.</p><a class="ytLink" href="https://www.youtube.com/watch?v=sVn5GiBh4yY" target="_blank" rel="noopener">Watch on YouTube →</a></div>
     </article>
     <article class="ytCard">
       <div class="ytVideo"><iframe src="https://www.youtube.com/embed/ECMMct_jnEM" title="How to WIN with the London System" loading="lazy" allowfullscreen></iframe></div>
@@ -924,6 +939,7 @@ function stopMultiGame(){
 }
 function syncGameMode(){
   gameMode=$("gameMode").value;
+  document.querySelectorAll(".modeBtn").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-mode")===gameMode);});
   const multi=gameMode==="local3"||gameMode==="local4";
   if(multi){
     if(gameMode==="local4")startMultiGame(4);else startMultiGame(3);
@@ -957,7 +973,18 @@ $("side").onchange=function(){
   $("blackLabel").textContent=aiSide==="b"?"Computer":"You";
   newGame();
 };
-$("gameMode").onchange=syncGameMode;
+$("gameMode").onchange=function(){
+  document.querySelectorAll(".modeBtn").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-mode")===$("gameMode").value);});
+  syncGameMode();
+};
+document.querySelectorAll(".modeBtn").forEach(function(btn){
+  btn.onclick=function(){
+    const mode=this.getAttribute("data-mode");
+    $("gameMode").value=mode;
+    document.querySelectorAll(".modeBtn").forEach(function(b){b.classList.toggle("active",b===btn);});
+    syncGameMode();
+  };
+});
 $("multiNew").onclick=function(){startMultiGame(gameMode==="local4"?4:3);};
 $("multiReset").onclick=function(){startMultiGame(gameMode==="local4"?4:3);};
 $("time").onchange=()=>{newGame()};
