@@ -150,7 +150,7 @@ function drawArrow(from,to){const svg=$("arrowLayer");if(!svg)return;const f=F.i
 function clearArrow(){bestEngineMove=null;$("arrowLayer").innerHTML="";$("best-move").textContent="—";$("evalValue").textContent="—"}
 function analyzeWithEngine(){if(!engineReady||engineBusy||over)return;engineBusy=true;analysisToken++;clearArrow();const elo=+$("elo")?.value||+$("level")?.value||1800;if($("engineStatus"))$("engineStatus").textContent="Analyzing…";engine.postMessage("stop");engine.postMessage("setoption name UCI_LimitStrength value true");engine.postMessage("setoption name UCI_Elo value "+elo);engine.postMessage("ucinewgame");engine.postMessage("position fen "+fenFromState(s));engine.postMessage("go depth "+Math.max(10,Math.min(24,Math.round(10+(elo-800)/220))))}
 if($("analyze"))$("analyze").onclick=analyzeWithEngine;if($("clearArrow"))$("clearArrow").onclick=clearArrow;if($("elo")){$("elo").oninput=()=>{$("eloValue").textContent=$("elo").value};if($("eloValue"))$("eloValue").textContent=$("elo").value}makeEngine();
-\nlet evalHistory=[];
+let evalHistory=[];
 function recordEval(v){evalHistory.push(Number(v)||0);$("movesAnalyzed").textContent=evalHistory.length;drawEvalGraph();updateAccuracy()}
 function drawEvalGraph(){const cv=$("evalGraph"),ctx=cv?.getContext("2d");if(!ctx)return;const w=cv.clientWidth*devicePixelRatio,h=cv.clientHeight*devicePixelRatio;cv.width=w;cv.height=h;ctx.clearRect(0,0,w,h);if(!evalHistory.length)return;const mid=h/2,scale=Math.max(18,Math.min(h/2-8,h/8));ctx.beginPath();evalHistory.forEach((v,i)=>{const x=8+(w-16)*(i/Math.max(1,evalHistory.length-1));const y=mid-Math.max(-4,Math.min(4,v))*scale/4;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.strokeStyle="#70451f";ctx.lineWidth=3*devicePixelRatio;ctx.stroke();ctx.strokeStyle="#c7b596";ctx.lineWidth=1*devicePixelRatio;ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(w,mid);ctx.stroke()}
 const openingBook={
@@ -171,7 +171,7 @@ const openingBook={
 "e2e4 e7e5 g1f3 b8c6":"Three Knights Game",
 "e2e4 e7e5 g1f3 b8c6 f1b5":"Ruy Lopez"
 };
-function currentMoveUcis(){return history.map((m,i)=>{const p=history[i];return p}).join(" ")}
+function currentMoveUcis(){return ""}
 function updateOpening(){const key=history.length?history.slice(0,10).map((m,i)=>{return ""}).join(" "):"";let found="Starting position";const text=history.join("|");if(history[0]==="e4")found="King's Pawn Game";if(history[0]==="e4"&&history[1]==="c5")found="Sicilian Defense";if(history[0]==="e4"&&history[1]==="e5"&&history[2]==="Nf3")found="King's Knight Opening";if(history[0]==="e4"&&history[1]==="e5"&&history[2]==="Nf3"&&history[3]==="Nc6"&&history[4]==="Bb5")found="Ruy Lopez";if(history[0]==="d4"&&history[1]==="d5")found="Queen's Pawn Game";if(history[0]==="d4"&&history[1]==="Nf6")found="Indian Game";if(history[0]==="c4")found="English Opening";$("openingName").textContent=found}
 function updateAccuracy(){if(!evalHistory.length){$("accuracy").textContent="—";return}let total=0;for(let i=1;i<evalHistory.length;i++){const loss=Math.max(0,Math.abs(evalHistory[i-1]-evalHistory[i]));total+=Math.min(100,loss*18)}$("accuracy").textContent=Math.max(0,Math.round(100-total/Math.max(1,evalHistory.length-1)))+"%"}
 function render(){
@@ -191,10 +191,53 @@ function score(x,c){let sc=0;for(let r=0;r<8;r++)for(let q=0;q<8;q++){let p=x.b[
 function eloDepth(){const e=+$("elo")?.value||+$("level")?.value||1800;return Math.max(10,Math.min(24,Math.round(10+(e-800)/220)))}
 let engineQueue=null;
 function engineSearch(position,callback){if(!engineReady||engineBusy){callback(null);return}engineBusy=true;engineQueue=callback;engine.postMessage("stop");engine.postMessage("setoption name UCI_LimitStrength value true");engine.postMessage("setoption name UCI_Elo value "+(+$("elo")?.value||+$("level")?.value||1800));engine.postMessage("ucinewgame");engine.postMessage("position fen "+fenFromState(position));engine.postMessage("go depth "+eloDepth())}
-function handleEngine(msg){if(typeof msg!=="string")return;if(msg.includes("uciok")){engineReady=true;if($("engineStatus"))$("engineStatus").textContent="Stockfish ready";return}const sm=msg.match(/\\bscore\\s+(cp|mate)\\s+(-?\\d+)/);if(sm){let n=+sm[2];$("evalValue").textContent=sm[1]==="mate"?"Mate "+(n>0?"+":"")+n:(n/100).toFixed(2);lastEval=(sm[1]==="mate"?(n>0?100:-100):n/100);return}if(msg.startsWith("bestmove")){engineBusy=false;const cb=engineQueue;engineQueue=null;const mv=msg.split(/\\s+/)[1];if(cb)cb(mv&&mv!=="(none)"?mv:null)}}
+function handleEngine(msg){
+  if(typeof msg!=="string") return;
+  if(msg.includes("uciok")){
+    engineReady=true;
+    if($("engineStatus")) $("engineStatus").textContent="Stockfish ready";
+    return;
+  }
+  const sm=msg.match(/\\bscore\\s+(cp|mate)\\s+(-?\\d+)/);
+  if(sm){
+    let n=+sm[2];
+    lastEval=sm[1]==="mate"?(n>0?100:-100):n/100;
+    if($("evalValue")) $("evalValue").textContent=sm[1]==="mate"?("Mate "+(n>0?"+":"")+n):(n/100).toFixed(2);
+    return;
+  }
+  if(msg.startsWith("bestmove")){
+    engineBusy=false;
+    const cb=engineQueue; engineQueue=null;
+    const mv=msg.split(/\\s+/)[1];
+    if(cb) cb(mv&&mv!=="(none)"?mv:null);
+  }
+}
 let lastEval=0;
-function computer(){thinking=true;render();if(!engineReady){if($("engineStatus"))$("engineStatus").textContent="Waiting for Stockfish…";setTimeout(computer,500);return}const before=clone(s);engineSearch(s,mv=>{if(over){thinking=false;return}if(mv&&mv.length>=4){const m={f:[8-+mv[1],F.indexOf(mv[0])],t:[8-+mv[3],F.indexOf(mv[2])]};if(legalFrom(s,m.f[0],m.f[1]).some(t=>t[0]===m.t[0]&&t[1]===m.t[1])){s=apply(s,m.f,m.t);history.push(san(before,m));recordEval(lastEval);updateOpening()}}thinking=false;render();finish()})})();
-\n
+function computer(){
+  if(over) return;
+  thinking=true; render();
+  if(!engineReady){
+    if($("result")) $("result").textContent="Starting Stockfish…";
+    setTimeout(()=>{thinking=false; if(!over) computer()},700);
+    return;
+  }
+  const before=clone(s);
+  engineSearch(s,mv=>{
+    if(over){thinking=false;render();return}
+    if(mv&&mv.length>=4){
+      const m={f:[8-+mv[1],F.indexOf(mv[0])],t:[8-+mv[3],F.indexOf(mv[2])]};
+      if(legalFrom(s,m.f[0],m.f[1]).some(t=>t[0]===m.t[0]&&t[1]===m.t[1])){
+        snapshots.push(clone(s));
+        s=apply(s,m.f,m.t);
+        history.push(san(before,m));
+        recordEval(lastEval);
+        updateOpening();
+      }
+    }
+    thinking=false; render(); finish();
+  });
+}
+
 $("new").onclick=()=>newGame();
 $("undo").onclick=()=>{if(snapshots.length&&!thinking){s=clone(snapshots.pop());history.pop();sel=null;legal=[];over=false;render();}};
 $("flip").onclick=()=>{flip=!flip;render();};
@@ -202,9 +245,33 @@ $("resign").onclick=()=>{if(!over){over=true;thinking=false;$("status").textCont
 $("hint").onclick=()=>{if(over||thinking||s.turn===aiSide)return;engineSearch(s,mv=>{if(mv&&mv.length>=4){drawArrow([mv[0],mv[1]],[mv[2],mv[3]]);if($("best-move"))$("best-move").textContent=mv}})};
 function newGame(){s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;clock={w:+$("time").value,b:+$("time").value};render();if(aiSide==="w")computer();}
 $("side").onchange=()=>{aiSide=$("side").value==="w"?"b":"w";$("whiteLabel").textContent=aiSide==="w"?"Computer":"You";$("blackLabel").textContent=aiSide==="b"?"Computer":"You";newGame();};
-$("time").onchange=()=>{clock={w:+$("time").value,b:+$("time").value};$("wc").textContent=formatTime(clock.w);$("bc").textContent=formatTime(clock.b);};
+$("time").onchange=()=>{newGame()};
 function formatTime(n){n=Math.max(0,Math.floor(n));return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
-function finish(){const moves=all(s,s.turn);if(!moves.length){over=true;$("status").textContent=check(s,s.turn)?((s.turn==="w"?"White":"Black")+" is checkmated"): "Draw — no legal moves";}}
-const lessons=[{title:"Opening basics",body:"Control the center with pawns and pieces, develop your knights and bishops, and get your king safe. Avoid moving the same piece repeatedly without a reason.",tryit:"At the start, consider 1. e4 or 1. d4. Both help contest the center."},{title:"Look for checks, captures, and threats",body:"Before choosing a move, scan for forcing moves: checks, captures, and direct threats. Then ask what your opponent can do in reply.",tryit:"Pause before every move and name one candidate check, capture, or threat for each side."},{title:"Develop your pieces",body:"Bring knights and bishops into the game so they influence useful squares. Try not to send your queen out early if your opponent can gain time by attacking it.",tryit:"In a new game, aim to develop both knights and bishops before making several queen moves."},{title:"Protect your king",body:"Castling usually helps move your king to safety and connects your rooks. Watch for open lines and avoid weakening the pawns in front of your king without a clear reason.",tryit:"Look at the board and ask whether castling is legal and whether it improves king safety."},{title:"Rook endgames",body:"In rook endings, activity matters. An active rook can give checks, attack pawns, and support your own passed pawn. Keep your king involved when it is safe.",tryit:"When few pieces remain, compare which rook has more useful squares and whether your king can approach the center."}];document.querySelectorAll(".lessonPick").forEach(b=>b.addEventListener("click",()=>{const l=lessons[+b.dataset.lesson];if($("lessonPanel"))$("lessonPanel").innerHTML="<h3>"+l.title+"</h3><p>"+l.body+"</p><p><b>Try it:</b> "+l.tryit+"</p>"}));\n</script>
+function finish(){
+  const moves=all(s,s.turn);
+  if(!moves.length){
+    over=true;
+    thinking=false;
+    $("status").textContent=check(s,s.turn)?((s.turn==="w"?"White":"Black")+" is checkmated"):"Draw — no legal moves";
+  }
+}
+const lessons=[{title:"Opening basics",body:"Control the center with pawns and pieces, develop your knights and bishops, and get your king safe. Avoid moving the same piece repeatedly without a reason.",tryit:"At the start, consider 1. e4 or 1. d4. Both help contest the center."},{title:"Look for checks, captures, and threats",body:"Before choosing a move, scan for forcing moves: checks, captures, and direct threats. Then ask what your opponent can do in reply.",tryit:"Pause before every move and name one candidate check, capture, or threat for each side."},{title:"Develop your pieces",body:"Bring knights and bishops into the game so they influence useful squares. Try not to send your queen out early if your opponent can gain time by attacking it.",tryit:"In a new game, aim to develop both knights and bishops before making several queen moves."},{title:"Protect your king",body:"Castling usually helps move your king to safety and connects your rooks. Watch for open lines and avoid weakening the pawns in front of your king without a clear reason.",tryit:"Look at the board and ask whether castling is legal and whether it improves king safety."},{title:"Rook endgames",body:"In rook endings, activity matters. An active rook can give checks, attack pawns, and support your own passed pawn. Keep your king involved when it is safe.",tryit:"When few pieces remain, compare which rook has more useful squares and whether your king can approach the center."}];function updateCourse(){
+  const course=$("learnCourse").value;
+  const info={
+    "Opening Fundamentals":["Opening Fundamentals","Learn how to develop pieces, control the center, castle safely, and build a plan."],
+    "London System Ideas":["London System Ideas","Learn the basic setup, useful piece placement, and common plans without memorizing every move."],
+    "Tactical Patterns":["Tactical Patterns","Practice forks, pins, skewers, discovered attacks, and simple combinations."],
+    "Checkmate Patterns":["Checkmate Patterns","Practice recognizing mating nets and coordinating your pieces near the king."],
+    "Endgame Basics":["Endgame Basics","Learn king activity, passed pawns, opposition, and basic rook-endgame ideas."]
+  }[course];
+  $("courseTitle").textContent=info[0]; $("courseDescription").textContent=info[1];
+}
+$("learnCourse").onchange=updateCourse;
+$("learnWhite").onclick=()=>{ $("learnWhite").classList.add("active"); $("learnBlack").classList.remove("active"); };
+$("learnBlack").onclick=()=>{ $("learnBlack").classList.add("active"); $("learnWhite").classList.remove("active"); };
+$("courseToggle").onclick=()=>$("courseToggle").classList.toggle("on");
+$("startCourse").onclick=()=>{updateCourse();$("coursePlayStatus").textContent="Course started — use the board above to practice the ideas."; $("courseBoard").scrollIntoView({behavior:"smooth",block:"center"});};
+updateCourse();
+</script>
 </body>
 </html>
