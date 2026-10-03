@@ -942,7 +942,7 @@ function showPage(which){
   }
   document.title=learn?"Classic Chess — Learn Chess":courses?"Classic Chess — Chessly Courses":
     bot?"Classic Chess — Play Bot":three?"Classic Chess — Three Player":four?"Classic Chess — Four Player":"Classic Chess";
-  if(learn||courses){window.scrollTo({top:0,behavior:"smooth"});return;}
+  if(learn||courses){layout.classList.toggle("learnPageMode",learn);layout.classList.toggle("coursesPageMode",courses);try{if(typeof window.scrollTo==="function")window.scrollTo({top:0,behavior:"smooth"});}catch(e){}return;}
   if(gameMode!==(bot?"computer":three?"local3":four?"local4":"local2")){
     gameMode=bot?"computer":three?"local3":four?"local4":"local2";
     $("gameMode").value=gameMode;
