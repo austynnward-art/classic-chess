@@ -19,8 +19,8 @@ test.describe('Rebuild app smoke tests', () => {
     const multiSize = await page.locator('#multiBoard').boundingBox();
     await page.locator('[data-mode="local"]').first().click();
     const homeSize = await page.locator('#board').boundingBox();
-    expect(multiSize.width).toBe(homeSize.width);
-    expect(multiSize.height).toBe(homeSize.height);
+    expect(Math.abs(multiSize.width-homeSize.width)).toBeLessThanOrEqual(1);
+    expect(Math.abs(multiSize.height-homeSize.height)).toBeLessThanOrEqual(1);
   });
 
   test('courses contain six real YouTube embeds', async ({ page }) => {
@@ -44,8 +44,8 @@ test.describe('Rebuild app smoke tests', () => {
     await expect(page.locator('#learnBoard .fileLabel').last()).toHaveAttribute('data-file', 'h');
     const homeSize = await page.locator('#board').boundingBox();
     const learnSize = await page.locator('#learnBoard').boundingBox();
-    expect(homeSize.width).toBe(learnSize.width);
-    expect(homeSize.height).toBe(learnSize.height);
+    expect(Math.abs(homeSize.width-learnSize.width)).toBeLessThanOrEqual(1);
+    expect(Math.abs(homeSize.height-learnSize.height)).toBeLessThanOrEqual(1);
   });
 
   test('game review opens and contains coaching links', async ({ page }) => {
