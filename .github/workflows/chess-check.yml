@@ -63,21 +63,27 @@ jobs:
             // Exercise the actual UI in local two-player mode.
             const local2=dom.window.document.querySelector('[data-mode="local2"]');
             local2.click();
-            const move=(from,to)=>{
+            const move=async(from,to,expectedMoveCount)=>{
               const file=c=>c.charCodeAt(0)-97;
               const idx=algebraic=>{const f=file(algebraic[0]),r=8-Number(algebraic[1]);return r*8+f;};
               const squares=()=>[...dom.window.document.querySelectorAll("#board .sq")];
               squares()[idx(from)].click(); squares()[idx(to)].click();
+              for(let i=0;i<30;i++){
+                await new Promise(resolve=>setTimeout(resolve,20));
+                const rows=dom.window.document.querySelectorAll("#moves .move");
+                if(rows.length>=expectedMoveCount) return;
+              }
+              console.error("Move did not complete: "+from+"-"+to);
+              process.exit(1);
             };
-            move("e2","e4");
-            await new Promise(resolve=>setTimeout(resolve,60));
+            await move("e2","e4",1);
             const liveReview=dom.window.document.querySelector("#reviewMoveList")?.textContent||"";
             if(!/Great move|Good move|Mistake|Blunder/.test(liveReview)) { console.error("Live move review grade did not appear"); process.exit(1); }
             if(!dom.window.document.querySelector("#botSpeech")?.textContent.includes("move")) { console.error("Bot feedback text did not update"); process.exit(1); }
-            move("e7","e5");
-            move("g1","f3"); move("g8","f6");
-            move("f1","e2"); move("f8","e7");
-            move("e1","g1");
+            await move("e7","e5",2);
+            await move("g1","f3",3); await move("g8","f6",4);
+            await move("f1","e2",5); await move("f8","e7",6);
+            await move("e1","g1",7);
             dom.window.document.querySelector("#analyze").click();
             await new Promise(resolve=>setTimeout(resolve,40));
             if(dom.window.document.querySelector("#engineStatus")?.textContent!=="Stockfish ready") { console.error("Analyze completion callback failed"); process.exit(1); }
