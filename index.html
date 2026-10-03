@@ -22,7 +22,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .frame{width:100%;aspect-ratio:1;background:#ffffff;border:1px solid #d9dee5;border-radius:14px;padding:10px;box-shadow:0 8px 24px rgba(30,40,55,.12)}
 .board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:100%;height:100%;aspect-ratio:1;border:0;border-radius:8px;overflow:hidden}
 .sq{position:relative;width:100%;height:100%;min-width:0;min-height:0;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-family:"Times New Roman",serif;font-size:clamp(40px,8vw,82px);line-height:1}
-.light{background:#e7ebf0}.dark{background:#9aa6b5}.sq:hover{filter:brightness(1.07)}
+.light{background:#f0d9b5}.dark{background:#b58863}.sq:hover{filter:brightness(1.07)}
 .selected{outline:4px solid #3b82f6;outline-offset:-4px}.last{background-image:linear-gradient(#e5bd5366,#e5bd5366)}
 .legal:after{content:"";position:absolute;width:16%;height:16%;border-radius:50%;background:#5b4635aa}
 .capture:after{content:"";position:absolute;inset:6%;border:4px solid #d69b52aa;border-radius:50%}
@@ -72,7 +72,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .learnShell{grid-column:auto;margin-top:18px;background:#fbfaf9;border:1px solid #e7e1dc;border-radius:16px;padding:22px;box-shadow:0 8px 28px rgba(35,30,25,.08);font-family:Inter,Arial,sans-serif;color:#171717}
 .learnHeader{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}.learnHeader h2{margin:0;font:700 26px Inter,Arial,sans-serif}.learnHeader p{margin:5px 0 0;color:#777;font:14px Inter,Arial,sans-serif}.learnBadge{background:#f1ece8;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700}
 .courseGrid{display:grid;grid-template-columns:390px 1fr;gap:24px}.courseHero{background:#f2eee9;border-radius:14px;min-height:300px;overflow:hidden;position:relative;padding:18px;display:flex;flex-direction:column;justify-content:flex-end}.courseArt{position:absolute;inset:0;background:radial-gradient(circle at 50% 32%,#fff 0 8%,transparent 9%),linear-gradient(160deg,#e9d8c7,#f7f3ef 48%,#ddd2c8);display:grid;place-items:center}.courseArt:after{content:"♞";font-size:120px;color:#272321;filter:drop-shadow(0 8px 7px #0003)}.courseHeroText{position:relative;background:linear-gradient(transparent,#f2eee9 20%);margin:0 -18px -18px;padding:55px 18px 18px}.courseHeroText h3{margin:0 0 6px;font-size:21px}.courseHeroText p{margin:0;color:#68625d;line-height:1.4;font-size:13px}.courseForm{display:grid;gap:13px}.courseField label{display:block;font-size:14px;font-weight:700;margin:0 0 7px}.courseSelect{width:100%;height:48px;border:1px solid #e3ded9;border-radius:10px;background:#fff;padding:0 14px;font:600 15px Inter,Arial,sans-serif;color:#222}.colorChoice{display:grid;grid-template-columns:1fr 1fr;gap:10px}.colorBtn{height:42px;border:1px solid #e3ded9;background:#fff;border-radius:9px;font-weight:700;cursor:pointer}.colorBtn.active{background:#e8dfdc;border-color:#ddd1cc}.toggleRow{display:flex;align-items:center;justify-content:space-between;gap:12px}.toggle{width:42px;height:24px;border-radius:99px;background:#ddd;position:relative;cursor:pointer;border:0}.toggle:after{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;box-shadow:0 1px 3px #0003}.toggle.on{background:#6b4b3a}.toggle.on:after{left:21px}.startCourse{height:48px;border:0;border-radius:10px;background:#222;color:#fff;font:700 15px Inter,Arial,sans-serif;cursor:pointer}.startCourse:hover{background:#3a3531}.courseNote{font-size:12px;color:#8a817a;margin:0}.chapterBox{padding:11px 13px;background:#faf8f6;border:1px solid #e7e1dc;border-radius:10px;color:#5e5853;font-size:13px}.learnProgress{display:flex;gap:5px;margin-top:16px}.learnProgress span{height:5px;flex:1;border-radius:5px;background:#e3ddd8}.learnProgress span.done{background:#765542}
-.courseMiniFrame{width:min(100%,430px);margin:auto;background:#27313d;border:8px solid #27313d;border-radius:12px;padding:0;box-shadow:0 6px 16px #0002}.courseBoard{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);aspect-ratio:1;width:100%;overflow:hidden}.courseSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(25px,6vw,48px);line-height:1}.courseSq.light{background:#e7ebf0}.courseSq.dark{background:#9aa6b5}.courseSq.selected{outline:4px solid #765542;outline-offset:-4px}.courseSq.legal:after{content:"";width:13%;height:13%;border-radius:50%;background:#3f2a1d88;position:absolute}.courseSq.capture:after{content:"";position:absolute;inset:7%;border:3px solid #3f2a1d88;border-radius:50%}.coursePiece{filter:drop-shadow(0 2px 2px #0003)}.coursePlayStatus{font-size:12px;color:#777;margin-top:8px}.chapterNav{display:grid;grid-template-columns:1fr 1fr;gap:8px}.chapterBtn{height:40px;border:1px solid #e3ded9;background:#fff;border-radius:9px;font-weight:700;cursor:pointer}.chapterBtn:hover{background:#f5f1ee}.lessonCard{padding:13px;background:#faf8f6;border:1px solid #e7e1dc;border-radius:10px;font-size:13px;line-height:1.45}.lessonCard p{margin:7px 0;color:#5e5853}.lessonTry{margin-top:9px;padding:9px;background:#fff;border-radius:8px;color:#765542;font-weight:600}.coursePlayStatus{min-height:18px}@media(max-width:800px){.courseGrid{grid-template-columns:1fr}.courseHero{min-height:260px}}
+.courseMiniFrame{width:min(100%,430px);margin:auto;background:#27313d;border:8px solid #27313d;border-radius:12px;padding:0;box-shadow:0 6px 16px #0002}.courseBoard{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);aspect-ratio:1;width:100%;overflow:hidden}.courseSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(25px,6vw,48px);line-height:1}.courseSq.light{background:#f0d9b5}.courseSq.dark{background:#b58863}.courseSq.selected{outline:4px solid #765542;outline-offset:-4px}.courseSq.legal:after{content:"";width:13%;height:13%;border-radius:50%;background:#3f2a1d88;position:absolute}.courseSq.capture:after{content:"";position:absolute;inset:7%;border:3px solid #3f2a1d88;border-radius:50%}.coursePiece{filter:drop-shadow(0 2px 2px #0003)}.coursePlayStatus{font-size:12px;color:#777;margin-top:8px}.chapterNav{display:grid;grid-template-columns:1fr 1fr;gap:8px}.chapterBtn{height:40px;border:1px solid #e3ded9;background:#fff;border-radius:9px;font-weight:700;cursor:pointer}.chapterBtn:hover{background:#f5f1ee}.lessonCard{padding:13px;background:#faf8f6;border:1px solid #e7e1dc;border-radius:10px;font-size:13px;line-height:1.45}.lessonCard p{margin:7px 0;color:#5e5853}.lessonTry{margin-top:9px;padding:9px;background:#fff;border-radius:8px;color:#765542;font-weight:600}.coursePlayStatus{min-height:18px}@media(max-width:800px){.courseGrid{grid-template-columns:1fr}.courseHero{min-height:260px}}
 
 /* YouTube chess hub */
 .ytShell{grid-column:auto;margin-top:18px;background:#fff;border:1px solid #d9dee5;border-radius:16px;padding:20px;box-shadow:0 8px 28px rgba(35,30,25,.08)}
@@ -80,6 +80,8 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .ytGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ytVideo{position:relative;aspect-ratio:16/9;background:#111}.ytVideo iframe{display:block;width:100%;height:100%;border:0}.ytCard{overflow:hidden}.ytThumb{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#eee}.ytCardBody{padding:11px}.ytCard h3{font-size:15px;margin:0 0 5px}.ytCard p{font-size:12px;color:#6b7280;margin:0 0 9px;line-height:1.35}.ytLink{display:inline-block;padding:8px 10px;border-radius:8px;background:#222;color:#fff;text-decoration:none;font-size:12px;font-weight:700}.ytPosts{margin-top:16px;padding-top:15px;border-top:1px solid #e5e7eb}.ytPosts h3{margin:0 0 9px;font-size:16px}.ytPostRow{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.ytPost{padding:11px;border:1px solid #e1e4e8;border-radius:10px;background:#fafafa;text-decoration:none;color:#222}.ytPost b{display:block;font-size:13px}.ytPost span{display:block;margin-top:4px;font-size:11px;color:#777}.ytMore{margin-top:12px;text-align:center}.ytMore a{color:#2563eb;font-weight:700;text-decoration:none;font-size:13px}@media(max-width:800px){.ytGrid,.ytPostRow{grid-template-columns:1fr}.ytShell{grid-column:auto}}
 
 .resourceHero{margin-top:8px;padding:24px;border-radius:14px;background:linear-gradient(135deg,#f1ece8,#faf8f6);border:1px solid #e4ddd7}.resourceKicker{font-size:11px;font-weight:800;letter-spacing:1.4px;color:#765542}.resourceHero h3{margin:5px 0 7px;font-size:24px}.resourceHero p{max-width:760px;color:#666;line-height:1.5;margin:0 0 14px}.resourceBtn{display:inline-block;margin:4px 7px 0 0;padding:10px 13px;border-radius:9px;background:#222;color:#fff;text-decoration:none;font-weight:700;font-size:13px}.resourceBtn.secondary{background:#fff;color:#222;border:1px solid #d9d2cc}.resourceSection{margin-top:20px}.resourceSectionHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.resourceSectionHead h3{margin:0;font-size:18px}.resourceSectionHead span{font-size:11px;font-weight:800;color:#777;text-transform:uppercase}.resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.resourceCard{display:block;padding:13px;border:1px solid #e2ddd8;border-radius:11px;background:#fff;text-decoration:none;color:#222;transition:transform .12s ease,box-shadow .12s ease}.resourceCard:hover{transform:translateY(-2px);box-shadow:0 5px 14px #00000012}.resourceCard b{display:block;font-size:14px}.resourceCard span{display:block;margin-top:5px;font-size:12px;color:#777;line-height:1.4}.gothamGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.gothamCard{overflow:hidden;border:1px solid #e2ddd8;border-radius:11px;background:#fff}.gothamVideo{aspect-ratio:16/9;background:#111}.gothamVideo iframe{width:100%;height:100%;border:0;display:block}.gothamBody{padding:12px}.gothamBody b{display:block;font-size:14px}.gothamBody span{display:block;margin:5px 0 9px;color:#777;font-size:12px;line-height:1.4}.gothamBody a,.resourceMore a{color:#2563eb;font-size:12px;font-weight:800;text-decoration:none}.resourceMore{text-align:center;margin-top:12px}.resourceNote{margin-top:18px;padding:11px 13px;border-radius:9px;background:#f7f5f3;color:#777;font-size:11px;line-height:1.4}@media(max-width:800px){.resourceGrid,.gothamGrid{grid-template-columns:1fr}}
+
+.courseCarousel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.courseCard{background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:18px;box-shadow:0 4px 14px #0000000b}.courseTag{font-size:10px;font-weight:900;letter-spacing:1.2px;color:#765542}.courseCard h3{margin:6px 0 7px;font-size:19px}.courseCard p{margin:0;color:#666;line-height:1.5;font-size:13px}.courseBtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.learningTrainer{margin-top:18px;background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:16px}.trainerHead{display:flex;justify-content:space-between;gap:12px;align-items:center}.trainerHead h3{margin:0 0 4px}.trainerHead p{margin:0;color:#777;font-size:12px}.trainerGrid{display:grid;grid-template-columns:minmax(320px,620px) 1fr;gap:16px;margin-top:14px}.learningBoard{display:grid;grid-template-columns:repeat(8,1fr);width:100%;aspect-ratio:1;border-radius:9px;overflow:hidden;box-shadow:0 3px 12px #0002}.learningSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(28px,6vw,58px);line-height:1}.learningSq.light{background:#f0d9b5}.learningSq.dark{background:#b58863}.learningSq.selected{outline:4px solid #2563eb;outline-offset:-4px}.learningSq.hint{box-shadow:inset 0 0 0 4px #22c55e}.learningPiece{font-family:"Times New Roman",serif}.learningPiece.whitePiece{color:#fffdf7;text-shadow:0 2px 0 #8b633b,1px 0 0 #805a32,-1px 0 0 #805a32,0 4px 2px #0006}.learningPiece.blackPiece{color:#15120f;text-shadow:0 2px 0 #050403,1px 0 0 #302318,-1px 0 0 #302318,0 4px 3px #0007}.trainerSide{display:grid;align-content:start;gap:10px}.trainerPanel{border:1px solid #e5ddd5;border-radius:10px;padding:12px;background:#faf8f6}.trainerPanel b{display:block;margin-bottom:6px}.trainerPanel span,.trainerPanel a{display:block;color:#777;font-size:12px;line-height:1.45}.trainerPanel a{color:#2563eb;text-decoration:none;margin-top:6px}@media(max-width:800px){.courseCarousel,.trainerGrid{grid-template-columns:1fr}.trainerHead{align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -132,57 +134,45 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 </main>
 <section class="learnShell">
   <div class="learnHeader">
-    <div><h2>📚 Learn Chess with Chessly + GothamChess</h2><p>This section now uses official Chessly and GothamChess learning resources instead of made-up course material.</p></div>
-    <span class="learnBadge">OFFICIAL RESOURCES</span>
+    <div><h2>📚 Chessly + GothamChess</h2><p>Only the two courses you asked for: <b>E4 Part 1</b> and <b>Caro-Kann</b>. The buttons below open the official Chessly pages, and the practice boards are playable here.</p></div>
+    <span class="learnBadge">2 COURSES</span>
   </div>
 
-  <div class="resourceHero">
-    <div>
-      <div class="resourceKicker">CHESSLY</div>
-      <h3>Chessly — GothamChess's learning platform</h3>
-      <p>Browse the official Chessly courses, studies, drills, quizzes, openings, tactics, middlegames, and endgames.</p>
-      <a class="resourceBtn" href="https://chessly.com/" target="_blank" rel="noopener">Open Chessly →</a>
-      <a class="resourceBtn secondary" href="https://chessly.com/courses" target="_blank" rel="noopener">Browse Courses →</a>
+  <div class="courseCarousel" aria-label="Chessly courses">
+    <article class="courseCard">
+      <div class="courseTag">WHITE · E4</div>
+      <h3>E4 Part 1 — E4 New York Style</h3>
+      <p>Practice the opening ideas around 1.e4 and the Vienna. This app uses its own public opening practice line; paid Chessly lessons stay on Chessly.</p>
+      <div class="courseBtns">
+        <button class="resourceBtn" type="button" onclick="startLearningGame('e4')">▶ Play E4 Part 1</button>
+        <a class="resourceBtn secondary" href="https://old.chessly.com/courses/812a7981-0439-4de4-a86b-35b9833eea25" target="_blank" rel="noopener">Open Chessly Course →</a>
+      </div>
+    </article>
+
+    <article class="courseCard">
+      <div class="courseTag">BLACK · CARO-KANN</div>
+      <h3>Caro-Kann — C6 Caro Kann</h3>
+      <p>Practice the Caro-Kann from the White side while the trainer answers with the opening moves. The official Chessly course remains linked separately.</p>
+      <div class="courseBtns">
+        <button class="resourceBtn" type="button" onclick="startLearningGame('caro')">▶ Play Caro-Kann</button>
+        <a class="resourceBtn secondary" href="https://old.chessly.com/courses/a7d23f32-20fb-4cf9-9b56-7e63329f55e7" target="_blank" rel="noopener">Open Chessly Course →</a>
+      </div>
+    </article>
+  </div>
+
+  <div class="learningTrainer">
+    <div class="trainerHead"><div><h3 id="trainerTitle">Choose a course to start</h3><p id="trainerStatus">Pick E4 Part 1 or Caro-Kann above. You play White; the trainer supplies the opening replies.</p></div><button class="btn" type="button" onclick="resetLearningGame()">↻ Reset</button></div>
+    <div class="trainerGrid">
+      <div id="learningBoard" class="learningBoard" aria-label="Playable learning board"></div>
+      <div class="trainerSide">
+        <div class="trainerPanel"><b>How to play</b><span>Make the highlighted opening move. If you choose a different legal move, you can still play normally; the trainer will keep the board playable.</span></div>
+        <div class="trainerPanel"><b>Opening line</b><div id="trainerMoves">—</div></div>
+        <div class="trainerPanel"><b>Course links</b><a href="https://chessly.com/" target="_blank" rel="noopener">Chessly</a><a href="https://www.gothamchess.com/chessly" target="_blank" rel="noopener">GothamChess → Chessly</a></div>
+      </div>
     </div>
   </div>
 
-  <div class="resourceSection">
-    <div class="resourceSectionHead"><h3>Chessly course library</h3><span>Official Chessly</span></div>
-    <div class="resourceGrid">
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>Beginner Chess</b><span>Basics, openings, middlegames, endgames and practice.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>Intermediate Chess</b><span>Planning, evaluation, attacks and endgame decisions.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>Tactics Masterclass</b><span>Forks, pins, discovered attacks, skewers and combinations.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>Endgame Masterclass</b><span>King-and-pawn endings, rook endings and practical endgames.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>D4 Dynamite</b><span>London and Trompowsky-based White repertoire.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>E4 New York Style</b><span>White repertoire including the Vienna and attacking ideas.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>C6 Caro Kann</b><span>Black repertoire against 1.e4.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>The Gotham Scandi</b><span>Scandinavian Defense repertoire for Black.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>G6 Modern Defense</b><span>A Black repertoire built around the Modern Defense.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>E6/B6 Defense</b><span>A universal-style Black opening system.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>Queens Gambit Declined</b><span>Black repertoire against major 1.d4 setups.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>The Dutch Defense</b><span>Flexible Black repertoire against 1.d4 and related setups.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>Gambits for White</b><span>Active 1.e4-based attacking repertoire.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>Gambits for Black</b><span>Active Black gambit ideas against popular openings.</span></a>
-      <a class="resourceCard" href="https://chessly.com/courses" target="_blank" rel="noopener"><b>Middlegame Masterclass</b><span>Plans, mistakes, attacks and practical middlegame play.</span></a>
-    </div>
-  </div>
-
-  <div class="resourceSection">
-    <div class="resourceSectionHead"><h3>Free GothamChess lessons</h3><span>YouTube</span></div>
-    <div class="gothamGrid">
-      <article class="gothamCard">
-        <div class="gothamVideo"><iframe src="https://www.youtube.com/embed/OCSbzArwB10" title="How To Play Chess: The Ultimate Beginner Guide — GothamChess" loading="lazy" allowfullscreen></iframe></div>
-        <div class="gothamBody"><b>How To Play Chess: The Ultimate Beginner Guide</b><span>Board basics, piece movement, checkmate, openings, tactics and endgames.</span><a href="https://www.youtube.com/watch?v=OCSbzArwB10" target="_blank" rel="noopener">Watch on YouTube →</a></div>
-      </article>
-      <article class="gothamCard">
-        <div class="gothamVideo"><iframe src="https://www.youtube.com/embed/XtaEnxG2lbg" title="How To Win At Chess — GothamChess" loading="lazy" allowfullscreen></iframe></div>
-        <div class="gothamBody"><b>How To Win At Chess</b><span>Game-based instruction covering openings, middlegame ideas and tactics.</span><a href="https://www.youtube.com/watch?v=XtaEnxG2lbg" target="_blank" rel="noopener">Watch on YouTube →</a></div>
-      </article>
-    </div>
-    <div class="resourceMore"><a href="https://www.youtube.com/@GothamChess/videos" target="_blank" rel="noopener">Open the official GothamChess video library →</a></div>
-  </div>
-
-  <div class="resourceNote"><b>Source:</b> Chessly and GothamChess official pages. Paid Chessly material stays on Chessly; this app links to it rather than copying it.</div>
+  <div class="resourceNote"><b>Important:</b> Chessly says its courses include videos, studies, drills and quizzes. This app does not copy or reproduce paid course videos or lessons; it provides playable opening practice and links to the official courses. citeturn1search0turn0search2</div>
 </section>
 <section class="ytShell" id="youtubeChess">
   <div class="ytHeader"><div><h2>♟ Chess Videos</h2><p>Watch the selected chess videos directly inside the app.</p></div><span class="ytBadge">EMBEDDED VIDEOS</span></div>
@@ -550,6 +540,65 @@ function handleDraw(){
     over=true;thinking=false;$("status").textContent="Draw — agreement";render();
   }
 }
+let learningState=initial(),learningSel=null,learningLegal=[],learningCourse=null,learningLine=[],learningPly=0;
+const learningLines={
+  e4:[
+    ["e4","e5"],["nc3","nc6"],["f4","exf4"],["nf3","d6"],["bb5","bd7"]
+  ],
+  caro:[
+    ["e4","c6"],["d4","d5"],["exd5","cxd5"],["bd3","nc6"],["nf3","n6"]
+  ]
+};
+function uciToMove(x,uci){
+  const fr=8-+uci[1],fc=uci.charCodeAt(0)-97,tr=8-+uci[3],tc=uci.charCodeAt(2)-97;
+  return all(x,x.turn).find(m=>m.fr===fr&&m.fc===fc&&m.tr===tr&&m.tc===tc)||null;
+}
+function trainerUci(m){return String.fromCharCode(97+m.fc)+(8-m.fr)+String.fromCharCode(97+m.tc)+(8-m.tr);}
+function setLearningOpening(kind){
+  learningCourse=kind;learningState=initial();learningSel=null;learningLegal=[];learningPly=0;learningLine=learningLines[kind]||[];
+  $("trainerTitle").textContent=kind==="e4"?"E4 Part 1 — playable practice":"Caro-Kann — playable practice";
+  $("trainerStatus").textContent=kind==="e4"?"You play White. Practice the opening ideas around 1.e4.":"You play White. Practice playing against the Caro-Kann.";
+  renderLearningBoard();renderTrainerMoves();
+}
+function resetLearningGame(){if(learningCourse)setLearningOpening(learningCourse);else{learningState=initial();renderLearningBoard();}}
+function trainerOpponent(){
+  if(!learningCourse||learningState.turn!=="b")return;
+  const expected=learningLine[learningPly]?.[1];
+  const move=expected?uciToMove(learningState,expected):null;
+  if(move){learningState=apply(learningState,move);learningPly++;renderLearningBoard();renderTrainerMoves();}
+}
+function learningTap(r,c){
+  if(!learningCourse||learningState.turn!=="w")return;
+  if(learningSel){
+    const m=learningLegal.find(z=>z.tr===r&&z.tc===c);
+    if(m){
+      learningState=apply(learningState,m);learningSel=null;learningLegal=[];learningPly++;
+      renderLearningBoard();renderTrainerMoves();setTimeout(trainerOpponent,280);return;
+    }
+  }
+  const p=learningState.b[r][c];
+  if(p&&p.c==="w"){learningSel=[r,c];learningLegal=all(learningState,"w").filter(m=>m.fr===r&&m.fc===c);}
+  else{learningSel=null;learningLegal=[];}
+  renderLearningBoard();
+}
+function renderLearningBoard(){
+  const B=$("learningBoard");if(!B)return;B.innerHTML="";
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const e=document.createElement("button");e.type="button";e.className="learningSq "+(((r+c)%2)?"dark":"light");
+    if(learningSel?.[0]===r&&learningSel?.[1]===c)e.classList.add("selected");
+    if(learningLegal.some(m=>m.tr===r&&m.tc===c))e.classList.add("hint");
+    const p=learningState.b[r][c];
+    if(p){const z=document.createElement("span");z.className="learningPiece "+(p.c==="w"?"whitePiece":"blackPiece");z.textContent=U[p.c][p.t];e.appendChild(z);}
+    e.onclick=()=>learningTap(r,c);B.appendChild(e);
+  }
+}
+function renderTrainerMoves(){
+  const el=$("trainerMoves");if(!el)return;
+  const played=[];
+  for(let i=0;i<learningPly;i++){const pair=learningLine[Math.floor(i/2)];if(pair)played.push((i%2?"... ":"")+(pair[i%2]||""));}
+  el.textContent=played.length?played.join("  "):"Start with 1.e4";
+}
+renderLearningBoard();
 function showPage(which){
   const learn=which==="learn";
   const layout=document.querySelector(".layout");
@@ -562,7 +611,7 @@ function showPage(which){
   if(learn){window.scrollTo({top:0,behavior:"smooth"});}
   else render();
 }
-$("playPage").onclick=()=>showPage("play");
+$("playPage").onclick=()=>showPage("play");setLearningOpening("e4");
 $("learnPage").onclick=()=>showPage("learn");
 showPage("play");
 
