@@ -497,6 +497,19 @@ function gradeMove(loss,isBest){
   if(loss<=0.70)return "Mistake";
   return "Blunder";
 }
+function coachExplanation(grade,loss,playedUci,bestAlternative){
+  const lossText=loss.toFixed(2);
+  if(grade==="Great move"){
+    return "Coach: Excellent choice. This move matches Stockfish's best idea or stays essentially equal, so you keep the position's strongest plans available.";
+  }
+  if(grade==="Good move"){
+    return "Coach: Solid move. You keep most of the position's value and avoid a major problem. A stronger engine move was available, but your choice is still practical.";
+  }
+  if(grade==="Mistake"){
+    return "Coach: This move gives up some advantage. Look for the opponent's new threat before moving again; a better alternative could have kept more of the position under control.";
+  }
+  return "Coach: This move loses a significant amount of evaluation. Before playing a move like this, check checks, captures, and threats for both sides, then compare your move with the engine's safer alternative.";
+}
 function renderReviewMoveList(){
   const box=$("reviewMoveList");if(!box)return;
   const filtered=reviewMistakesOnly?reviewMoveGrades.filter(x=>x.grade==="Mistake"||x.grade==="Blunder"):reviewMoveGrades;
@@ -543,7 +556,7 @@ function requestLiveReview(moveJustPlayed,mover,playedUci,baselinePosition){
       if(moveJustPlayed&&reviewBaselineWhite!==null){
         const loss=Math.max(0,mover==="w"?reviewBaselineWhite-afterWhite:afterWhite-reviewBaselineWhite);
         const grade=gradeMove(loss,!!playedUci&&playedUci===bestEngineMoveBefore);
-        const detail=grade==="Great move"?"Stockfish sees this as the top move or essentially equal to it.":"Estimated engine loss: "+loss.toFixed(2)+" pawns versus the position before your move.";
+        const detail=coachExplanation(grade,loss,playedUci,bestEngineMoveBefore)+" Estimated engine change: "+loss.toFixed(2)+" pawns.";
         recordMoveGrade(moveJustPlayed,grade,detail);
       }
       if(mv&&mv.length>=4){
