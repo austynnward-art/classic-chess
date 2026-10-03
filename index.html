@@ -21,9 +21,9 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .player{font-size:20px;font-weight:bold}.small{display:block;font-size:15px;font-weight:normal;margin-top:2px;color:#6d5538}
 .clock{font-size:38px;text-align:center;margin:12px 0 4px;font-weight:bold}.active{box-shadow:inset 0 0 0 2px #a66a2e,0 2px 6px #5d3b2124}
 .captured{font-size:23px;min-height:105px;margin-top:8px;line-height:1.5}
-.frame{width:100%;aspect-ratio:1;background:#ffffff;border:1px solid #d9dee5;border-radius:14px;padding:10px;box-shadow:0 8px 24px rgba(30,40,55,.12);position:relative;overflow:hidden}.frame>div{position:absolute!important;inset:10px!important;width:auto!important;height:auto!important}
-.board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:100%;height:100%;aspect-ratio:1;border:0;border-radius:8px;overflow:hidden}
-.sq{position:relative;width:100%;height:100%;min-width:0;min-height:0;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-family:"Times New Roman",serif;font-size:clamp(30px,7vw,74px);line-height:1;overflow:hidden}
+.frame{width:100%;aspect-ratio:1;background:#6b4529;border:2px solid #4f321e;border-radius:6px;padding:22px;box-shadow:0 8px 24px rgba(30,40,55,.18);position:relative;overflow:hidden}.frame>div{position:absolute!important;inset:22px!important;width:auto!important;height:auto!important}
+.board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:100%;height:100%;aspect-ratio:1;border:3px solid #6b4529;border-radius:2px;overflow:visible;box-shadow:0 0 0 2px #c79a61}
+.sq{position:relative;width:100%;height:100%;min-width:0;min-height:0;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-family:"Times New Roman",serif;font-size:clamp(30px,7vw,74px);line-height:1;overflow:visible}
 .light{background-color:#f0d9b5 !important;background-image:none}.dark{background-color:#b58863 !important;background-image:none}.sq:hover{filter:brightness(1.07)}
 .selected{outline:4px solid #3b82f6;outline-offset:-4px}.last{background-image:linear-gradient(#e5bd5366,#e5bd5366) !important}
 .legal:after{content:"";position:absolute;width:16%;height:16%;border-radius:50%;background:#5b4635aa}
@@ -59,7 +59,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
     0 4px 3px rgba(0,0,0,.45),
     0 -1px 1px #5b4937;
 }
-.coord{position:absolute;font:700 11px Arial;color:#63401f88;pointer-events:none}.rank{left:4px;top:3px}.file{right:4px;bottom:3px}
+.coord{position:absolute;font:700 12px Arial;color:#f4dfbd;pointer-events:none;text-shadow:0 1px 1px #3f2616;z-index:8}.rank{top:50%;transform:translateY(-50%)}.rankLeft{left:-18px}.rankRight{right:-18px}.file{left:50%;transform:translateX(-50%)}.fileTop{top:-19px}.fileBottom{bottom:-19px}
 .controls{display:grid;grid-template-columns:1.25fr 1.15fr 1.15fr 1.15fr 1.15fr;gap:12px;margin-top:13px}
 .btn{border:1px solid #c3aa7c;background:linear-gradient(#fffaf0,#f0e0c0);border-radius:7px;padding:13px 7px;cursor:pointer;font:16px Georgia;color:#27313d;box-shadow:0 2px 4px rgba(30,40,55,.08)}.btn:hover{background:#ead9b7}.primary{background:#2563eb;color:#fff;border-color:#2563eb}
 .options{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0 auto;justify-content:flex-end;border-left:1px solid #bda477;padding-left:14px}
@@ -501,7 +501,7 @@ function updateAccuracy(){if(!evalHistory.length){$("accuracy").textContent="—
 function render(){
 const B=$("board");
 B.innerHTML="";
-for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.className="sq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="piece "+(p.c==="w"?"whitePiece":"blackPiece");z.textContent=U[p.c][p.t];e.appendChild(z)}let ra=document.createElement("span");ra.className="coord rank";ra.textContent=8-r;e.appendChild(ra);let fi=document.createElement("span");fi.className="coord file";fi.textContent=F[c];e.appendChild(fi);e.onclick=()=>tap(r,c);B.appendChild(e)}
+for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.className="sq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="piece "+(p.c==="w"?"whitePiece":"blackPiece");z.textContent=U[p.c][p.t];e.appendChild(z)}if(vc===0){let ra=document.createElement("span");ra.className="coord rank rankLeft";ra.textContent=8-r;e.appendChild(ra)}if(vc===7){let ra=document.createElement("span");ra.className="coord rank rankRight";ra.textContent=8-r;e.appendChild(ra)}if(vr===0){let fi=document.createElement("span");fi.className="coord file fileTop";fi.textContent=F[c];e.appendChild(fi)}if(vr===7){let fi=document.createElement("span");fi.className="coord file fileBottom";fi.textContent=F[c];e.appendChild(fi)}e.onclick=()=>tap(r,c);B.appendChild(e)}
 $("status").textContent=thinking?"Computer is thinking…":(s.turn==="w"?"White":"Black")+" to move"+(check(s,s.turn)?" · Check":"");
 $("moves").innerHTML=history.map((m,i)=>`<div class="move"><span>${i%2===0?Math.floor(i/2)+1+".":""}</span><span>${i%2===0?m:""}</span><span>${i%2?m:""}</span></div>`).join("");
 $("wcap").textContent=s.captured.b.map(t=>U.b[t]).join(" ")||"—";$("bcap").textContent=s.captured.w.map(t=>U.w[t]).join(" ")||"—";
