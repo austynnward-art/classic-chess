@@ -661,7 +661,7 @@ function coachBeforeMove(){
   $("status").textContent="🧠 Coach checklist: "+checks+" checking move"+(checks===1?"":"s")+", "+captures+" capture"+(captures===1?"":"s")+". Now ask: what is the opponent threatening?";
 }
 if($("coachCheckBtn"))$("coachCheckBtn").onclick=coachBeforeMove;
-function tap(r,c){if(over||thinking||(!mistakePracticeActive&&s.turn===aiSide))return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));const playedSan=san(old,{f:sel,t:[r,c]}),playedUci=String.fromCharCode(97+sel[1])+(8-sel[0])+String.fromCharCode(97+c)+(8-r),mover=old.turn;s=apply(s,sel,[r,c]);history.push(playedSan);recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];if(mistakePracticeActive){$("status").textContent="🎯 Practice move played: "+playedSan+" · "+(playedUci===mistakePracticePositions[mistakePracticeIndex]?.bestMove?"That matches the engine alternative.":"Compare your idea with the original mistake and try another line.");render();return}render();finish();requestLiveReview(playedSan,mover,playedUci,old);return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
+function tap(r,c){if(over||thinking||(!mistakePracticeActive&&s.turn===aiSide))return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));const playedSan=san(old,{f:sel,t:[r,c]}),playedUci=String.fromCharCode(97+sel[1])+(8-sel[0])+String.fromCharCode(97+c)+(8-r),mover=old.turn;s=apply(s,sel,[r,c]);history.push(playedSan);recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];if(mistakePracticeActive){render();$("status").textContent="🎯 Practice move played: "+playedSan+" · "+(playedUci===mistakePracticePositions[mistakePracticeIndex]?.bestMove?"That matches the engine alternative.":"Compare your idea with the original mistake and try another line.");return}render();finish();requestLiveReview(playedSan,mover,playedUci,old);return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
 const val={p:100,n:320,b:330,r:500,q:900,k:20000};
 function score(x,c){let sc=0;for(let r=0;r<8;r++)for(let q=0;q<8;q++){let p=x.b[r][q];if(p)sc+=(p.c===c?1:-1)*val[p.t]}return sc}
 function eloDepth(){const e=+$("elo")?.value||+$("level")?.value||1800;return Math.max(10,Math.min(24,Math.round(10+(e-800)/220)))}
@@ -850,9 +850,9 @@ function computer(){
 }
 
 $("new").onclick=()=>newGame();
-$("undo").onclick=()=>{if(snapshots.length&&!thinking){s=clone(snapshots.pop());history.pop();sel=null;legal=[];over=false;reviewToken++;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;updateMistakePracticeUI();if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();render();requestLiveReview();}};
+$("undo").onclick=()=>{if(snapshots.length&&!thinking){s=clone(snapshots.pop());history.pop();sel=null;legal=[];over=false;reviewToken++;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;updateMistakePracticeUI();if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();render();reviewGame();if(gameMode==="computer"&&s.turn===aiSide&&!over){computer();}else{requestLiveReview();}};
 $("flip").onclick=()=>{flip=!flip;render();};
-$("resign").onclick=()=>{if(!over){over=true;thinking=false;$("status").textContent=(s.turn==="w"?"White":"Black")+" resigned";render();}};
+$("resign").onclick=()=>{if(!over){over=true;thinking=false;$("status").textContent=(s.turn==="w"?"White":"Black")+" resigned";render();reviewGame();}};
 $("hint").onclick=()=>{if(over||thinking||s.turn===aiSide)return;engineSearch(s,mv=>{if(mv&&mv.length>=4){drawArrow([mv[0],mv[1]],[mv[2],mv[3]]);if($("best-move"))$("best-move").textContent=mv}})};
 function positionKey(x){
   let board="";
@@ -907,16 +907,16 @@ function checkAutomaticDraws(){
 function handleDraw(){
   if(over||thinking)return;
   const automatic=drawReason();
-  if(automatic){over=true;$("status").textContent=automatic;render();return;}
+  if(automatic){over=true;$("status").textContent=automatic;render();reviewGame();return;}
   const claim=claimableDrawReason();
   if(claim){
     if(confirm("Claim a draw by "+claim+"?")){
-      over=true;$("status").textContent="Draw — "+claim;render();
+      over=true;$("status").textContent="Draw — "+claim;render();reviewGame();
     }
     return;
   }
   if(confirm("Offer a draw to the computer? If accepted, the game ends as a draw.")){
-    over=true;thinking=false;$("status").textContent="Draw — agreement";render();
+    over=true;thinking=false;$("status").textContent="Draw — agreement";render();reviewGame();
   }
 }
 let learningState=initial(),learningSel=null,learningLegal=[],learningCourse=null,learningLine=[],learningPly=0;
@@ -1338,9 +1338,9 @@ function handleTimeLoss(side){
   if(over)return;
   const winner=opp(side);
   if(!opponentCanWin(winner)){
-    over=true;thinking=false;$("status").textContent="Draw — time expired, opponent cannot force checkmate";render();return;
+    over=true;thinking=false;$("status").textContent="Draw — time expired, opponent cannot force checkmate";render();reviewGame();return;
   }
-  over=true;thinking=false;$("status").textContent=(side==="w"?"White":"Black")+" lost on time";render();
+  over=true;thinking=false;$("status").textContent=(side==="w"?"White":"Black")+" lost on time";render();reviewGame();
 }
 function updateClock(){
   if(over||!s||!clock)return;
