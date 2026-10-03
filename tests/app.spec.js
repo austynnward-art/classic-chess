@@ -45,9 +45,15 @@ test.describe('Classic Chess smoke tests', () => {
     await page.goto('/');
     await page.locator('#coursesTopPage').click();
     await expect(page.locator('.chesslyCourseDash')).toBeVisible();
-  await expect(page.locator('.ytShell')).toBeVisible();
+    await expect(page.locator('.ytShell')).toBeVisible();
+    await expect(page.locator('.ytShell iframe')).toHaveCount(6);
+    await expect(page.locator('.ytShell iframe').first()).toHaveAttribute('src', /youtube\.com\/embed\//);
+    await expect(page.locator('.resourceCard')).toHaveCount(17);
 
     await page.locator('#learnTopPage').click();
     await expect(page.locator('#learningBoard')).toBeVisible();
+    await expect(page.locator('.learnWorkspace')).toBeVisible();
+    await page.locator('#coursesTopPage').click();
+    await expect(page.locator('.chesslyCourseDash')).toBeVisible();
   });
 });
