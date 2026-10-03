@@ -15,13 +15,13 @@ body{margin:0;background:linear-gradient(#f5ead4,#e9dcc1);color:#3b2918;font-fam
 .player{font-size:20px;font-weight:bold}.small{display:block;font-size:15px;font-weight:normal;margin-top:2px;color:#6d5538}
 .clock{font-size:38px;text-align:center;margin:12px 0 4px;font-weight:bold}.active{box-shadow:inset 0 0 0 2px #a66a2e,0 2px 6px #5d3b2124}
 .captured{font-size:23px;min-height:105px;margin-top:8px;line-height:1.5}
-.frame{width:100%;aspect-ratio:1;background:linear-gradient(135deg,#8a5427,#4e2c14 45%,#78461f);border:3px solid #5a3216;border-radius:7px;padding:10px;box-shadow:0 7px 18px #3d241366, inset 0 0 0 2px rgba(255,226,173,.18)}
-.board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:100%;aspect-ratio:1;border:2px solid #593318;overflow:hidden}
+.frame{width:100%;aspect-ratio:1;background:#f7f5f2;border:1px solid #ded9d3;border-radius:14px;padding:10px;box-shadow:0 8px 24px rgba(35,30,25,.12)}
+.board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:100%;height:100%;aspect-ratio:1;border:0;border-radius:8px;overflow:hidden}
 .sq{position:relative;width:100%;height:100%;min-width:0;min-height:0;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-family:"Times New Roman",serif;font-size:clamp(40px,8vw,82px);line-height:1}
-.light{background:linear-gradient(135deg,#fff1cf,#ead5ad)}.dark{background:linear-gradient(135deg,#c9853e,#b97434)}.sq:hover{filter:brightness(1.07)}
-.selected{outline:5px solid #b4772f;outline-offset:-5px}.last{background-image:linear-gradient(#e5bd5366,#e5bd5366)}
-.legal:after{content:"";position:absolute;width:14%;height:14%;border-radius:50%;background:#5a381e99}
-.capture:after{content:"";position:absolute;inset:7%;border:4px solid #633d1c99;border-radius:50%}
+.light{background:#f0ebe5}.dark{background:#9b806b}.sq:hover{filter:brightness(1.07)}
+.selected{outline:4px solid #d69b52;outline-offset:-4px}.last{background-image:linear-gradient(#e5bd5366,#e5bd5366)}
+.legal:after{content:"";position:absolute;width:16%;height:16%;border-radius:50%;background:#5b4635aa}
+.capture:after{content:"";position:absolute;inset:6%;border:4px solid #d69b52aa;border-radius:50%}
 .piece{
   display:flex;
   align-items:center;
