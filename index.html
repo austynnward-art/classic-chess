@@ -319,7 +319,7 @@ function fallbackComputerMove(){
   }
   return best;
 }
-const openingBook={
+const computerOpeningBook={
   "":"e4",
   "e4":"e5",
   "e4 e5":"Nf3",
@@ -349,7 +349,7 @@ const openingBook={
   "Nf3 d5 d4 Nf6 c4":"e6"
 };
 function openingBookMove(){
-  const wanted=openingBook[history.join(" ")];
+  const wanted=computerOpeningBook[history.join(" ")];
   if(!wanted)return null;
   const moves=all(s,s.turn);
   return moves.find(m=>san(s,m)===wanted)||null;
