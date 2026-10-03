@@ -9,7 +9,9 @@
 body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-serif}
 .app{max-width:1280px;margin:auto;padding:0 10px 12px}
 .pageNav{display:flex;gap:8px;align-items:center}.pageBtn{border:1px solid #c3aa7c;background:#fffaf0;border-radius:9px;padding:9px 12px;cursor:pointer;font:700 13px Inter,Arial,sans-serif;color:#27313d}.pageBtn.active{background:#2563eb;color:#fff;border-color:#2563eb}
-.layout.learnPageMode{display:block}.layout.learnPageMode>.left,.layout.learnPageMode>.center,.layout.learnPageMode>.right{display:none}.layout.learnPageMode>.learnShell,.layout.learnPageMode>.ytShell{display:block;max-width:1000px;margin-left:auto;margin-right:auto}.layout:not(.learnPageMode)>.learnShell,.layout:not(.learnPageMode)>.ytShell{display:none}
+.layout.learnPageMode{display:block}.layout.learnPageMode>.left,.layout.learnPageMode>.center,.layout.learnPageMode>.right,.layout.learnPageMode>.coursesShell{display:none}.layout.learnPageMode>.learnShell,.layout.learnPageMode>.ytShell{display:block;max-width:1000px;margin-left:auto;margin-right:auto}
+.layout.coursesPageMode{display:block}.layout.coursesPageMode>.left,.layout.coursesPageMode>.center,.layout.coursesPageMode>.right,.layout.coursesPageMode>.learnShell,.layout.coursesPageMode>.ytShell{display:none}.layout.coursesPageMode>.coursesShell{display:block;max-width:1000px;margin-left:auto;margin-right:auto}
+.layout:not(.learnPageMode):not(.coursesPageMode)>.learnShell,.layout:not(.learnPageMode):not(.coursesPageMode)>.ytShell,.layout:not(.coursesPageMode)>.coursesShell{display:none}
 .layout:not(.learnPageMode)>.center{min-width:0}.frame{min-width:0}
 @media(max-width:700px){.pageNav{flex-wrap:wrap;justify-content:flex-end}.top{height:auto;min-height:88px}.pageBtn{padding:8px 9px}.layout{grid-template-columns:1fr}.controls{grid-template-columns:repeat(2,1fr)}}
 .top{height:88px;background:#ffffff;border:1px solid #d9dee5;border-radius:0 0 12px 12px;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;box-shadow:0 3px 14px rgba(30,40,55,.08)}
@@ -64,7 +66,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .select{padding:8px 25px 8px 9px;border:1px solid #bca887;border-radius:5px;background:#fffaf0;color:#27313d;font:14px Inter,Arial,sans-serif}
 .status{margin-top:10px;padding:11px;background:#ffffff;border:1px solid #d9dee5;border-radius:7px;display:flex;justify-content:space-between;font-size:15px}
 .moves{font:13px monospace;max-height:315px;overflow:auto;margin-top:8px}.move{display:grid;grid-template-columns:30px 1fr 1fr;padding:7px 0;border-bottom:1px solid #e1d3b8}
-@media(max-width:950px){.layout{grid-template-columns:1fr}.center{order:1}.learnShell{grid-column:auto;order:2}.left{order:3}.right{order:4}.controls{grid-template-columns:repeat(3,1fr)}.options{justify-content:flex-start;border-left:0;padding-left:0}}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.center{order:1}.learnShell,.coursesShell{grid-column:auto;order:2}.left{order:3}.right{order:4}.controls{grid-template-columns:repeat(3,1fr)}.options{justify-content:flex-start;border-left:0;padding-left:0}}
 
 .analysisCard{margin-top:12px}.analysisGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.analysisValue{font-size:20px;font-weight:bold}.range{width:100%;margin-top:8px}.analyzeRow{display:flex;gap:8px;margin-top:9px}.analyzeRow .btn{flex:1}.engineStatus{font-size:13px;color:#6d5538;margin-top:7px}.arrowLayer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
 .analysisGraph{height:120px;margin-top:10px;border:1px solid #d5c3a4;border-radius:6px;background:#fffdf7}.opening{font-size:15px;margin-top:6px}.accuracy{font-size:20px;font-weight:bold}.analysisGraph canvas{width:100%;height:100%}
@@ -86,7 +88,11 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 </head>
 <body>
 <div class="app">
-<header class="top"><div class="brand"><div class="horse">♞</div><div><h1>Classic Chess</h1><small>Strategy  ·  Focus  ·  Victory</small></div></div><nav class="pageNav" aria-label="Pages"><button class="pageBtn active" id="playPage" type="button">♟ Play</button><button class="pageBtn" id="learnPage" type="button">📚 Learn + Videos</button></nav></header>
+<header class="top"><div class="brand"><div class="horse">♞</div><div><h1>Classic Chess</h1><small>Strategy  ·  Focus  ·  Victory</small></div></div><nav class="pageNav" aria-label="Pages">
+<button class="pageBtn active" id="playPage" type="button">♟ Play Chess</button>
+<button class="pageBtn" id="learnPage" type="button">📚 Learn Chess</button>
+<button class="pageBtn" id="coursesPage" type="button">🎓 Chessly Courses</button>
+</nav></header>
 <div class="layout">
 <aside class="left">
 <div class="card" id="whiteCard"><div class="player">White <span class="small" id="whiteLabel">You</span></div><div class="clock" id="wc">10:00</div></div>
@@ -115,7 +121,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 <button class="btn" id="hint">💡 Hint</button>
 </div>
 <div class="options">
-<label>Game: <select class="select" id="gameMode">
+<label>Players: <select class="select" id="gameMode">
 <option value="computer" selected>2 Player · Computer</option>
 <option value="local2">2 Player · Local</option>
 <option value="local3">3 Player · Local</option>
@@ -150,12 +156,17 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   <div class="small" style="margin-top:5px">Positions analyzed: <span id="movesAnalyzed">0</span></div>
 </div>
 </main>
-<section class="learnShell">
+<section class="coursesShell" id="chesslyCourses">
   <div class="learnHeader">
-    <div><h2>📚 Chessly 2.0 + Intermediate Practice</h2><p>Chessly 2.0 course links plus two playable intermediate practice sections built for the 100–1500 range.</p></div>
-    <span class="learnBadge">4 CHESSLY COURSES</span>
+    <div><h2>🎓 Choose a Chessly Course</h2><p>Choose a course that fits your level and goal. Chessly's current platform advertises 70+ openings and skills courses.</p></div>
+    <span class="learnBadge">CHOOSE YOUR PATH</span>
   </div>
-
+  <div class="resourceHero">
+    <div class="resourceKicker">CHESSLY 2.0</div>
+    <h3>Courses people can choose</h3>
+    <p>The four courses below are the main choices we set up. The buttons open the official Chessly platform; paid course lessons are not copied into this app.</p>
+    <a class="resourceBtn" href="https://chessly.com/" target="_blank" rel="noopener">Open Chessly 2.0 →</a>
+  </div>
   <div class="courseCarousel" aria-label="Chessly 2.0 courses">
     <article class="courseCard">
       <div class="courseTag">WHITE · 0–2200</div>
@@ -194,6 +205,23 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
         <a class="resourceBtn secondary" href="https://chessly.com/" target="_blank" rel="noopener">Open Chessly 2.0 →</a>
       </div>
     </article>
+  </div>
+
+
+  <div class="resourceSection">
+    <div class="resourceSectionHead"><h3>More course choices</h3><span>Official Chessly library</span></div>
+    <div class="resourceGrid">
+      <a class="resourceCard" href="https://chessly.com/" target="_blank" rel="noopener"><b>Beginner Chess</b><span>Learn the fundamentals, openings, tactics, endgames and model games.</span></a>
+      <a class="resourceCard" href="https://chessly.com/" target="_blank" rel="noopener"><b>Middlegame Masterclass</b><span>Explore the official Chessly library for middlegame improvement.</span></a>
+      <a class="resourceCard" href="https://chessly.com/" target="_blank" rel="noopener"><b>Endgame Masterclass</b><span>Explore the official Chessly library for endgame study.</span></a>
+    </div>
+  </div>
+  <div class="resourceNote"><b>Verified ranges:</b> E4 New York Style and C6 Caro Kann are listed at 0–2200; Tactics Masterclass is listed at 0–1600. Better Openings is shown without an invented Elo range.</div>
+</section>
+<section class="learnShell">
+  <div class="learnHeader">
+    <div><h2>📚 Learn Chess</h2><p>Intermediate drills, opening systems, US Chess practice, and videos for different levels.</p></div>
+    <span class="learnBadge">PRACTICE + VIDEOS</span>
   </div>
 
   <div class="resourceHero">
@@ -732,19 +760,23 @@ function renderTrainerMoves(){
 }
 renderLearningBoard();
 function showPage(which){
-  const learn=which==="learn";
   const layout=document.querySelector(".layout");
   if(!layout)return;
+  const learn=which==="learn";
+  const courses=which==="courses";
   layout.classList.toggle("learnPageMode",learn);
-  $("playPage")?.classList.toggle("active",!learn);
+  layout.classList.toggle("coursesPageMode",courses);
+  $("playPage")?.classList.toggle("active",!learn&&!courses);
   $("learnPage")?.classList.toggle("active",learn);
-  if($("result"))$("result").textContent=learn?"Page 2 · Learn + Videos":"Page 1 · Play";
-  document.title=learn?"Classic Chess — Learn + Videos":"Classic Chess";
-  if(learn){window.scrollTo({top:0,behavior:"smooth"});}
-  else if(s) render();
+  $("coursesPage")?.classList.toggle("active",courses);
+  if($("result"))$("result").textContent=learn?"Page 2 · Learn Chess":courses?"Page 3 · Chessly Courses":"Page 1 · Play Chess";
+  document.title=courses?"Classic Chess — Chessly Courses":learn?"Classic Chess — Learn Chess":"Classic Chess";
+  if(learn||courses)window.scrollTo({top:0,behavior:"smooth"});
+  else if(s)render();
 }
 $("playPage").onclick=()=>showPage("play");setLearningOpening("e4");
 $("learnPage").onclick=()=>showPage("learn");
+$("coursesPage").onclick=()=>showPage("courses");
 showPage("play");
 
 const MULTI_PLAYERS={
