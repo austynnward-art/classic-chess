@@ -141,6 +141,8 @@ body.fourPlayerView .layout{grid-template-columns:203px minmax(500px,1fr) 210px;
 .fourPlayerView .fourBoardWrap{position:relative;padding:25px 34px 25px 34px;background:#0b3558;border-radius:10px;max-width:650px;margin:auto}
 .fourPlayerView .multiBoard{width:100%;max-width:560px;border:0;border-radius:10px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%);box-shadow:0 7px 20px #031a2b99}
 .fourPlayerView .multiSq{transition:background-color .16s ease,transform .12s ease,filter .12s ease}.fourPlayerView .multiSq.playable:hover{filter:brightness(1.08);transform:scale(1.01);z-index:2}
+body.fourPlayerView[data-board-style="bright"] .multiSq.redZone{background:#ef5a52}.fourPlayerView[data-board-style="bright"] .multiSq.blueZone{background:#2992e5}.fourPlayerView[data-board-style="bright"] .multiSq.greenZone{background:#45b85d}.fourPlayerView[data-board-style="bright"] .multiSq.yellowZone{background:#f2c43c}
+body.fourPlayerView[data-board-style="dark"] .multiSq.redZone{background:#713b3b}.fourPlayerView[data-board-style="dark"] .multiSq.blueZone{background:#315b7a}.fourPlayerView[data-board-style="dark"] .multiSq.greenZone{background:#356844}.fourPlayerView[data-board-style="dark"] .multiSq.yellowZone{background:#806526}
 .fourPlayerView .multiSq.redZone{background:#c98a78}.fourPlayerView .multiSq.blueZone{background:#7fa8ca}.fourPlayerView .multiSq.greenZone{background:#79a978}.fourPlayerView .multiSq.yellowZone{background:#d0a44f}
 .fourPlayerView .multiSq.redZone:nth-child(odd),.fourPlayerView .multiSq.blueZone:nth-child(odd),.fourPlayerView .multiSq.greenZone:nth-child(odd),.fourPlayerView .multiSq.yellowZone:nth-child(odd){filter:brightness(.92)}
 .fourPlayerView .multiPiece{transition:transform .14s ease,filter .14s ease}.fourPlayerView .multiSq:hover .multiPiece{transform:scale(1.06);filter:drop-shadow(0 5px 4px #0006)}
@@ -651,7 +653,7 @@ function pieceSVG(color,type){
 }
 let s,history=[],snapshots=[],sel=null,legal=[],flip=false,over=false,thinking=false,aiSide="b",timer=null,clock={w:600,b:600};
 let computerRetryTimer=null,computerMoveTimer=null,computerRequestToken=0;
-let gameMode="computer",multiState=null,multiSelected=null,multiLegal=[],clockTimer=null;
+let gameMode="computer",multiState=null,multiSelected=null,multiLegal=[],clockTimer=null,multiBotEnabled=true,multiBotTimer=null;
 const $=id=>document.getElementById(id),opp=c=>c==="w"?"b":"w",inside=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
 function initial(){let b=Array.from({length:8},()=>Array(8).fill(null)),a=["r","n","b","q","k","b","n","r"];for(let c=0;c<8;c++){b[0][c]={c:"b",t:a[c]};b[1][c]={c:"b",t:"p"};b[6][c]={c:"w",t:"p"};b[7][c]={c:"w",t:a[c]}}return{b,turn:"w",castle:{wk:1,wq:1,bk:1,bq:1},ep:null,last:null,captured:{w:[],b:[]},halfmove:0}}
 function clone(x){return JSON.parse(JSON.stringify(x))}
@@ -1333,7 +1335,7 @@ $("askCoachBtn").onclick=function(){
 };
 $("closeTips").onclick=function(){ const p=document.querySelector(".coachTips"); if(p)p.classList.toggle("tipsClosed"); };
 $("fourDifficulty").onchange=function(){ $("level").value=this.value; };
-$("fourBoardStyle").onchange=function(){ document.body.dataset.boardStyle=this.value.toLowerCase(); };
+$("fourBoardStyle").onchange=function(){ document.body.dataset.boardStyle=this.value.toLowerCase(); renderMulti(); };
 setLearningOpening("e4");
 showPage("play");
 
@@ -1463,6 +1465,35 @@ function multiPseudo(st,r,c){
   }
   return legal;
 }
+function multiBotMove(){
+  if(!multiBotEnabled||!multiState||multiState.winner||multiState.drawAgreed)return;
+  const color=multiState.turn;
+  if(color==="red"||!multiState.alive[color])return;
+  const choices=[];
+  for(let r=0;r<14;r++)for(let c=0;c<14;c++){
+    const p=multiState.board[r][c];
+    if(p&&p.c===color)for(const m of multiPseudo(multiState,r,c)){
+      const target=multiState.board[m[0]][m[1]];
+      let score=target?(target.t==="q"?90:target.t==="r"?50:target.t==="b"||target.t==="n"?32:target.t==="p"?10:0):0;
+      score+=(7-Math.max(Math.abs(m[0]-6.5),Math.abs(m[1]-6.5)))*2;
+      const cp=multiClone(multiState);
+      cp.board[m[0]][m[1]]=cp.board[r][c];cp.board[r][c]=null;
+      if(cp.board[m[0]][m[1]]?.t==="p"&&MULTI_PLAYERS[color].promo(m[0],m[1]))score+=25;
+      choices.push({from:[r,c],to:m,score});
+    }
+  }
+  if(!choices.length){renderMulti();return;}
+  choices.sort((a,b)=>b.score-a.score);
+  const pick=choices[Math.floor(Math.random()*Math.min(4,choices.length))];
+  multiSelected=pick.from;multiLegal=multiPseudo(multiState,pick.from[0],pick.from[1]);
+  setTimeout(()=>multiApply(pick.from[0],pick.from[1],pick.to[0],pick.to[1]),180);
+}
+function scheduleMultiBot(){
+  if(multiBotTimer)clearTimeout(multiBotTimer);
+  multiBotTimer=null;
+  if(!multiBotEnabled||!multiState||multiState.winner||multiState.drawAgreed||multiState.turn==="red")return;
+  multiBotTimer=setTimeout(()=>{multiBotTimer=null;multiBotMove();},420);
+}
 function multiApply(r,c,tr,tc){
   if(multiState.drawAgreed)return;
   const p=multiState.board[r][c];if(!p||p.c!==multiState.turn)return;
@@ -1491,7 +1522,7 @@ function multiApply(r,c,tr,tc){
     const next=multiNextAlive();
     multiState.turn=next||p.c;
   }
-  multiSelected=null;multiLegal=[];renderMulti();
+  multiSelected=null;multiLegal=[];renderMulti();scheduleMultiBot();
 }
 function renderMulti(){
   const B=$("multiBoard");if(!B||!multiState)return;
@@ -1534,6 +1565,7 @@ function renderMulti(){
 
 }
 function startMultiGame(count){
+  if(multiBotTimer){clearTimeout(multiBotTimer);multiBotTimer=null;}
   reviewToken++;reviewPending=false;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;updateMistakePracticeUI();if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();
   multiState=multiInitial(count);multiSelected=null;multiLegal=[];
   document.body.classList.toggle("fourPlayerView",count===4);
@@ -1549,6 +1581,7 @@ function startMultiGame(count){
     "3-player local pass-and-play on a three-arm hexagonal-style board. George R. Dekle's 1984 Three-Man Chess uses a 96-cell quadrilateral-cell hexagonal board, clockwise turns, and checkmate as the win condition; this app keeps its local trainer implementation separate from the official ruleset.";
 }
 function stopMultiGame(){
+  if(multiBotTimer){clearTimeout(multiBotTimer);multiBotTimer=null;}
   document.body.classList.remove("fourPlayerView");
   $("multiFrame").classList.remove("active");
   $("board").parentElement.classList.remove("hiddenStandardBoard");
@@ -2502,11 +2535,11 @@ $("threePage").onclick=()=>showPage("three");
 $("fourPage").onclick=()=>showPage("four");
 $("learnTopPage").onclick=()=>showPage("learn");
 $("coursesTopPage").onclick=()=>showPage("courses");
-$("fourStartBtn").onclick=function(){ $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
-$("fourResetBtn").onclick=function(){ startMultiGame(4); };
-$("twoModeBtn").onclick=function(){ $("gameMode").value="local2"; showPage("play"); syncGameMode(); };
-$("botModeBtn").onclick=function(){ $("gameMode").value="computer"; showPage("bot"); syncGameMode(); };
-$("friendModeBtn").onclick=function(){ $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
+$("fourStartBtn").onclick=function(){ multiBotEnabled=true; $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
+$("fourResetBtn").onclick=function(){ if(multiBotTimer){clearTimeout(multiBotTimer);multiBotTimer=null;} startMultiGame(4); };
+$("twoModeBtn").onclick=function(){ multiBotEnabled=false; $("gameMode").value="local2"; showPage("play"); syncGameMode(); };
+$("botModeBtn").onclick=function(){ multiBotEnabled=true; $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
+$("friendModeBtn").onclick=function(){ multiBotEnabled=false; $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
 $("coachModeBtn").onclick=function(){
   const b=$("coachModeBtn"),tips=document.querySelector(".coachTips");
   const on=b.classList.toggle("off");
@@ -2514,7 +2547,16 @@ $("coachModeBtn").onclick=function(){
   if(tips)tips.classList.toggle("tipsClosed",on);
   if($("botSpeech"))$("botSpeech").textContent=on?"Coach Mode is paused. Turn it back on when you want tips while you play.":"Coach Mode is on — I’ll watch the position and give you a useful tip.";
 };
-$("askCoachBtn").onclick=function(){ if(typeof coachCheck==="function")coachCheck(); else if($("botSpeech"))$("botSpeech").textContent="Before every move: checks, captures, threats — then check what changed."; };
+$("askCoachBtn").onclick=function(){
+  if(typeof coachBeforeMove==="function")coachBeforeMove();
+  const reason=$("coachReason"),speech=$("botSpeech");
+  if(reason&&multiState){
+    const turn=MULTI_PLAYERS[multiState.turn]?.name||"current player";
+    const moves=multiState.moves?.length||0;
+    reason.innerHTML="<strong>How I’m evaluating:</strong> "+turn+" is to move. I’m checking checks, captures, threats, king safety, and useful development. Moves played: "+moves+".";
+  }
+  if(speech)speech.textContent="I’ll explain the chess reasons I can see on the board instead of pretending to reveal hidden internal thoughts.";
+};
 $("closeTips").onclick=function(){ const p=document.querySelector(".coachTips"); if(p)p.classList.toggle("tipsClosed"); };
 $("fourDifficulty").onchange=function(){ $("level").value=this.value; };
 $("fourBoardStyle").onchange=function(){ document.body.dataset.boardStyle=this.value.toLowerCase(); };
