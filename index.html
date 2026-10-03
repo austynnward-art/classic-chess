@@ -262,6 +262,37 @@ body.contentPage .pageTile{background:#fff}
  .fourPlayerView .coachReason{margin-top:7px;padding:8px 10px;border-radius:8px;background:#082b49;border:1px solid #1d5b84;color:#b9d8ee;font-size:9px;line-height:1.4}.fourPlayerView .coachReason strong{color:#fff}.fourPlayerView .askCoachBtn{white-space:normal;line-height:1.15;height:auto;min-height:34px;padding:7px}
 
 /* REFERENCE-MATCH PASS — compact 4-player dashboard + Learn/Courses mockup styling */
+/* SPACING + COURSE POLISH PASS */
+body.focusHome.fourPlayerView .layout{grid-template-columns:162px minmax(430px,1fr) 202px;gap:12px;margin-top:12px}
+body.focusHome.fourPlayerView .fourControls{padding:10px}
+body.focusHome.fourPlayerView .fourModeGrid{gap:6px;margin-bottom:9px}
+body.focusHome.fourPlayerView .fourModeBtn{min-height:40px;font-size:8.5px}
+body.focusHome.fourPlayerView .dashboardSelect{height:28px;margin-bottom:8px}
+body.focusHome.fourPlayerView .multiFrame{padding:9px}
+body.focusHome.fourPlayerView .fourBoardWrap{padding:18px 26px}
+body.focusHome.fourPlayerView .fourBottomGrid{gap:10px;margin-top:9px}
+body.focusHome.fourPlayerView .bottomCard{padding:8px}
+body.focusHome.fourPlayerView .right .fourCoachCard{padding:9px}
+body.focusHome.fourPlayerView .botAvatar{width:124px;height:124px}
+body.focusHome.fourPlayerView .botSpeech{margin:7px 3px;padding:8px 9px;font-size:7.5px}
+body.focusHome.fourPlayerView .coachTips{margin-top:7px;padding:7px}
+body.focusHome.fourPlayerView .tipRow{margin:5px 0}
+body.focusHome.fourPlayerView .askCoachBtn{margin-top:6px}
+body.focusHome.fourPlayerView .gameProgressCard{margin-top:7px;padding:7px}
+body.contentPage .pageCards,.contentPage .courseResourceGrid,.contentPage .ytGrid,.contentPage .resourceGrid{gap:12px}
+body.contentPage .pageTile,.contentPage .courseResource,.contentPage .ytCard,.contentPage .resourceCard{border-radius:10px}
+body.contentPage .courseVideoResources{margin-top:14px;padding:14px}
+body.contentPage .courseVideoResources h3{margin:0 0 5px;font-size:13px}
+.courseOpeningGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.courseOpening{background:#fff;border:1px solid #cfe2f3;border-radius:10px;padding:10px;box-shadow:0 3px 10px #17466b12;display:flex;flex-direction:column;gap:6px}
+.courseOpening .openingTag{font-size:7px;font-weight:900;letter-spacing:.7px;color:#1974bb;text-transform:uppercase}
+.courseOpening b{font-size:10px;color:#123b61}
+.courseOpening span{font-size:7.5px;line-height:1.4;color:#58708a;min-height:32px}
+.courseOpening a{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:#1678c9;color:#fff;border-radius:6px;padding:6px 8px;font-size:7.5px;font-weight:800;margin-top:auto}
+.courseOpening a:hover{filter:brightness(1.08);transform:translateY(-1px)}
+@media(max-width:900px){body.focusHome.fourPlayerView .layout{grid-template-columns:145px minmax(320px,1fr) 175px;gap:8px}.courseOpeningGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){body.focusHome.fourPlayerView .layout{grid-template-columns:1fr}.courseOpeningGrid{grid-template-columns:1fr}}
+
 html,body{min-height:100%;}
 body.focusHome.fourPlayerView{background:#092c50;color:#eaf4fc;overflow-x:hidden}
 body.focusHome.fourPlayerView .app{max-width:1180px;margin:0 auto;padding:0 10px 14px}
@@ -528,6 +559,38 @@ body.contentPage #courseVideoResources{display:block!important;max-width:1160px;
 <div class="courseResourcePanel" id="courseVideoResources">
   <h3>🎥 Chess Courses + Video Teachers</h3>
   <p>Study from public chess videos and open the creators' live channels. Each card gives you YouTube and Twitch links.</p>
+  <div class="courseOpeningGrid" aria-label="Opening video courses">
+  <article class="courseOpening">
+    <span class="openingTag">White repertoire</span><b>1.e4 Starter Course</b>
+    <span>Learn the opening principles behind 1.e4 and build a simple first-move repertoire.</span>
+    <a href="https://www.youtube.com/results?search_query=1.e4+chess+opening+course" target="_blank" rel="noopener">Watch 1.e4 lessons →</a>
+  </article>
+  <article class="courseOpening">
+    <span class="openingTag">Black vs 1.e4</span><b>Caro-Kann Defense</b>
+    <span>Study 1.e4 c6 2.d4 d5, the main ideas, Advance, Exchange and main-line positions.</span>
+    <a href="https://www.youtube.com/watch?v=HvER2idtW6M" target="_blank" rel="noopener">Watch Caro-Kann →</a>
+  </article>
+  <article class="courseOpening">
+    <span class="openingTag">White vs 1...e5</span><b>Italian Game</b>
+    <span>Build plans from 1.e4 e5 2.Nf3 Nc6 3.Bc4 and learn the Giuoco Piano ideas.</span>
+    <a href="https://www.youtube.com/watch?v=qUews8fEGkc" target="_blank" rel="noopener">Watch Italian Game →</a>
+  </article>
+  <article class="courseOpening">
+    <span class="openingTag">Black vs 1.e4</span><b>Sicilian Defense</b>
+    <span>Explore the Sicilian setup, major branches and the plans that make each side's play different.</span>
+    <a href="https://www.youtube.com/watch?v=impkeLfyyVM" target="_blank" rel="noopener">Watch Sicilian →</a>
+  </article>
+  <article class="courseOpening">
+    <span class="openingTag">White repertoire</span><b>Queen’s Gambit</b>
+    <span>Practice the d4 setup, central tension and common plans from the Queen’s Gambit family.</span>
+    <a href="https://www.youtube.com/results?search_query=Queen%27s+Gambit+chess+opening+course" target="_blank" rel="noopener">Watch QG lessons →</a>
+  </article>
+  <article class="courseOpening">
+    <span class="openingTag">Black vs 1.d4</span><b>King’s Indian Defense</b>
+    <span>Learn the fianchetto setup, kingside attacking ideas and central breaks.</span>
+    <a href="https://www.youtube.com/results?search_query=King%27s+Indian+Defense+chess+opening+course" target="_blank" rel="noopener">Watch KID lessons →</a>
+  </article>
+</div>
   <div class="courseResourceGrid">
     <article class="courseResource"><b>GothamChess</b><span>Beginner-friendly lessons, openings, tactics and game breakdowns.</span><div class="courseResourceLinks"><a href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener">YouTube</a><a class="secondary" href="https://www.twitch.tv/gothamchess" target="_blank" rel="noopener">Twitch</a></div></article>
     <article class="courseResource"><b>Chess.com</b><span>Rules, fundamentals, lessons, events and broad training content.</span><div class="courseResourceLinks"><a href="https://www.youtube.com/@chess" target="_blank" rel="noopener">YouTube</a><a class="secondary" href="https://www.twitch.tv/chess" target="_blank" rel="noopener">Twitch</a></div></article>
