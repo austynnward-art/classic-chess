@@ -546,7 +546,7 @@ const learningLines={
     ["e4","e5"],["nc3","nc6"],["f4","exf4"],["nf3","d6"],["bb5","bd7"]
   ],
   caro:[
-    ["e4","c6"],["d4","d5"],["exd5","cxd5"],["bd3","nc6"],["nf3","n6"]
+    ["e4","c6"],["d4","d5"],["exd5","cxd5"],["bd3","nc6"],["nf3","g6"]
   ]
 };
 function uciToMove(x,uci){
@@ -563,7 +563,7 @@ function setLearningOpening(kind){
 function resetLearningGame(){if(learningCourse)setLearningOpening(learningCourse);else{learningState=initial();renderLearningBoard();}}
 function trainerOpponent(){
   if(!learningCourse||learningState.turn!=="b")return;
-  const expected=learningLine[learningPly]?.[1];
+  const expected=learningLine[Math.floor(learningPly/2)]?.[1];
   const move=expected?uciToMove(learningState,expected):null;
   if(move){learningState=apply(learningState,move);learningPly++;renderLearningBoard();renderTrainerMoves();}
 }
