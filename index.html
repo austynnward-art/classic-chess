@@ -6,20 +6,20 @@
 <title>Classic Chess — Single File</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(#f5ead4,#e9dcc1);color:#3b2918;font-family:Georgia,"Times New Roman",serif}
+body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-serif}
 .app{max-width:1280px;margin:auto;padding:0 10px 12px}
-.top{height:88px;background:linear-gradient(#fffaf0,#f1dfbd);border:1px solid #c5a977;border-radius:0 0 8px 8px;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;box-shadow:0 3px 9px #5d3b2130}
-.brand{display:flex;gap:14px;align-items:center}.brand .horse{font-size:55px;line-height:1}.brand h1{margin:0;font-size:31px}.brand small{font-size:17px;color:#765c3d;letter-spacing:.5px}
+.top{height:88px;background:#ffffff;border:1px solid #d9dee5;border-radius:0 0 12px 12px;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;box-shadow:0 3px 14px rgba(30,40,55,.08)}
+.brand{display:flex;gap:14px;align-items:center}.brand .horse{font-size:55px;line-height:1}.brand h1{margin:0;font-size:31px}.brand small{font-size:17px;color:#6b7280;letter-spacing:.5px}
 .layout{display:grid;grid-template-columns:190px minmax(500px,840px) 190px;gap:18px;margin-top:10px;align-items:start}
-.card{background:linear-gradient(135deg,#fffaf0,#f4e8cf);border:1px solid #c6ad82;border-radius:7px;padding:13px;box-shadow:0 2px 6px #5d3b2124}
+.card{background:#ffffff;border:1px solid #d9dee5;border-radius:10px;padding:13px;box-shadow:0 2px 10px rgba(30,40,55,.07)}
 .player{font-size:20px;font-weight:bold}.small{display:block;font-size:15px;font-weight:normal;margin-top:2px;color:#6d5538}
 .clock{font-size:38px;text-align:center;margin:12px 0 4px;font-weight:bold}.active{box-shadow:inset 0 0 0 2px #a66a2e,0 2px 6px #5d3b2124}
 .captured{font-size:23px;min-height:105px;margin-top:8px;line-height:1.5}
-.frame{width:100%;aspect-ratio:1;background:#f7f5f2;border:1px solid #ded9d3;border-radius:14px;padding:10px;box-shadow:0 8px 24px rgba(35,30,25,.12)}
+.frame{width:100%;aspect-ratio:1;background:#ffffff;border:1px solid #d9dee5;border-radius:14px;padding:10px;box-shadow:0 8px 24px rgba(30,40,55,.12)}
 .board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:100%;height:100%;aspect-ratio:1;border:0;border-radius:8px;overflow:hidden}
 .sq{position:relative;width:100%;height:100%;min-width:0;min-height:0;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-family:"Times New Roman",serif;font-size:clamp(40px,8vw,82px);line-height:1}
-.light{background:#f0ebe5}.dark{background:#9b806b}.sq:hover{filter:brightness(1.07)}
-.selected{outline:4px solid #d69b52;outline-offset:-4px}.last{background-image:linear-gradient(#e5bd5366,#e5bd5366)}
+.light{background:#e7ebf0}.dark{background:#9aa6b5}.sq:hover{filter:brightness(1.07)}
+.selected{outline:4px solid #3b82f6;outline-offset:-4px}.last{background-image:linear-gradient(#e5bd5366,#e5bd5366)}
 .legal:after{content:"";position:absolute;width:16%;height:16%;border-radius:50%;background:#5b4635aa}
 .capture:after{content:"";position:absolute;inset:6%;border:4px solid #d69b52aa;border-radius:50%}
 .piece{
@@ -55,10 +55,10 @@ body{margin:0;background:linear-gradient(#f5ead4,#e9dcc1);color:#3b2918;font-fam
 }
 .coord{position:absolute;font:700 11px Arial;color:#63401f88;pointer-events:none}.rank{left:4px;top:3px}.file{right:4px;bottom:3px}
 .controls{display:grid;grid-template-columns:1.25fr 1.15fr 1.15fr 1.15fr 1.15fr;gap:12px;margin-top:13px}
-.btn{border:1px solid #c3aa7c;background:linear-gradient(#fffaf0,#f0e0c0);border-radius:7px;padding:13px 7px;cursor:pointer;font:16px Georgia;color:#49321e;box-shadow:0 2px 4px #5d3b2118}.btn:hover{background:#ead9b7}.primary{background:linear-gradient(#8b5427,#633719);color:#fff8e9;border-color:#5a3218}
+.btn{border:1px solid #c3aa7c;background:linear-gradient(#fffaf0,#f0e0c0);border-radius:7px;padding:13px 7px;cursor:pointer;font:16px Georgia;color:#27313d;box-shadow:0 2px 4px rgba(30,40,55,.08)}.btn:hover{background:#ead9b7}.primary{background:#2563eb;color:#fff;border-color:#2563eb}
 .options{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0 auto;justify-content:flex-end;border-left:1px solid #bda477;padding-left:14px}
-.select{padding:8px 25px 8px 9px;border:1px solid #bca887;border-radius:5px;background:#fffaf0;color:#49321e;font:14px Georgia}
-.status{margin-top:10px;padding:11px;background:linear-gradient(#fff9ec,#f2e3c5);border:1px solid #c7b596;border-radius:7px;display:flex;justify-content:space-between;font-size:15px}
+.select{padding:8px 25px 8px 9px;border:1px solid #bca887;border-radius:5px;background:#fffaf0;color:#27313d;font:14px Inter,Arial,sans-serif}
+.status{margin-top:10px;padding:11px;background:#ffffff;border:1px solid #d9dee5;border-radius:7px;display:flex;justify-content:space-between;font-size:15px}
 .moves{font:13px monospace;max-height:315px;overflow:auto;margin-top:8px}.move{display:grid;grid-template-columns:30px 1fr 1fr;padding:7px 0;border-bottom:1px solid #e1d3b8}
 @media(max-width:950px){.layout{grid-template-columns:1fr}.center{order:1}.learnShell{grid-column:auto;order:2}.left{order:3}.right{order:4}.controls{grid-template-columns:repeat(3,1fr)}.options{justify-content:flex-start;border-left:0;padding-left:0}}
 
@@ -68,7 +68,7 @@ body{margin:0;background:linear-gradient(#f5ead4,#e9dcc1);color:#3b2918;font-fam
 .learnShell{grid-column:2;margin-top:18px;background:#fbfaf9;border:1px solid #e7e1dc;border-radius:16px;padding:22px;box-shadow:0 8px 28px rgba(35,30,25,.08);font-family:Inter,Arial,sans-serif;color:#171717}
 .learnHeader{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}.learnHeader h2{margin:0;font:700 26px Inter,Arial,sans-serif}.learnHeader p{margin:5px 0 0;color:#777;font:14px Inter,Arial,sans-serif}.learnBadge{background:#f1ece8;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700}
 .courseGrid{display:grid;grid-template-columns:390px 1fr;gap:24px}.courseHero{background:#f2eee9;border-radius:14px;min-height:300px;overflow:hidden;position:relative;padding:18px;display:flex;flex-direction:column;justify-content:flex-end}.courseArt{position:absolute;inset:0;background:radial-gradient(circle at 50% 32%,#fff 0 8%,transparent 9%),linear-gradient(160deg,#e9d8c7,#f7f3ef 48%,#ddd2c8);display:grid;place-items:center}.courseArt:after{content:"♞";font-size:120px;color:#272321;filter:drop-shadow(0 8px 7px #0003)}.courseHeroText{position:relative;background:linear-gradient(transparent,#f2eee9 20%);margin:0 -18px -18px;padding:55px 18px 18px}.courseHeroText h3{margin:0 0 6px;font-size:21px}.courseHeroText p{margin:0;color:#68625d;line-height:1.4;font-size:13px}.courseForm{display:grid;gap:13px}.courseField label{display:block;font-size:14px;font-weight:700;margin:0 0 7px}.courseSelect{width:100%;height:48px;border:1px solid #e3ded9;border-radius:10px;background:#fff;padding:0 14px;font:600 15px Inter,Arial,sans-serif;color:#222}.colorChoice{display:grid;grid-template-columns:1fr 1fr;gap:10px}.colorBtn{height:42px;border:1px solid #e3ded9;background:#fff;border-radius:9px;font-weight:700;cursor:pointer}.colorBtn.active{background:#e8dfdc;border-color:#ddd1cc}.toggleRow{display:flex;align-items:center;justify-content:space-between;gap:12px}.toggle{width:42px;height:24px;border-radius:99px;background:#ddd;position:relative;cursor:pointer;border:0}.toggle:after{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;box-shadow:0 1px 3px #0003}.toggle.on{background:#6b4b3a}.toggle.on:after{left:21px}.startCourse{height:48px;border:0;border-radius:10px;background:#222;color:#fff;font:700 15px Inter,Arial,sans-serif;cursor:pointer}.startCourse:hover{background:#3a3531}.courseNote{font-size:12px;color:#8a817a;margin:0}.chapterBox{padding:11px 13px;background:#faf8f6;border:1px solid #e7e1dc;border-radius:10px;color:#5e5853;font-size:13px}.learnProgress{display:flex;gap:5px;margin-top:16px}.learnProgress span{height:5px;flex:1;border-radius:5px;background:#e3ddd8}.learnProgress span.done{background:#765542}
-.courseMiniFrame{width:min(100%,430px);margin:auto;background:#5a3218;border:8px solid #5a3218;border-radius:12px;padding:0;box-shadow:0 6px 16px #0002}.courseBoard{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);aspect-ratio:1;width:100%;overflow:hidden}.courseSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(25px,6vw,48px);line-height:1}.courseSq.light{background:#f1dfbf}.courseSq.dark{background:#b87535}.courseSq.selected{outline:4px solid #765542;outline-offset:-4px}.courseSq.legal:after{content:"";width:13%;height:13%;border-radius:50%;background:#3f2a1d88;position:absolute}.courseSq.capture:after{content:"";position:absolute;inset:7%;border:3px solid #3f2a1d88;border-radius:50%}.coursePiece{filter:drop-shadow(0 2px 2px #0003)}.coursePlayStatus{font-size:12px;color:#777;margin-top:8px}@media(max-width:800px){.courseGrid{grid-template-columns:1fr}.courseHero{min-height:260px}}
+.courseMiniFrame{width:min(100%,430px);margin:auto;background:#27313d;border:8px solid #27313d;border-radius:12px;padding:0;box-shadow:0 6px 16px #0002}.courseBoard{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);aspect-ratio:1;width:100%;overflow:hidden}.courseSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(25px,6vw,48px);line-height:1}.courseSq.light{background:#e7ebf0}.courseSq.dark{background:#9aa6b5}.courseSq.selected{outline:4px solid #765542;outline-offset:-4px}.courseSq.legal:after{content:"";width:13%;height:13%;border-radius:50%;background:#3f2a1d88;position:absolute}.courseSq.capture:after{content:"";position:absolute;inset:7%;border:3px solid #3f2a1d88;border-radius:50%}.coursePiece{filter:drop-shadow(0 2px 2px #0003)}.coursePlayStatus{font-size:12px;color:#777;margin-top:8px}@media(max-width:800px){.courseGrid{grid-template-columns:1fr}.courseHero{min-height:260px}}
 </style>
 </head>
 <body>
@@ -98,7 +98,7 @@ body{margin:0;background:linear-gradient(#f5ead4,#e9dcc1);color:#3b2918;font-fam
 <label>Play as: <select class="select" id="side"><option value="w">White</option><option value="b">Black</option></select></label>
 <label>Time Control: <select class="select" id="time"><option value="600">10 min</option><option value="300">5 min</option><option value="180">3 min</option></select></label>
 </div>
-<div class="status"><span id="status">🟢 &nbsp;White to move</span><span id="result">Classic Wood Style · AI ratings are strength presets</span></div>
+<div class="status"><span id="status">🟢 &nbsp;White to move</span><span id="result">Modern Board · AI ratings are strength presets</span></div>
 <div class="card analysisCard" id="analysisPanel">
   <b>Analysis</b>
   <div class="analysisGrid">
