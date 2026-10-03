@@ -54,6 +54,8 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .hiddenStandardBoard{display:none!important}.multiFrame{display:none;margin-top:12px;background:#fff;border:1px solid #d9dee5;border-radius:14px;padding:10px;box-shadow:0 8px 24px rgba(30,40,55,.12)}.multiFrame.active{display:block}.multiBoard{width:min(100%,760px);margin:auto;display:grid;grid-template-columns:repeat(14,1fr);aspect-ratio:1;border:2px solid #6b4b3a;border-radius:9px;overflow:hidden;background:#d8c8ad}.multiSq{position:relative;border:0;padding:0;display:grid;place-items:center;font:clamp(18px,4vw,43px) "Times New Roman",serif;line-height:1;cursor:pointer;min-width:0;min-height:0}.multiSq.playable.light{background:#ead1a9}.multiSq.playable.dark{background:#b98258}.multiSq.void{background:#d9dde3;cursor:default}.multiSq.selected{outline:4px solid #2563eb;outline-offset:-4px}.multiSq.legal:after{content:"";width:16%;height:16%;border-radius:50%;background:#3f2a1d88;position:absolute}.multiSq.capture:after{content:"";position:absolute;inset:7%;border:3px solid #3f2a1d88;border-radius:50%}.multiPiece{display:flex;align-items:center;justify-content:center;width:78%;height:78%;filter:drop-shadow(0 3px 2px #0005)}.multiPiece.red{color:#b32929;text-shadow:0 2px 0 #6f1616,0 3px 2px #0003}.multiPiece.blue{color:#2166c1;text-shadow:0 2px 0 #123f7d,0 3px 2px #0003}.multiPiece.yellow{color:#d29411;text-shadow:0 2px 0 #8b5e08,0 3px 2px #0003}.multiPiece.green{color:#2b8f4a;text-shadow:0 2px 0 #1b5d30,0 3px 2px #0003}.multiInfo{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;margin:9px 0 0}.multiBadge{padding:7px 10px;border-radius:999px;background:#f4efe8;font-size:12px;font-weight:800}.multiNote{margin-top:8px;font-size:11px;color:#777}.multiControls{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}@media(max-width:700px){.multiBoard{width:100%}.options{gap:8px}.select{max-width:180px}}.resourceHero{margin-top:8px;padding:24px;border-radius:14px;background:linear-gradient(135deg,#f1ece8,#faf8f6);border:1px solid #e4ddd7}.resourceKicker{font-size:11px;font-weight:800;letter-spacing:1.4px;color:#765542}.resourceHero h3{margin:5px 0 7px;font-size:24px}.resourceHero p{max-width:760px;color:#666;line-height:1.5;margin:0 0 14px}.resourceBtn{display:inline-block;margin:4px 7px 0 0;padding:10px 13px;border-radius:9px;background:#222;color:#fff;text-decoration:none;font-weight:700;font-size:13px}.resourceBtn.secondary{background:#fff;color:#222;border:1px solid #d9d2cc}.resourceSection{margin-top:20px}.resourceSectionHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.resourceSectionHead h3{margin:0;font-size:18px}.resourceSectionHead span{font-size:11px;font-weight:800;color:#777;text-transform:uppercase}.resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.resourceCard{display:block;padding:13px;border:1px solid #e2ddd8;border-radius:11px;background:#fff;text-decoration:none;color:#222;transition:transform .12s ease,box-shadow .12s ease}.resourceCard:hover{transform:translateY(-2px);box-shadow:0 5px 14px #00000012}.resourceCard b{display:block;font-size:14px}.resourceCard span{display:block;margin-top:5px;font-size:12px;color:#777;line-height:1.4}.gothamGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.gothamCard{overflow:hidden;border:1px solid #e2ddd8;border-radius:11px;background:#fff}.gothamVideo{aspect-ratio:16/9;background:#111}.gothamVideo iframe{width:100%;height:100%;border:0;display:block}.gothamBody{padding:12px}.gothamBody b{display:block;font-size:14px}.gothamBody span{display:block;margin:5px 0 9px;color:#777;font-size:12px;line-height:1.4}.gothamBody a,.resourceMore a{color:#2563eb;font-size:12px;font-weight:800;text-decoration:none}.resourceMore{text-align:center;margin-top:12px}.resourceNote{margin-top:18px;padding:11px 13px;border-radius:9px;background:#f7f5f3;color:#777;font-size:11px;line-height:1.4}@media(max-width:800px){.resourceGrid,.gothamGrid{grid-template-columns:1fr}}
 
 .courseCarousel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.courseCard{background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:18px;box-shadow:0 4px 14px #0000000b}.courseTag{font-size:10px;font-weight:900;letter-spacing:1.2px;color:#765542}.courseCard h3{margin:6px 0 7px;font-size:19px}.courseCard p{margin:0;color:#666;line-height:1.5;font-size:13px}.courseBtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.learningTrainer{margin-top:18px;background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:16px}.trainerHead{display:flex;justify-content:space-between;gap:12px;align-items:center}.trainerHead h3{margin:0 0 4px}.trainerHead p{margin:0;color:#777;font-size:12px}.trainerGrid{display:grid;grid-template-columns:minmax(320px,620px) 1fr;gap:16px;margin-top:14px}.learningBoard{display:grid;grid-template-columns:repeat(8,1fr);width:100%;aspect-ratio:1;border-radius:9px;overflow:hidden;box-shadow:0 3px 12px #0002}.learningSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(24px,5.2vw,50px);line-height:1;overflow:hidden}.learningBoard .learningSq.light{background-color:#f0d9b5 !important;background-image:none}.learningBoard .learningSq.dark{background-color:#b58863 !important;background-image:none}.learningSq.selected{outline:4px solid #2563eb;outline-offset:-4px}.learningSq.hint{box-shadow:inset 0 0 0 4px #22c55e}.learningPiece{font-family:"Times New Roman",serif}.learningPiece.whitePiece{color:#fffdf7;text-shadow:0 2px 0 #8b633b,1px 0 0 #805a32,-1px 0 0 #805a32,0 4px 2px #0006}.learningPiece.blackPiece{color:#15120f;text-shadow:0 2px 0 #050403,1px 0 0 #302318,-1px 0 0 #302318,0 4px 3px #0007}.trainerSide{display:grid;align-content:start;gap:10px}.trainerPanel{border:1px solid #e5ddd5;border-radius:10px;padding:12px;background:#faf8f6}.trainerPanel b{display:block;margin-bottom:6px}.trainerPanel span,.trainerPanel a{display:block;color:#777;font-size:12px;line-height:1.45}.trainerPanel a{color:#2563eb;text-decoration:none;margin-top:6px}@media(max-width:800px){.courseCarousel,.trainerGrid{grid-template-columns:1fr}.trainerHead{align-items:flex-start}}
+
+.courseBoard,.learningBoard{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));aspect-ratio:1/1;width:100%;height:auto}.courseSq,.learningSq{aspect-ratio:1/1;min-width:0;min-height:0;width:100%;height:100%}.gameReview{margin-top:12px;padding:13px;border:1px solid #d9dee5;border-radius:10px;background:#fff;display:none}.gameReview.show{display:block}.reviewGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}.reviewStat{padding:9px;border-radius:8px;background:#f7f4ef}.reviewStat b{display:block;font-size:17px}.reviewStat span{font-size:11px;color:#777}.reviewText{margin-top:9px;font-size:13px;line-height:1.45;color:#555}.botBadge{display:flex;align-items:center;gap:8px;margin-top:8px;padding:7px 8px;border-radius:9px;background:#f6f1eb}.botAvatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#171717;color:#fff;font-weight:900;font-size:12px}.botBadge a{color:#2563eb;text-decoration:none;font-size:11px;font-weight:800}.winOverlay{position:fixed;inset:0;z-index:1000;display:none;place-items:center;background:#0008;pointer-events:none}.winOverlay.show{display:grid}.winCard{padding:28px 34px;border-radius:18px;background:#fff;box-shadow:0 16px 50px #0008;text-align:center;animation:winPop .45s ease-out}.winCard .winIcon{font-size:62px;animation:winBounce .8s ease-in-out infinite alternate}.winCard h2{margin:7px 0 4px;font-size:30px}.winCard p{margin:0;color:#666}@keyframes winPop{from{transform:scale(.65);opacity:0}to{transform:scale(1);opacity:1}}@keyframes winBounce{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-9px) rotate(5deg)}}
 </style>
 </head>
 <body>
@@ -126,12 +128,13 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   </div>
   <div class="analyzeRow">
     <button class="btn" id="analyze" type="button">Analyze position</button>
+    <button class="btn" id="reviewGame" type="button">Game review</button>
     <button class="btn" id="clearArrow" type="button">Clear arrow</button>
   </div>
   <div class="engineStatus" id="engineStatus">Starting Stockfish…</div>
   <label class="small" style="margin-top:8px">Engine strength <span id="eloValue">1800</span></label>
   <input class="range" id="elo" type="range" min="800" max="3000" step="100" value="1800">
-  <div class="analysisGraph"><canvas id="evalGraph"></canvas></div>
+  <div class="gameReview" id="gameReview"><b>Game Review</b><div class="reviewGrid"><div class="reviewStat"><b id="reviewResult">—</b><span>Result</span></div><div class="reviewStat"><b id="reviewMoves">0</b><span>Moves</span></div><div class="reviewStat"><b id="reviewOpening">—</b><span>Opening</span></div><div class="reviewStat"><b id="reviewMaterial">0</b><span>Material</span></div></div><div class="reviewText" id="reviewText">Finish a game to see a review.</div></div><div class="analysisGraph"><canvas id="evalGraph"></canvas></div>
   <div class="small" style="margin-top:5px">Positions analyzed: <span id="movesAnalyzed">0</span></div>
 </div>
 </main>
@@ -363,12 +366,13 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   </div></div>
 </section>
 <aside class="right">
-<div class="card" id="blackCard"><div class="player">Black <span class="small" id="blackLabel">Computer</span></div><div class="clock" id="bc">10:00</div></div>
+<div class="card" id="blackCard"><div class="player">Black <span class="small" id="blackLabel">Computer</span></div><div class="clock" id="bc">10:00</div><div class="botBadge"><div class="botAvatar">GC</div><div><b>GothamChess Bot</b><br><a href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener">GothamChess channel →</a></div></div></div>
 <div class="card"><b>Captured</b><div class="captured" id="bcap">—</div></div>
 <div class="card"><b>Move History</b><div class="moves" id="moves"></div></div>
 </aside>
 </div>
 </div>
+<div class="winOverlay" id="winOverlay" aria-live="polite"><div class="winCard"><div class="winIcon">♛</div><h2 id="winTitle">Game over</h2><p id="winText">The game has ended.</p></div></div>
 <script>
 (()=> {
 const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"}},F="abcdefgh".split("");
@@ -480,6 +484,9 @@ function updateOpening(){
   if(history[0]==="e4"&&history[1]==="e5"&&history[2]==="Nf3"&&history[3]==="Nc6"&&history[4]==="Bb5") found="Ruy Lopez";
   $("openingName").textContent=found;
 }
+function showWinAnimation(title,text){const o=$("winOverlay");if(!o)return;$("winTitle").textContent=title;$("winText").textContent=text;o.classList.add("show");setTimeout(()=>o.classList.remove("show"),2600)}
+function reviewGame(){const panel=$("gameReview");if(!panel)return;let result="In progress";if(over){if($("status").textContent.toLowerCase().includes("draw"))result="Draw";else if(check(s,s.turn))result=(s.turn==="w"?"Black":"White")+" wins by mate";else result=s.turn==="w"?"Black wins":"White wins";}const materialScore=score(s,"w");$("reviewResult").textContent=result;$("reviewMoves").textContent=history.length;$("reviewOpening").textContent=$("openingName").textContent||"Starting position";$("reviewMaterial").textContent=(materialScore>0?"+":"")+materialScore;$("reviewText").textContent=history.length?("Reviewed "+history.length+" plies. Opening: "+$("openingName").textContent+". Material balance: "+(materialScore>0?"White +":"")+materialScore+". Use Analyze position for engine evaluation and the best-move arrow."):"No moves yet. Play a game first.";panel.classList.add("show")}
+if($("reviewGame"))$("reviewGame").onclick=reviewGame;
 function updateAccuracy(){if(!evalHistory.length){$("accuracy").textContent="—";return}let total=0;for(let i=1;i<evalHistory.length;i++){const loss=Math.max(0,Math.abs(evalHistory[i-1]-evalHistory[i]));total+=Math.min(100,loss*18)}$("accuracy").textContent=Math.max(0,Math.round(100-total/Math.max(1,evalHistory.length-1)))+"%"}
 function render(){
 const B=$("board");
@@ -621,6 +628,7 @@ function computer(){
     snapshots.push(clone(s));
     s=apply(s,bookMove.f,bookMove.t);
     history.push(san(before,bookMove));
+    recordEval(score(s,"w")/100);
     updateOpening();
     thinking=false;
     render();
@@ -638,12 +646,13 @@ function computer(){
       snapshots.push(clone(s));
       s=apply(s,m.f,m.t);
       history.push(san(before,m));
+      recordEval(score(s,"w")/100);
       updateOpening();
     }catch(err){
       const moves=all(s,s.turn);
       if(moves.length){
         const m=moves[0],before=clone(s);
-        snapshots.push(clone(s));s=apply(s,m.f,m.t);history.push(san(before,m));updateOpening();
+        snapshots.push(clone(s));s=apply(s,m.f,m.t);history.push(san(before,m));recordEval(score(s,"w")/100);updateOpening();
       }
     }
     thinking=false;
@@ -1161,8 +1170,13 @@ function finish(){
   if(!moves.length){
     over=true;
     thinking=false;
-    $("status").textContent=check(s,s.turn)?((s.turn==="w"?"White":"Black")+" is checkmated"):"Draw — stalemate";
+    const checkedSide=s.turn;
+    const winner=opp(checkedSide);
+    const isMate=check(s,checkedSide);
+    $("status").textContent=isMate?((checkedSide==="w"?"White":"Black")+" is checkmated"):"Draw — stalemate";
     render();
+    if(isMate)showWinAnimation(winner==="b"?"GothamChess Bot wins!":"You win!",winner==="b"?"Checkmate. The bot finished the game.":"Checkmate. Great finish!");
+    else reviewGame();
   }
 }
 syncGameMode();
