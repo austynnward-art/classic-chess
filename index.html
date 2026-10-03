@@ -1121,22 +1121,25 @@ $("multiNew").onclick=function(){startMultiGame(gameMode==="local4"?4:3);};
 $("multiReset").onclick=function(){startMultiGame(gameMode==="local4"?4:3);};
 $("time").onchange=()=>{newGame()};
 $("draw").onclick=function(){
-  if(gameMode!=="local3"&&gameMode!=="local4")return;
-  if(!multiState||multiState.winner)return;
-  const offerer=multiState.turn,others=multiState.activeColors.filter(x=>x!==offerer);
-  if(!others.length)return;
-  const accepted=others.every(x=>window.confirm(MULTI_PLAYERS[offerer].name+" offers a draw. "+MULTI_PLAYERS[x].name+", accept?"));
-  if(accepted){
-    multiState.drawOffer=offerer;multiState.winner=null;multiSelected=null;multiLegal=[];
-    $("multiTurn").textContent="Draw agreed — game over";
-    $("status").textContent="½ Draw agreed by all active players";
-    renderMulti();
-  }else{
-    multiState.drawOffer=null;
-    $("status").textContent=MULTI_PLAYERS[offerer].name+" draw offer declined";
-    renderMulti();
+  if(gameMode==="local3"||gameMode==="local4"){
+    if(!multiState||multiState.winner)return;
+    const offerer=multiState.turn,others=multiState.activeColors.filter(x=>x!==offerer);
+    if(!others.length)return;
+    const accepted=others.every(x=>window.confirm(MULTI_PLAYERS[offerer].name+" offers a draw. "+MULTI_PLAYERS[x].name+", accept?"));
+    if(accepted){
+      multiState.drawOffer=offerer;multiSelected=null;multiLegal=[];
+      $("multiTurn").textContent="Draw agreed — game over";
+      $("status").textContent="½ Draw agreed by all active players";
+      renderMulti();
+    }else{
+      multiState.drawOffer=null;
+      $("status").textContent=MULTI_PLAYERS[offerer].name+" draw offer declined";
+      renderMulti();
+    }
+    return;
   }
-};
+  handleDraw();
+}
 function formatTime(n){n=Math.max(0,Math.floor(n));return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
 function opponentCanWin(side){
   for(let r=0;r<8;r++)for(let c=0;c<8;c++){
