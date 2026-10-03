@@ -19,8 +19,10 @@ test('Classic Chess visual walkthrough', async ({ page }) => {
   await page.locator('#coursesTopPage').click();
   await expect(page.locator('.chesslyCourseDash')).toBeVisible();
   await expect(page.locator('.ytShell')).toBeVisible();
+  await expect(page.locator('.ytShell iframe')).toHaveCount(6);
   await page.waitForTimeout(1400);
   await page.locator('#learnTopPage').click();
+  await expect(page.locator('#learningBoard')).toBeVisible();
   await expect(page.locator('#learningBoard')).toBeVisible();
   await page.waitForTimeout(1200);
   await page.locator('#coursesTopPage').click();
