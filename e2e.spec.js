@@ -28,3 +28,15 @@ test("academy course cards open the matching trainer lesson",async({page})=>{
   await expect(page.locator("#learn")).toHaveClass(/active/);
   await expect(page.locator("#lessonProgress")).toContainText("Forcing moves");
 });
+
+test("trainer board uses the same click and drag move state",async({page})=>{
+  await page.goto("/");
+  await page.locator('[data-page="learn"]').first().click();
+  await page.locator('.lesson[data-lesson="opening"]').click();
+  const cell=(file,rank)=>page.locator('#learnBoard .sq[data-file="'+file+'"][data-rank="'+rank+'"]');
+  await cell("e",2).click();
+  await expect(cell("e",4)).toHaveClass(/legal/);
+  await cell("e",4).click();
+  await expect(cell("e",4).locator("img")).toHaveCount(1);
+  await expect(cell("e",2).locator("img")).toHaveCount(0);
+});
