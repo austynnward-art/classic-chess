@@ -257,6 +257,7 @@ body.contentPage .pageTile{background:#fff}
   body.focusHome .pageNav{width:100%;justify-content:center}
   body.contentPage .pageArt,.body.contentPage .pageArt svg{min-height:260px}
 }
+ .fourPlayerView .coachReason{margin-top:7px;padding:8px 10px;border-radius:8px;background:#082b49;border:1px solid #1d5b84;color:#b9d8ee;font-size:9px;line-height:1.4}.fourPlayerView .coachReason strong{color:#fff}.fourPlayerView .askCoachBtn{white-space:normal;line-height:1.15;height:auto;min-height:34px;padding:7px}
 </style>
 </head>
 <body>
@@ -501,7 +502,7 @@ body.contentPage .pageTile{background:#fff}
       <div class="tipRow"><i>♜</i><div><b>Develop your pieces</b><span>Get your knights and bishops out early.</span></div></div>
       <div class="tipRow"><i>!</i><div><b>Watch all four players</b><span>Don't just focus on one side.</span></div></div>
       <div class="tipRow"><i>♔</i><div><b>Keep your king safe</b><span>Always check threats before moving.</span></div></div>
-      <button class="askCoachBtn" id="askCoachBtn" type="button">💬 <span>Ask Coach</span> ›</button>
+      <button class="askCoachBtn" id="askCoachBtn" type="button">🧠 <span>Show Me What You’re Thinking</span> ›</button><div class="coachReason" id="coachReason" aria-live="polite">I’ll explain the position using visible chess reasons: threats, captures, king safety, and whose turn it is.</div>
       <button class="coachModeBtn" id="coachModeBtn" type="button">🧠 Coach Mode: ON</button>
     </div>
     <div class="gameProgressCard"><b id="fourProgressTitle">Game in progress...</b><span id="fourProgressText">Make your move!</span></div>
@@ -1201,7 +1202,16 @@ $("coachModeBtn").onclick=function(){
   if(tips)tips.classList.toggle("tipsClosed",on);
   if($("botSpeech"))$("botSpeech").textContent=on?"Coach Mode is paused. Turn it back on when you want tips while you play.":"Coach Mode is on — I’ll watch the position and give you a useful tip.";
 };
-$("askCoachBtn").onclick=function(){ if(typeof coachCheck==="function")coachCheck(); else if($("botSpeech"))$("botSpeech").textContent="Before every move: checks, captures, threats — then check what changed."; };
+$("askCoachBtn").onclick=function(){
+  const reason=$("coachReason"), speech=$("botSpeech");
+  if(typeof coachCheck==="function") coachCheck();
+  if(reason){
+    const turn=multiState&&multiState.turn?multiState.turn[0].toUpperCase()+multiState.turn.slice(1):"current";
+    const moveCount=multiState&&multiState.moves?multiState.moves.length:0;
+    reason.innerHTML="<strong>How I’m evaluating:</strong> It’s "+turn+"’s turn. I’m checking immediate threats, captures, king safety, and useful developing moves before suggesting a plan. Moves played: "+moveCount+".";
+  }
+  if(speech) speech.textContent="I can explain my recommendation, but I won’t pretend to reveal hidden internal thoughts. I’ll show the chess reasons you can actually use.";
+};
 $("closeTips").onclick=function(){ const p=document.querySelector(".coachTips"); if(p)p.classList.toggle("tipsClosed"); };
 $("fourDifficulty").onchange=function(){ $("level").value=this.value; };
 $("fourBoardStyle").onchange=function(){ document.body.dataset.boardStyle=this.value.toLowerCase(); };
