@@ -809,14 +809,14 @@ function trainerOpponent(){
   if(!learningCourse||learningState.turn!=="b")return;
   const expected=learningLine[Math.floor(learningPly/2)]?.[1];
   const move=expected?uciToMove(learningState,expected):null;
-  if(move){learningState=apply(learningState,move);learningPly++;renderLearningBoard();renderTrainerMoves();}
+  if(move){learningState=apply(learningState,move.f,move.t);learningPly++;renderLearningBoard();renderTrainerMoves();}
 }
 function learningTap(r,c){
   if(!learningCourse||learningState.turn!=="w")return;
   if(learningSel){
     const m=learningLegal.find(z=>z.tr===r&&z.tc===c);
     if(m){
-      learningState=apply(learningState,m);learningSel=null;learningLegal=[];learningPly++;
+      learningState=apply(learningState,[m.fr,m.fc],[m.tr,m.tc]);learningSel=null;learningLegal=[];learningPly++;
       renderLearningBoard();renderTrainerMoves();setTimeout(trainerOpponent,280);return;
     }
   }
