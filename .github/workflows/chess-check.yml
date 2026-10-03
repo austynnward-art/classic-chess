@@ -33,7 +33,12 @@ jobs:
             beforeParse(window){
               window.Worker=class{
                 constructor(){this.onmessage=null}
-                postMessage(msg){if(msg==="uci"&&this.onmessage)this.onmessage({data:"uciok"});}
+                postMessage(msg){
+                  if(msg==="uci"&&this.onmessage){this.onmessage({data:"uciok"});return;}
+                  if(typeof msg==="string"&&msg.startsWith("go ")&&this.onmessage){
+                    setTimeout(()=>{this.onmessage({data:"info depth 8 score cp 20"});this.onmessage({data:"bestmove e2e4"});},5);
+                  }
+                }
                 terminate(){}
               };
               if(!window.URL.createObjectURL)window.URL.createObjectURL=()=> "blob:stub";
@@ -44,6 +49,9 @@ jobs:
             const board=dom.window.document.querySelectorAll("#board .sq").length;
             const course=dom.window.document.querySelectorAll("#courseBoard .courseSq").length;
             if(errors.length) { console.error(errors.join("\n---\n")); process.exit(1); }
+            if(!html.startsWith("<!doctype html>")) { console.error("index.html has unexpected content before doctype"); process.exit(1); }
+            if(!dom.window.document.querySelector("#botSpeech")) { console.error("Bot speech panel missing"); process.exit(1); }
+            if(!dom.window.document.querySelector("#analyze")) { console.error("Analyze control missing"); process.exit(1); }
             if(board!==64) { console.error("Main board has",board,"squares"); process.exit(1); }
             if(course!==64) { console.error("Course board has",course,"squares"); process.exit(1); }
             const initialPieces=[...dom.window.document.querySelectorAll("#board svg[data-piece]")].map(x=>x.getAttribute("data-piece"));
@@ -60,10 +68,19 @@ jobs:
               const squares=()=>[...dom.window.document.querySelectorAll("#board .sq")];
               squares()[idx(from)].click(); squares()[idx(to)].click();
             };
-            move("e2","e4"); move("e7","e5");
+            move("e2","e4");
+            await new Promise(resolve=>setTimeout(resolve,60));
+            const liveReview=dom.window.document.querySelector("#reviewMoveList")?.textContent||"";
+            if(!/Great move|Good move|Mistake|Blunder/.test(liveReview)) { console.error("Live move review grade did not appear"); process.exit(1); }
+            if(!dom.window.document.querySelector("#botSpeech")?.textContent.includes("move")) { console.error("Bot feedback text did not update"); process.exit(1); }
+            move("e7","e5");
             move("g1","f3"); move("g8","f6");
             move("f1","e2"); move("f8","e7");
             move("e1","g1");
+            dom.window.document.querySelector("#analyze").click();
+            await new Promise(resolve=>setTimeout(resolve,40));
+            if(dom.window.document.querySelector("#engineStatus")?.textContent!=="Stockfish ready") { console.error("Analyze completion callback failed"); process.exit(1); }
+            if(dom.window.document.querySelector("#best-move")?.textContent==="—") { console.error("Analyze best-move output failed"); process.exit(1); }
             const finalSquares=[...dom.window.document.querySelectorAll("#board .sq")];
             if(!dom.window.document.querySelector("#moves").textContent.includes("O-O")) { console.error("Castling SAN test failed"); process.exit(1); }
 
@@ -90,7 +107,11 @@ jobs:
             const e5Piece=learnSquares()[lidx("e5")]?.querySelector('svg[data-piece="bp"]');
             if(!e5Piece) { console.error("Learning trainer reply failed; status="+dom.window.document.querySelector("#trainerStatus")?.textContent+"; moves="+dom.window.document.querySelector("#trainerMoves")?.textContent); process.exit(1); }
 
-            console.log("DEEP UI TEST PASSED: boards=64/64, local moves, castling, pages, 4-player board, learning trainer");
+            // Regression: starting a new game must clear the move-review history.
+            dom.window.document.querySelector("#playPage").click();
+            dom.window.document.querySelector("#new").click();
+            if((dom.window.document.querySelector("#reviewMoveList")?.textContent||"").trim()!=="") { console.error("New game did not clear review history"); process.exit(1); }
+            console.log("DEEP UI TEST PASSED: startup, SVG pieces, live review, bot feedback, analysis callback, local moves, castling, pages, 4-player board, learning trainer, review reset");
             dom.window.close();
           })();
           NODE
