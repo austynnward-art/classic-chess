@@ -63,7 +63,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .controls{display:grid;grid-template-columns:1.25fr 1.15fr 1.15fr 1.15fr 1.15fr;gap:12px;margin-top:13px}
 .btn{border:1px solid #c3aa7c;background:linear-gradient(#fffaf0,#f0e0c0);border-radius:7px;padding:13px 7px;cursor:pointer;font:16px Georgia;color:#27313d;box-shadow:0 2px 4px rgba(30,40,55,.08)}.btn:hover{background:#ead9b7}.primary{background:#2563eb;color:#fff;border-color:#2563eb}
 .options{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0 auto;justify-content:flex-end;border-left:1px solid #bda477;padding-left:14px}
-.select{padding:8px 25px 8px 9px;border:1px solid #bca887;border-radius:5px;background:#fffaf0;color:#27313d;font:14px Inter,Arial,sans-serif}.playerModes{display:flex;gap:7px;flex-wrap:wrap;align-items:center;width:100%;justify-content:center;margin-top:9px}.modeBtn{border:1px solid #c3aa7c;background:linear-gradient(#fffaf0,#f0e0c0);border-radius:8px;padding:9px 12px;cursor:pointer;font:700 13px Inter,Arial,sans-serif;color:#27313d}.modeBtn.active{background:#2563eb;color:#fff;border-color:#2563eb}.modeBtn:hover{filter:brightness(1.03)}
+.select{padding:8px 25px 8px 9px;border:1px solid #bca887;border-radius:5px;background:#fffaf0;color:#27313d;font:14px Inter,Arial,sans-serif}.playerModePanel{width:100%;margin:4px 0 6px;padding:10px 12px;background:#fbf7ef;border:1px solid #d8c4a2;border-radius:10px;text-align:center}.playerModePanel>b{display:block;font:700 13px Inter,Arial,sans-serif;color:#5e452d;margin-bottom:7px}.playerModes{display:flex;gap:7px;flex-wrap:wrap;align-items:center;width:100%;justify-content:center}.modeBtn{border:1px solid #c3aa7c;background:linear-gradient(#fffaf0,#f0e0c0);border-radius:8px;padding:9px 12px;cursor:pointer;font:700 13px Inter,Arial,sans-serif;color:#27313d}.modeBtn.active{background:#2563eb;color:#fff;border-color:#2563eb}.modeBtn:hover{filter:brightness(1.03)}
 .status{margin-top:10px;padding:11px;background:#ffffff;border:1px solid #d9dee5;border-radius:7px;display:flex;justify-content:space-between;font-size:15px}
 .moves{font:13px monospace;max-height:315px;overflow:auto;margin-top:8px}.move{display:grid;grid-template-columns:30px 1fr 1fr;padding:7px 0;border-bottom:1px solid #e1d3b8}
 @media(max-width:950px){.layout{grid-template-columns:1fr}.center{order:1}.learnShell,.coursesShell{grid-column:auto;order:2}.left{order:3}.right{order:4}.controls{grid-template-columns:repeat(3,1fr)}.options{justify-content:flex-start;border-left:0;padding-left:0}}
@@ -127,11 +127,14 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 <option value="local3">3 Player · Local</option>
 <option value="local4">4 Player · Local</option>
 </select></label>
-<div class="playerModes" aria-label="Choose number of players">
-  <button class="modeBtn active" type="button" data-mode="computer">2 Player</button>
-  <button class="modeBtn" type="button" data-mode="local2">2 Local</button>
-  <button class="modeBtn" type="button" data-mode="local3">3 Player</button>
-  <button class="modeBtn" type="button" data-mode="local4">4 Player</button>
+<div class="playerModePanel" aria-label="Choose player mode">
+  <b>Choose Players</b>
+  <div class="playerModes">
+    <button class="modeBtn active" type="button" data-mode="computer">♟ 2 Player vs Computer</button>
+    <button class="modeBtn" type="button" data-mode="local2">♟ 2 Player Local</button>
+    <button class="modeBtn" type="button" data-mode="local3">♟ 3 Player</button>
+    <button class="modeBtn" type="button" data-mode="local4">♟ 4 Player</button>
+  </div>
 </div>
 <label>AI Strength: <select class="select" id="level">
 <option value="800">800</option><option value="1000">1000</option><option value="1200">1200</option>
@@ -175,7 +178,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   </div>
   <div class="courseCarousel" aria-label="Chessly 2.0 courses">
     <article class="courseCard">
-      <div class="courseTag">WHITE · 0–2200</div>
+      <div class="courseTag">WHITE · 800–2200</div>
       <h3>E4 Part 1 — E4 New York Style</h3>
       <p>Official Chessly course. The course listing shows an Elo range of 0–2200, with videos, studies, drills and model games.</p>
       <div class="courseBtns">
@@ -260,6 +263,24 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   </div>
 
   <div class="resourceSection">
+    <div class="resourceSectionHead"><h3>🌐 Chess study websites</h3><span>More places to learn</span></div>
+    <div class="resourceGrid">
+      <a class="resourceCard" href="https://www.chess.com/learn" target="_blank" rel="noopener"><b>Chess.com — Learn</b><span>Lessons, learning paths and structured study.</span></a>
+      <a class="resourceCard" href="https://www.chess.com/practice" target="_blank" rel="noopener"><b>Chess.com — Practice</b><span>Practice openings, endgames, master games and custom positions.</span></a>
+      <a class="resourceCard" href="https://lichess.org/" target="_blank" rel="noopener"><b>Lichess</b><span>Free chess, puzzles, studies, analysis and tournaments.</span></a>
+      <a class="resourceCard" href="https://chesstempo.com/" target="_blank" rel="noopener"><b>ChessTempo</b><span>Tactics, openings, endgames, games database and training.</span></a>
+      <a class="resourceCard" href="https://www.chessable.com/" target="_blank" rel="noopener"><b>Chessable</b><span>Course and move-training platform for structured study.</span></a>
+      <a class="resourceCard" href="https://www.chessgames.com/" target="_blank" rel="noopener"><b>Chessgames.com</b><span>Large searchable database of historic games.</span></a>
+      <a class="resourceCard" href="https://new.uschess.org/" target="_blank" rel="noopener"><b>US Chess</b><span>U.S. federation, tournament, rules and educational resources.</span></a>
+      <a class="resourceCard" href="https://utahchess.com/" target="_blank" rel="noopener"><b>Utah Chess</b><span>Utah tournaments, clubs, lessons and local chess events.</span></a>
+      <a class="resourceCard" href="https://www.fide.com/" target="_blank" rel="noopener"><b>FIDE</b><span>International Chess Federation and official global chess information.</span></a>
+      <a class="resourceCard" href="https://saintlouischessclub.org/" target="_blank" rel="noopener"><b>Saint Louis Chess Club</b><span>Chess education, events and instructional resources.</span></a>
+      <a class="resourceCard" href="https://www.gothamchess.com/" target="_blank" rel="noopener"><b>GothamChess</b><span>Official site and links to GothamChess material.</span></a>
+      <a class="resourceCard" href="https://chessly.com/" target="_blank" rel="noopener"><b>Chessly 2.0</b><span>Official Chessly platform for the course choices.</span></a>
+    </div>
+  </div>
+
+  <div class="resourceSection">
     <div class="resourceSectionHead"><h3>♟ Opening systems practice</h3><span>Original playable lines</span></div>
     <div class="resourceGrid">
       <div class="resourceCard"><b>London System</b><span>Practice a simple 1.d4 system with Bf4 and e3.</span><button class="resourceBtn" type="button" onclick="startLearningGame('london')">Play London</button></div>
@@ -339,6 +360,20 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
       <a class="resourceCard" href="https://www.youtube.com/watch?v=ECMMct_jnEM" target="_blank" rel="noopener"><b>How to WIN with the London System</b><span>Theory plus complete games.</span></a>
       <a class="resourceCard" href="https://www.youtube.com/watch?v=Nc8rzTIfFCw" target="_blank" rel="noopener"><b>Want to Crush the London System?</b><span>How to play against the system.</span></a>
       <a class="resourceCard" href="https://www.youtube.com/watch?v=IvxhIozo_zo" target="_blank" rel="noopener"><b>Play Chess Endgames Like Magnus Carlsen</b><span>Queen, rook, knight and bishop endgame study.</span></a>
+    </div>
+  </div>
+
+  <div class="resourceSection">
+    <div class="resourceSectionHead"><h3>🎥 GothamChess by Elo</h3><span>Direct YouTube links</span></div>
+    <div class="resourceGrid">
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=Ay7uLfMQzZ8" target="_blank" rel="noopener"><b>~800 Elo — Typical 800 Elo Chess</b><span>GothamChess video for an 800-Elo game.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=HBCeRCyEHf8" target="_blank" rel="noopener"><b>~1000 Elo — Legendary 1000 Elo Chess Game</b><span>Direct YouTube video from GothamChess.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=J1XhBzD0nmE" target="_blank" rel="noopener"><b>~1200 Elo — Educational 1200 Elo Chess</b><span>Direct YouTube video from GothamChess.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=5cQVpSxyGlk" target="_blank" rel="noopener"><b>900–1800 Elo — How To Win At Chess</b><span>Episode 4 covers games from roughly 920 through 1820.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=kob9FrQdmV4" target="_blank" rel="noopener"><b>~1600 Elo — I Lost To A 1600 Elo?!</b><span>Direct YouTube video from GothamChess.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/watch?v=g0W1X63EgKQ" target="_blank" rel="noopener"><b>~1800 Elo — Sensei Gotham</b><span>Direct YouTube video focused on reaching 1800-level play.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/@GothamChess/search?query=2000%20elo" target="_blank" rel="noopener"><b>2000+ Elo — GothamChess search</b><span>Open GothamChess's YouTube results for 2000-Elo study.</span></a>
+      <a class="resourceCard" href="https://www.youtube.com/@GothamChess/search?query=2500%20elo" target="_blank" rel="noopener"><b>2500+ Elo — GothamChess search</b><span>Higher-level games and lessons from the official channel.</span></a>
     </div>
   </div>
 
