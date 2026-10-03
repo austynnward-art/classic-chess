@@ -1,4 +1,4 @@
-<!doctype html>
+reviewBaselineWhite=null;reviewMoveGrades=[];bestEngineMoveBefore=null;if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -551,7 +551,7 @@ $("whiteCard").classList.toggle("active",s.turn==="w"&&!over);$("blackCard").cla
 renderCourseBoard();
 }
 function renderCourseBoard(){const B=$("courseBoard");if(!B)return;B.innerHTML="";for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.type="button";e.className="courseSq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="coursePiece "+(p.c==="w"?"whitePiece":"blackPiece");z.innerHTML=pieceSVG(p.c,p.t);e.appendChild(z)}e.onclick=()=>tap(r,c);B.appendChild(e)}}
-function tap(r,c){if(over||thinking||s.turn===aiSide)return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));const playedSan=san(old,{f:sel,t:[r,c]}),playedUci=String.fromCharCode(97+sel[1])+(8-sel[0])+String.fromCharCode(97+c)+(8-r),mover=old.turn;s=apply(s,sel,[r,c]);history.push(playedSan);recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];render();finish();if(!over&&s.turn===aiSide)computer();else requestLiveReview(playedSan,mover,playedUci);return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
+function tap(r,c){if(over||thinking||s.turn===aiSide)return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));const playedSan=san(old,{f:sel,t:[r,c]}),playedUci=String.fromCharCode(97+sel[1])+(8-sel[0])+String.fromCharCode(97+c)+(8-r),mover=old.turn;s=apply(s,sel,[r,c]);history.push(playedSan);recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];render();finish();requestLiveReview(playedSan,mover,playedUci);return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
 const val={p:100,n:320,b:330,r:500,q:900,k:20000};
 function score(x,c){let sc=0;for(let r=0;r<8;r++)for(let q=0;q<8;q++){let p=x.b[r][q];if(p)sc+=(p.c===c?1:-1)*val[p.t]}return sc}
 function eloDepth(){const e=+$("elo")?.value||+$("level")?.value||1800;return Math.max(10,Math.min(24,Math.round(10+(e-800)/220)))}
