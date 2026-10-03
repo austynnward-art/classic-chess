@@ -22,8 +22,8 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .frame{width:100%;aspect-ratio:1;background:#ffffff;border:1px solid #d9dee5;border-radius:14px;padding:10px;box-shadow:0 8px 24px rgba(30,40,55,.12)}
 .board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:100%;height:100%;aspect-ratio:1;border:0;border-radius:8px;overflow:hidden}
 .sq{position:relative;width:100%;height:100%;min-width:0;min-height:0;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-family:"Times New Roman",serif;font-size:clamp(40px,8vw,82px);line-height:1}
-.light{background:#f0d9b5}.dark{background:#b58863}.sq:hover{filter:brightness(1.07)}
-.selected{outline:4px solid #3b82f6;outline-offset:-4px}.last{background-image:linear-gradient(#e5bd5366,#e5bd5366)}
+.light{background-color:#f0d9b5 !important;background-image:none}.dark{background-color:#b58863 !important;background-image:none}.sq:hover{filter:brightness(1.07)}
+.selected{outline:4px solid #3b82f6;outline-offset:-4px}.last{background-image:linear-gradient(#e5bd5366,#e5bd5366) !important}
 .legal:after{content:"";position:absolute;width:16%;height:16%;border-radius:50%;background:#5b4635aa}
 .capture:after{content:"";position:absolute;inset:6%;border:4px solid #d69b52aa;border-radius:50%}
 .piece{
@@ -72,7 +72,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .learnShell{grid-column:auto;margin-top:18px;background:#fbfaf9;border:1px solid #e7e1dc;border-radius:16px;padding:22px;box-shadow:0 8px 28px rgba(35,30,25,.08);font-family:Inter,Arial,sans-serif;color:#171717}
 .learnHeader{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}.learnHeader h2{margin:0;font:700 26px Inter,Arial,sans-serif}.learnHeader p{margin:5px 0 0;color:#777;font:14px Inter,Arial,sans-serif}.learnBadge{background:#f1ece8;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700}
 .courseGrid{display:grid;grid-template-columns:390px 1fr;gap:24px}.courseHero{background:#f2eee9;border-radius:14px;min-height:300px;overflow:hidden;position:relative;padding:18px;display:flex;flex-direction:column;justify-content:flex-end}.courseArt{position:absolute;inset:0;background:radial-gradient(circle at 50% 32%,#fff 0 8%,transparent 9%),linear-gradient(160deg,#e9d8c7,#f7f3ef 48%,#ddd2c8);display:grid;place-items:center}.courseArt:after{content:"♞";font-size:120px;color:#272321;filter:drop-shadow(0 8px 7px #0003)}.courseHeroText{position:relative;background:linear-gradient(transparent,#f2eee9 20%);margin:0 -18px -18px;padding:55px 18px 18px}.courseHeroText h3{margin:0 0 6px;font-size:21px}.courseHeroText p{margin:0;color:#68625d;line-height:1.4;font-size:13px}.courseForm{display:grid;gap:13px}.courseField label{display:block;font-size:14px;font-weight:700;margin:0 0 7px}.courseSelect{width:100%;height:48px;border:1px solid #e3ded9;border-radius:10px;background:#fff;padding:0 14px;font:600 15px Inter,Arial,sans-serif;color:#222}.colorChoice{display:grid;grid-template-columns:1fr 1fr;gap:10px}.colorBtn{height:42px;border:1px solid #e3ded9;background:#fff;border-radius:9px;font-weight:700;cursor:pointer}.colorBtn.active{background:#e8dfdc;border-color:#ddd1cc}.toggleRow{display:flex;align-items:center;justify-content:space-between;gap:12px}.toggle{width:42px;height:24px;border-radius:99px;background:#ddd;position:relative;cursor:pointer;border:0}.toggle:after{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;box-shadow:0 1px 3px #0003}.toggle.on{background:#6b4b3a}.toggle.on:after{left:21px}.startCourse{height:48px;border:0;border-radius:10px;background:#222;color:#fff;font:700 15px Inter,Arial,sans-serif;cursor:pointer}.startCourse:hover{background:#3a3531}.courseNote{font-size:12px;color:#8a817a;margin:0}.chapterBox{padding:11px 13px;background:#faf8f6;border:1px solid #e7e1dc;border-radius:10px;color:#5e5853;font-size:13px}.learnProgress{display:flex;gap:5px;margin-top:16px}.learnProgress span{height:5px;flex:1;border-radius:5px;background:#e3ddd8}.learnProgress span.done{background:#765542}
-.courseMiniFrame{width:min(100%,430px);margin:auto;background:#27313d;border:8px solid #27313d;border-radius:12px;padding:0;box-shadow:0 6px 16px #0002}.courseBoard{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);aspect-ratio:1;width:100%;overflow:hidden}.courseSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(25px,6vw,48px);line-height:1}.courseSq.light{background:#f0d9b5}.courseSq.dark{background:#b58863}.courseSq.selected{outline:4px solid #765542;outline-offset:-4px}.courseSq.legal:after{content:"";width:13%;height:13%;border-radius:50%;background:#3f2a1d88;position:absolute}.courseSq.capture:after{content:"";position:absolute;inset:7%;border:3px solid #3f2a1d88;border-radius:50%}.coursePiece{filter:drop-shadow(0 2px 2px #0003)}.coursePlayStatus{font-size:12px;color:#777;margin-top:8px}.chapterNav{display:grid;grid-template-columns:1fr 1fr;gap:8px}.chapterBtn{height:40px;border:1px solid #e3ded9;background:#fff;border-radius:9px;font-weight:700;cursor:pointer}.chapterBtn:hover{background:#f5f1ee}.lessonCard{padding:13px;background:#faf8f6;border:1px solid #e7e1dc;border-radius:10px;font-size:13px;line-height:1.45}.lessonCard p{margin:7px 0;color:#5e5853}.lessonTry{margin-top:9px;padding:9px;background:#fff;border-radius:8px;color:#765542;font-weight:600}.coursePlayStatus{min-height:18px}@media(max-width:800px){.courseGrid{grid-template-columns:1fr}.courseHero{min-height:260px}}
+.courseMiniFrame{width:min(100%,430px);margin:auto;background:#27313d;border:8px solid #27313d;border-radius:12px;padding:0;box-shadow:0 6px 16px #0002}.courseBoard{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);aspect-ratio:1;width:100%;overflow:hidden}.courseSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(25px,6vw,48px);line-height:1}.courseBoard .courseSq.light{background-color:#f0d9b5 !important;background-image:none}.courseBoard .courseSq.dark{background-color:#b58863 !important;background-image:none}.courseSq.selected{outline:4px solid #765542;outline-offset:-4px}.courseSq.legal:after{content:"";width:13%;height:13%;border-radius:50%;background:#3f2a1d88;position:absolute}.courseSq.capture:after{content:"";position:absolute;inset:7%;border:3px solid #3f2a1d88;border-radius:50%}.coursePiece{filter:drop-shadow(0 2px 2px #0003)}.coursePlayStatus{font-size:12px;color:#777;margin-top:8px}.chapterNav{display:grid;grid-template-columns:1fr 1fr;gap:8px}.chapterBtn{height:40px;border:1px solid #e3ded9;background:#fff;border-radius:9px;font-weight:700;cursor:pointer}.chapterBtn:hover{background:#f5f1ee}.lessonCard{padding:13px;background:#faf8f6;border:1px solid #e7e1dc;border-radius:10px;font-size:13px;line-height:1.45}.lessonCard p{margin:7px 0;color:#5e5853}.lessonTry{margin-top:9px;padding:9px;background:#fff;border-radius:8px;color:#765542;font-weight:600}.coursePlayStatus{min-height:18px}@media(max-width:800px){.courseGrid{grid-template-columns:1fr}.courseHero{min-height:260px}}
 
 /* YouTube chess hub */
 .ytShell{grid-column:auto;margin-top:18px;background:#fff;border:1px solid #d9dee5;border-radius:16px;padding:20px;box-shadow:0 8px 28px rgba(35,30,25,.08)}
@@ -81,7 +81,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 
 .resourceHero{margin-top:8px;padding:24px;border-radius:14px;background:linear-gradient(135deg,#f1ece8,#faf8f6);border:1px solid #e4ddd7}.resourceKicker{font-size:11px;font-weight:800;letter-spacing:1.4px;color:#765542}.resourceHero h3{margin:5px 0 7px;font-size:24px}.resourceHero p{max-width:760px;color:#666;line-height:1.5;margin:0 0 14px}.resourceBtn{display:inline-block;margin:4px 7px 0 0;padding:10px 13px;border-radius:9px;background:#222;color:#fff;text-decoration:none;font-weight:700;font-size:13px}.resourceBtn.secondary{background:#fff;color:#222;border:1px solid #d9d2cc}.resourceSection{margin-top:20px}.resourceSectionHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.resourceSectionHead h3{margin:0;font-size:18px}.resourceSectionHead span{font-size:11px;font-weight:800;color:#777;text-transform:uppercase}.resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.resourceCard{display:block;padding:13px;border:1px solid #e2ddd8;border-radius:11px;background:#fff;text-decoration:none;color:#222;transition:transform .12s ease,box-shadow .12s ease}.resourceCard:hover{transform:translateY(-2px);box-shadow:0 5px 14px #00000012}.resourceCard b{display:block;font-size:14px}.resourceCard span{display:block;margin-top:5px;font-size:12px;color:#777;line-height:1.4}.gothamGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.gothamCard{overflow:hidden;border:1px solid #e2ddd8;border-radius:11px;background:#fff}.gothamVideo{aspect-ratio:16/9;background:#111}.gothamVideo iframe{width:100%;height:100%;border:0;display:block}.gothamBody{padding:12px}.gothamBody b{display:block;font-size:14px}.gothamBody span{display:block;margin:5px 0 9px;color:#777;font-size:12px;line-height:1.4}.gothamBody a,.resourceMore a{color:#2563eb;font-size:12px;font-weight:800;text-decoration:none}.resourceMore{text-align:center;margin-top:12px}.resourceNote{margin-top:18px;padding:11px 13px;border-radius:9px;background:#f7f5f3;color:#777;font-size:11px;line-height:1.4}@media(max-width:800px){.resourceGrid,.gothamGrid{grid-template-columns:1fr}}
 
-.courseCarousel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.courseCard{background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:18px;box-shadow:0 4px 14px #0000000b}.courseTag{font-size:10px;font-weight:900;letter-spacing:1.2px;color:#765542}.courseCard h3{margin:6px 0 7px;font-size:19px}.courseCard p{margin:0;color:#666;line-height:1.5;font-size:13px}.courseBtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.learningTrainer{margin-top:18px;background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:16px}.trainerHead{display:flex;justify-content:space-between;gap:12px;align-items:center}.trainerHead h3{margin:0 0 4px}.trainerHead p{margin:0;color:#777;font-size:12px}.trainerGrid{display:grid;grid-template-columns:minmax(320px,620px) 1fr;gap:16px;margin-top:14px}.learningBoard{display:grid;grid-template-columns:repeat(8,1fr);width:100%;aspect-ratio:1;border-radius:9px;overflow:hidden;box-shadow:0 3px 12px #0002}.learningSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(28px,6vw,58px);line-height:1}.learningSq.light{background:#f0d9b5}.learningSq.dark{background:#b58863}.learningSq.selected{outline:4px solid #2563eb;outline-offset:-4px}.learningSq.hint{box-shadow:inset 0 0 0 4px #22c55e}.learningPiece{font-family:"Times New Roman",serif}.learningPiece.whitePiece{color:#fffdf7;text-shadow:0 2px 0 #8b633b,1px 0 0 #805a32,-1px 0 0 #805a32,0 4px 2px #0006}.learningPiece.blackPiece{color:#15120f;text-shadow:0 2px 0 #050403,1px 0 0 #302318,-1px 0 0 #302318,0 4px 3px #0007}.trainerSide{display:grid;align-content:start;gap:10px}.trainerPanel{border:1px solid #e5ddd5;border-radius:10px;padding:12px;background:#faf8f6}.trainerPanel b{display:block;margin-bottom:6px}.trainerPanel span,.trainerPanel a{display:block;color:#777;font-size:12px;line-height:1.45}.trainerPanel a{color:#2563eb;text-decoration:none;margin-top:6px}@media(max-width:800px){.courseCarousel,.trainerGrid{grid-template-columns:1fr}.trainerHead{align-items:flex-start}}
+.courseCarousel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.courseCard{background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:18px;box-shadow:0 4px 14px #0000000b}.courseTag{font-size:10px;font-weight:900;letter-spacing:1.2px;color:#765542}.courseCard h3{margin:6px 0 7px;font-size:19px}.courseCard p{margin:0;color:#666;line-height:1.5;font-size:13px}.courseBtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.learningTrainer{margin-top:18px;background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:16px}.trainerHead{display:flex;justify-content:space-between;gap:12px;align-items:center}.trainerHead h3{margin:0 0 4px}.trainerHead p{margin:0;color:#777;font-size:12px}.trainerGrid{display:grid;grid-template-columns:minmax(320px,620px) 1fr;gap:16px;margin-top:14px}.learningBoard{display:grid;grid-template-columns:repeat(8,1fr);width:100%;aspect-ratio:1;border-radius:9px;overflow:hidden;box-shadow:0 3px 12px #0002}.learningSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(28px,6vw,58px);line-height:1}.learningBoard .learningSq.light{background-color:#f0d9b5 !important;background-image:none}.learningBoard .learningSq.dark{background-color:#b58863 !important;background-image:none}.learningSq.selected{outline:4px solid #2563eb;outline-offset:-4px}.learningSq.hint{box-shadow:inset 0 0 0 4px #22c55e}.learningPiece{font-family:"Times New Roman",serif}.learningPiece.whitePiece{color:#fffdf7;text-shadow:0 2px 0 #8b633b,1px 0 0 #805a32,-1px 0 0 #805a32,0 4px 2px #0006}.learningPiece.blackPiece{color:#15120f;text-shadow:0 2px 0 #050403,1px 0 0 #302318,-1px 0 0 #302318,0 4px 3px #0007}.trainerSide{display:grid;align-content:start;gap:10px}.trainerPanel{border:1px solid #e5ddd5;border-radius:10px;padding:12px;background:#faf8f6}.trainerPanel b{display:block;margin-bottom:6px}.trainerPanel span,.trainerPanel a{display:block;color:#777;font-size:12px;line-height:1.45}.trainerPanel a{color:#2563eb;text-decoration:none;margin-top:6px}@media(max-width:800px){.courseCarousel,.trainerGrid{grid-template-columns:1fr}.trainerHead{align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -134,45 +134,95 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 </main>
 <section class="learnShell">
   <div class="learnHeader">
-    <div><h2>📚 Chessly + GothamChess</h2><p>Only the two courses you asked for: <b>E4 Part 1</b> and <b>Caro-Kann</b>. The buttons below open the official Chessly pages, and the practice boards are playable here.</p></div>
-    <span class="learnBadge">2 COURSES</span>
+    <div><h2>📚 Chessly 2.0 + Intermediate Practice</h2><p>Chessly 2.0 course links plus two playable intermediate practice sections built for the 100–1500 range.</p></div>
+    <span class="learnBadge">4 CHESSLY COURSES</span>
   </div>
 
-  <div class="courseCarousel" aria-label="Chessly courses">
+  <div class="courseCarousel" aria-label="Chessly 2.0 courses">
     <article class="courseCard">
-      <div class="courseTag">WHITE · E4</div>
+      <div class="courseTag">WHITE · 0–2200</div>
       <h3>E4 Part 1 — E4 New York Style</h3>
-      <p>Practice the opening ideas around 1.e4 and the Vienna. This app uses its own public opening practice line; paid Chessly lessons stay on Chessly.</p>
+      <p>Official Chessly course. The course listing shows an Elo range of 0–2200, with videos, studies, drills and model games.</p>
       <div class="courseBtns">
-        <button class="resourceBtn" type="button" onclick="startLearningGame('e4')">▶ Play E4 Part 1</button>
-        <a class="resourceBtn secondary" href="https://old.chessly.com/courses/812a7981-0439-4de4-a86b-35b9833eea25" target="_blank" rel="noopener">Open Chessly Course →</a>
+        <button class="resourceBtn" type="button" onclick="startLearningGame('e4')">▶ Play practice</button>
+        <a class="resourceBtn secondary" href="https://chessly.com/" target="_blank" rel="noopener">Open Chessly 2.0 →</a>
       </div>
     </article>
 
     <article class="courseCard">
-      <div class="courseTag">BLACK · CARO-KANN</div>
+      <div class="courseTag">BLACK · 0–2200</div>
       <h3>Caro-Kann — C6 Caro Kann</h3>
-      <p>Practice the Caro-Kann from the White side while the trainer answers with the opening moves. The official Chessly course remains linked separately.</p>
+      <p>Official Chessly course. The course listing shows an Elo range of 0–2200, with videos, studies, drills and model games.</p>
       <div class="courseBtns">
-        <button class="resourceBtn" type="button" onclick="startLearningGame('caro')">▶ Play Caro-Kann</button>
-        <a class="resourceBtn secondary" href="https://old.chessly.com/courses/a7d23f32-20fb-4cf9-9b56-7e63329f55e7" target="_blank" rel="noopener">Open Chessly Course →</a>
+        <button class="resourceBtn" type="button" onclick="startLearningGame('caro')">▶ Play practice</button>
+        <a class="resourceBtn secondary" href="https://chessly.com/" target="_blank" rel="noopener">Open Chessly 2.0 →</a>
       </div>
     </article>
+
+    <article class="courseCard">
+      <div class="courseTag">INTERMEDIATE · CHESSLY</div>
+      <h3>Better Openings</h3>
+      <p>Chessly 2.0 opening study area. Use the official Chessly platform for its current lessons, videos, studies and drills.</p>
+      <div class="courseBtns">
+        <a class="resourceBtn secondary" href="https://chessly.com/" target="_blank" rel="noopener">Open Chessly 2.0 →</a>
+      </div>
+    </article>
+
+    <article class="courseCard">
+      <div class="courseTag">0–1600 · TACTICS</div>
+      <h3>Tactics Masterclass</h3>
+      <p>The Chessly course listing shows 0–1600 Elo and a tactics focus with videos, quizzes, studies and drills.</p>
+      <div class="courseBtns">
+        <a class="resourceBtn secondary" href="https://chessly.com/" target="_blank" rel="noopener">Open Chessly 2.0 →</a>
+      </div>
+    </article>
+  </div>
+
+  <div class="resourceHero">
+    <div class="resourceKicker">INTERMEDIATE PRACTICE</div>
+    <h3>100–1500 tournament training</h3>
+    <p>Two separate sections: one shaped around Utah tournament play and one around US Chess/USCF tournament skills. The drills are original practice positions; links point to the public tournament and rules resources.</p>
+  </div>
+
+  <div class="resourceSection">
+    <div class="resourceSectionHead"><h3>🏔 Utah Intermediate · 100–1500</h3><span>Games + drills + video links</span></div>
+    <div class="resourceGrid">
+      <div class="resourceCard"><b>U1000–U1500 game drill</b><span>Practice an opening-to-middlegame sequence made for the range where Utah events offer U1400/U1200/U800-style sections.</span><button class="resourceBtn" type="button" onclick="startLearningGame('utah')">Play Utah drill</button></div>
+      <a class="resourceCard" href="https://utahchess.com/events/" target="_blank" rel="noopener"><b>Utah Chess events</b><span>Use the current Utah tournament calendar as the source for local event formats and game practice ideas.</span></a>
+      <a class="resourceCard" href="https://utahchess.com/event/2026-utah-open/" target="_blank" rel="noopener"><b>2026 Utah Open</b><span>Public tournament details include U1700, U1200 and U800 sections for tournament-style practice.</span></a>
+    </div>
+  </div>
+
+  <div class="resourceSection">
+    <div class="resourceSectionHead"><h3>🇺🇸 US Chess / USCF Intermediate · 100–1500</h3><span>Rules + drills + games</span></div>
+    <div class="resourceGrid">
+      <div class="resourceCard"><b>USCF tournament drill</b><span>Practice a clean tournament sequence with legal-move checks, development and tactical awareness.</span><button class="resourceBtn" type="button" onclick="startLearningGame('uscf')">Play USCF drill</button></div>
+      <a class="resourceCard" href="https://www.uschess.org/index.php/New-to-Chess-/" target="_blank" rel="noopener"><b>US Chess learning videos</b><span>Official US Chess rules and starter videos, including the quick refresher and rule explanations.</span></a>
+      <a class="resourceCard" href="https://www.uschess.org/" target="_blank" rel="noopener"><b>US Chess</b><span>Official federation resource for rated chess, rules and tournament information.</span></a>
+    </div>
+  </div>
+
+  <div class="resourceSection">
+    <div class="resourceSectionHead"><h3>🎥 Higher-level video study</h3><span>1600–2900 target range</span></div>
+    <div class="resourceGrid">
+      <a class="resourceCard" href="https://chessly.com/" target="_blank" rel="noopener"><b>Chessly video library</b><span>Use the current Chessly 2.0 library for higher-level lessons. I’m labeling this as a target range rather than claiming every video is rated 1600–2900.</span></a>
+      <a class="resourceCard" href="https://old.chessly.com/lectures?page=most-popular" target="_blank" rel="noopener"><b>Chessly model-game lectures</b><span>Publicly indexed Chessly lecture listings include intermediate/advanced model-game material.</span></a>
+    </div>
   </div>
 
   <div class="learningTrainer">
-    <div class="trainerHead"><div><h3 id="trainerTitle">Choose a course to start</h3><p id="trainerStatus">Pick E4 Part 1 or Caro-Kann above. You play White; the trainer supplies the opening replies.</p></div><button class="btn" type="button" onclick="resetLearningGame()">↻ Reset</button></div>
+    <div class="trainerHead"><div><h3 id="trainerTitle">Choose a course to start</h3><p id="trainerStatus">Pick E4, Caro-Kann, Utah, or USCF practice. You play White; the trainer supplies the opening replies.</p></div><button class="btn" type="button" onclick="resetLearningGame()">↻ Reset</button></div>
     <div class="trainerGrid">
       <div id="learningBoard" class="learningBoard" aria-label="Playable learning board"></div>
       <div class="trainerSide">
-        <div class="trainerPanel"><b>How to play</b><span>Make the highlighted opening move. If you choose a different legal move, you can still play normally; the trainer will keep the board playable.</span></div>
-        <div class="trainerPanel"><b>Opening line</b><div id="trainerMoves">—</div></div>
-        <div class="trainerPanel"><b>Course links</b><a href="https://chessly.com/" target="_blank" rel="noopener">Chessly</a><a href="https://www.gothamchess.com/chessly" target="_blank" rel="noopener">GothamChess → Chessly</a></div>
+        <div class="trainerPanel"><b>How to play</b><span>Make a legal move on the board. Highlighted squares show legal destinations.</span></div>
+        <div class="trainerPanel"><b>Current line</b><div id="trainerMoves">Start with a drill</div></div>
+        <div class="trainerPanel"><b>Official resources</b><a href="https://chessly.com/" target="_blank" rel="noopener">Chessly 2.0</a><a href="https://utahchess.com/" target="_blank" rel="noopener">Utah Chess</a><a href="https://www.uschess.org/" target="_blank" rel="noopener">US Chess</a></div>
       </div>
     </div>
   </div>
 
-  <div class="resourceNote"><b>Important:</b> Chessly says its courses include videos, studies, drills and quizzes. This app does not copy or reproduce paid course videos or lessons; it provides playable opening practice and links to the official courses.</div>
+  <div class="resourceNote"><b>Important:</b> Chessly’s paid lessons are not copied here. The local boards use original practice lines, while the official Chessly, Utah Chess and US Chess links open their own material.</div>
 </section>
 <section class="ytShell" id="youtubeChess">
   <div class="ytHeader"><div><h2>♟ Chess Videos</h2><p>Watch the selected chess videos directly inside the app.</p></div><span class="ytBadge">EMBEDDED VIDEOS</span></div>
@@ -547,11 +597,21 @@ const learningLines={
   ],
   caro:[
     ["e4","c6"],["d4","d5"],["exd5","cxd5"],["bd3","nc6"],["nf3","g6"]
+  ],
+  utah:[
+    ["e4","e5"],["nf3","nc6"],["bc4","bc5"],["c3","nf6"],["d4","exd4"]
+  ],
+  uscf:[
+    ["d4","nf6"],["c4","e6"],["nc3","d5"],["bg5","be7"],["e3","o-o"]
   ]
 };
 function uciToMove(x,uci){
-  const fr=8-+uci[1],fc=uci.charCodeAt(0)-97,tr=8-+uci[3],tc=uci.charCodeAt(2)-97;
-  return all(x,x.turn).find(m=>m.fr===fr&&m.fc===fc&&m.tr===tr&&m.tc===tc)||null;
+  const token=(uci||"").trim().toLowerCase();
+  if(!token)return null;
+  const candidates=all(x,x.turn);
+  return candidates.find(m=>san(x,m).toLowerCase().replace(/[+#]/g,"")===token.replace(/[+#]/g,""))
+    || candidates.find(m=>san(x,m).toLowerCase().replace(/[+#]/g,"").replace(/=/g,"")===token.replace(/[+#=]/g,""))
+    || null;
 }
 function trainerUci(m){return String.fromCharCode(97+m.fc)+(8-m.fr)+String.fromCharCode(97+m.tc)+(8-m.tr);}
 function setLearningOpening(kind){
@@ -560,6 +620,7 @@ function setLearningOpening(kind){
   $("trainerStatus").textContent=kind==="e4"?"You play White. Practice the opening ideas around 1.e4.":"You play White. Practice playing against the Caro-Kann.";
   renderLearningBoard();renderTrainerMoves();
 }
+function startLearningGame(kind){setLearningOpening(kind);showPage("learn");}
 function resetLearningGame(){if(learningCourse)setLearningOpening(learningCourse);else{learningState=initial();renderLearningBoard();}}
 function trainerOpponent(){
   if(!learningCourse||learningState.turn!=="b")return;
