@@ -23,15 +23,15 @@ test.describe('Rebuild app smoke tests', () => {
     expect(Math.abs(multiSize.height-homeSize.height)).toBeLessThanOrEqual(1);
   });
 
-  test('courses contain six real YouTube embeds', async ({ page }) => {
+  test('courses contain GothamChess and Caro-Kann YouTube embeds plus Chessly chapter links', async ({ page }) => {
     await page.goto('/');
     await page.locator('[data-page="courses"]').first().click();
     await expect(page.locator('#courses')).toBeVisible();
-    await expect(page.locator('#videos iframe')).toHaveCount(6);
+    await expect(page.locator('#videos iframe')).toHaveCount(8);
     await expect(page.locator('#videos iframe').first()).toHaveAttribute('src', /youtube\.com\/embed\/XtaEnxG2lbg/);
     await expect(page.locator('#courses a[href="https://chessly.com/"]').first()).toBeVisible();
     await expect(page.locator('#courses a[href="https://www.gothamchess.com/"]').first()).toBeVisible();
-    await expect(page.locator('#videos iframe').first()).toHaveAttribute('src', /youtube\.com\/embed\//);
+    await expect(page.locator('#videos iframe').nth(4)).toHaveAttribute('src', /youtube\.com\/embed\/ebfzL_GwiIE/);\n    await expect(page.locator('#videos iframe').nth(5)).toHaveAttribute('src', /youtube\.com\/embed\/rmbU97iftC8/);\n    await expect(page.locator('#courses a[href^="https://chessly.com/courses/"]')).toHaveCount(4);
   });
 
   test('learn page has trainer board', async ({ page }) => {
