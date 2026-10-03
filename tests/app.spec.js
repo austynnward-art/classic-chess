@@ -49,6 +49,31 @@ test.describe('Rebuild app smoke tests', () => {
     expect(Math.abs(homeSize.height-learnSize.height)).toBeLessThanOrEqual(1);
   });
 
+  test('every lesson launches Stockfish, drill, quiz, and progress tracking', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('[data-page="learn"]').first().click();
+    await expect(page.locator('#learn')).toBeVisible();
+    for (const id of ['forcing','piece','opening','conversion']) {
+      await page.locator('.lesson[data-lesson="'+id+'"]').click();
+      await expect(page.locator('#lessonProgress')).toContainText('0/3 completed');
+      await page.locator('#learnAnalyze').click();
+      await expect(page.locator('#lessonProgress')).toContainText('1/3 completed');
+      await page.locator('#learnDrill').click();
+      await expect(page.locator('#home')).toBeVisible();
+      await page.locator('[data-page="learn"]').first().click();
+      await page.locator('.lesson[data-lesson="'+id+'"]').click();
+      await page.locator('#learnQuiz').click();
+      await expect(page.locator('#lessonQuizPanel')).toBeVisible();
+      await expect(page.locator('.quizQ')).toHaveCount(3);
+      await page.locator('input[name="q0"][value="0"]').check();
+      await page.locator('input[name="q1"][value="0"]').check();
+      await page.locator('input[name="q2"][value="0"]').check();
+      await page.locator('#quizSubmit').click();
+      await expect(page.locator('#quizResult')).toContainText('Quiz complete');
+      await expect(page.locator('#lessonProgress')).toContainText('3/3 completed');
+    }
+  });
+
   test('game review opens and contains coaching links', async ({ page }) => {
     await page.goto('/');
     await page.locator('#endReview').click();
