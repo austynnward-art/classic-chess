@@ -920,7 +920,7 @@ function multiInitial(count){
     }
   }
   place("red");place("blue");place("yellow");if(count===4)place("green");
-  return {board:board,turn:"red",activeColors:colors,alive:Object.fromEntries(colors.map(function(x){return [x,true];})),ply:0,winner:null,stalemated:{},drawOffer:null};
+  return {board:board,turn:"red",activeColors:colors,alive:Object.fromEntries(colors.map(function(x){return [x,true];})),ply:0,winner:null,stalemated:{},drawOffer:null,drawAgreed:false};
 }
 function multiPseudoRaw(st,r,c){
   const piece=st.board[r][c]; if(!piece||!st.alive[piece.c])return [];
@@ -980,13 +980,14 @@ function multiPseudo(st,r,c){
   return legal;
 }
 function multiApply(r,c,tr,tc){
+  if(multiState.drawAgreed)return;
   const p=multiState.board[r][c];if(!p||p.c!==multiState.turn)return;
   if(!multiLegal.some(function(m){return m[0]===tr&&m[1]===tc;}))return;
   const target=multiState.board[tr][tc];
   if(target&&target.t==="k")return;
   multiState.board[tr][tc]=p;multiState.board[r][c]=null;multiState.ply++;
   if(p.t==="p"&&MULTI_PLAYERS[p.c].promo(tr,tc))p.t="q";
-  multiState.drawOffer=null;
+  multiState.drawOffer=null;multiState.drawAgreed=false;
   const checked=[];
   for(const col of multiState.activeColors){
     if(col===p.c)continue;
@@ -1030,6 +1031,7 @@ function renderMulti(){
   const turn=$("multiTurn"),alive=$("multiAlive");
   if(turn){
     if(multiState.winner)turn.textContent=MULTI_PLAYERS[multiState.winner].name+" wins by checkmate!";
+    else if(multiState.drawAgreed)turn.textContent="Draw agreed — game over";
     else if(multiState.drawOffer)turn.textContent=MULTI_PLAYERS[multiState.drawOffer].name+" offered a draw";
     else turn.textContent=MULTI_PLAYERS[multiState.turn].name+(multiInCheck(multiState,multiState.turn)?" — CHECK":"")+" to move";
   }
@@ -1110,7 +1112,7 @@ $("draw").onclick=function(){
     if(!others.length)return;
     const accepted=others.every(x=>window.confirm(MULTI_PLAYERS[offerer].name+" offers a draw. "+MULTI_PLAYERS[x].name+", accept?"));
     if(accepted){
-      multiState.drawOffer=offerer;multiSelected=null;multiLegal=[];
+      multiState.drawOffer=offerer;multiState.drawAgreed=true;multiSelected=null;multiLegal=[];
       $("multiTurn").textContent="Draw agreed — game over";
       $("status").textContent="½ Draw agreed by all active players";
       renderMulti();
