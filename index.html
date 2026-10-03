@@ -1245,6 +1245,7 @@ $("gameMode").onchange=function(){
 document.querySelectorAll(".modeBtn").forEach(function(btn){
   btn.onclick=function(){
     const mode=this.getAttribute("data-mode");
+    if(mode==="learn"||mode==="courses"){showPage(mode);return;}
     $("gameMode").value=mode;
     document.querySelectorAll(".modeBtn").forEach(function(b){b.classList.toggle("active",b===btn);});
     syncGameMode();
