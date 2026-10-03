@@ -561,6 +561,16 @@ body.focusHome.fourPlayerView .gameProgressCard b{font-size:10px}
 body.focusHome.fourPlayerView .gameProgressCard span{font-size:8.5px}
 @media(max-width:980px){body.focusHome.fourPlayerView .layout{grid-template-columns:180px minmax(0,1fr) 250px;gap:12px}}
 @media(max-width:760px){body.focusHome.fourPlayerView .layout{grid-template-columns:1fr;gap:9px}body.focusHome.fourPlayerView .botAvatar{width:150px;height:150px}}
+body.focusHome.fourPlayerView[data-board-style="bright"] .fourBoardWrap{background:#eaf7ff}
+body.focusHome.fourPlayerView[data-board-style="bright"] .multiSq.redZone{background:#ff8b82}
+body.focusHome.fourPlayerView[data-board-style="bright"] .multiSq.blueZone{background:#62b5ff}
+body.focusHome.fourPlayerView[data-board-style="bright"] .multiSq.greenZone{background:#78dc91}
+body.focusHome.fourPlayerView[data-board-style="bright"] .multiSq.yellowZone{background:#ffd96a}
+body.focusHome.fourPlayerView[data-board-style="dark"] .fourBoardWrap{background:#071d31}
+body.focusHome.fourPlayerView[data-board-style="dark"] .multiSq.redZone{background:#a94343}
+body.focusHome.fourPlayerView[data-board-style="dark"] .multiSq.blueZone{background:#285d8e}
+body.focusHome.fourPlayerView[data-board-style="dark"] .multiSq.greenZone{background:#39734a}
+body.focusHome.fourPlayerView[data-board-style="dark"] .multiSq.yellowZone{background:#927528}
 </style>
 </head>
 <body>
@@ -869,7 +879,7 @@ body.focusHome.fourPlayerView .gameProgressCard span{font-size:8.5px}
   </div></div>
 </section>
 <aside class="right">
-  <div class="fourCoach card" id="blackCard">
+  <div class="fourCoach fourCoachCard card" id="blackCard">
     <div class="coachHero">
       <div class="botBadge">
         <div class="botAvatar botFace1" aria-label="Large cartoon chess coach avatar"></div>
@@ -920,7 +930,7 @@ function pieceSVG(color,type){
 }
 let s,history=[],snapshots=[],sel=null,legal=[],flip=false,over=false,thinking=false,aiSide="b",timer=null,clock={w:600,b:600};
 let computerRetryTimer=null,computerMoveTimer=null,computerRequestToken=0;
-let gameMode="computer",multiState=null,multiSelected=null,multiLegal=[],clockTimer=null;
+let gameMode="computer",multiState=null,multiSelected=null,multiLegal=[],clockTimer=null,multiBotEnabled=false,multiBotTimer=null;
 const $=id=>document.getElementById(id),opp=c=>c==="w"?"b":"w",inside=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
 function initial(){let b=Array.from({length:8},()=>Array(8).fill(null)),a=["r","n","b","q","k","b","n","r"];for(let c=0;c<8;c++){b[0][c]={c:"b",t:a[c]};b[1][c]={c:"b",t:"p"};b[6][c]={c:"w",t:"p"};b[7][c]={c:"w",t:a[c]}}return{b,turn:"w",castle:{wk:1,wq:1,bk:1,bq:1},ep:null,last:null,captured:{w:[],b:[]},halfmove:0}}
 function clone(x){return JSON.parse(JSON.stringify(x))}
@@ -1523,7 +1533,7 @@ function renderLearningBoard(){
   for(let r=0;r<8;r++)for(let c=0;c<8;c++){
     const e=document.createElement("button");e.type="button";e.className="learningSq "+(((r+c)%2)?"dark":"light");
     if(learningSel?.[0]===r&&learningSel?.[1]===c)e.classList.add("selected");
-    if(learningLegal.some(m=>m.tr===r&&m.tc===c))e.classList.add("hint");
+    if(learningLegal.some(m=>m.t[0]===r&&m.t[1]===c))e.classList.add("hint");
     const p=learningState.b[r][c];
     if(p){const z=document.createElement("span");z.className="learningPiece "+(p.c==="w"?"whitePiece":"blackPiece");z.innerHTML=pieceSVG(p.c,p.t);e.appendChild(z);}
     e.onclick=()=>learningTap(r,c);B.appendChild(e);
@@ -1550,6 +1560,8 @@ function showPage(which){
   const learn=which==="learn";
   const courses=which==="courses";
   const gamePage=!learn&&!courses;
+  document.body.classList.toggle("contentPage",learn||courses);
+  document.body.classList.toggle("focusHome",gamePage);
   const bot=which==="bot";
   const three=which==="three";
   const four=which==="four";
@@ -1565,11 +1577,12 @@ function showPage(which){
   document.title=learn?"Classic Chess — Learn Chess":courses?"Classic Chess — Chessly Courses":
     bot?"Classic Chess — Play Bot":three?"Classic Chess — Three Player":four?"Classic Chess — Four Player":"Classic Chess";
   if(learn||courses){layout.classList.toggle("learnPageMode",learn);layout.classList.toggle("coursesPageMode",courses);try{if(typeof window.scrollTo==="function")window.scrollTo({top:0,behavior:"smooth"});}catch(e){}return;}
-  if(gameMode!==(bot?"computer":three?"local3":four?"local4":"local2")){
-    gameMode=bot?"computer":three?"local3":four?"local4":"local2";
+  const targetMode=bot?"computer":three?"local3":four?"local4":"local2";
+  if(gameMode!==targetMode){
+    gameMode=targetMode;
     $("gameMode").value=gameMode;
     syncGameMode();
-  }else{
+  }else if((targetMode==="local3"||targetMode==="local4")&&!multiState){
     syncGameMode();
   }
 }
@@ -1587,11 +1600,11 @@ $("threePage").onclick=()=>showPage("three");
 $("fourPage").onclick=()=>showPage("four");
 $("learnTopPage").onclick=()=>showPage("learn");
 $("coursesTopPage").onclick=()=>showPage("courses");
-$("fourStartBtn").onclick=function(){ multiBotEnabled=true; $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
+$("fourStartBtn").onclick=function(){multiBotEnabled=$("botModeBtn").classList.contains("active");$("gameMode").value="local4";showPage("four");startMultiGame(4);};
 $("fourResetBtn").onclick=function(){ if(multiBotTimer){clearTimeout(multiBotTimer);multiBotTimer=null;} startMultiGame(4); };
-$("twoModeBtn").onclick=function(){ multiBotEnabled=false; $("gameMode").value="local2"; showPage("play"); syncGameMode(); };
-$("botModeBtn").onclick=function(){ multiBotEnabled=true; $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
-$("friendModeBtn").onclick=function(){ multiBotEnabled=false; $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
+$("twoModeBtn").onclick=function(){multiBotEnabled=false;$("fourModeBtn").classList.remove("active");$("twoModeBtn").classList.add("active");$("gameMode").value="local2";showPage("play");};
+$("botModeBtn").onclick=function(){multiBotEnabled=true;$("botModeBtn").classList.add("active");$("friendModeBtn").classList.remove("active");$("gameMode").value="local4";showPage("four");startMultiGame(4);};
+$("friendModeBtn").onclick=function(){multiBotEnabled=false;$("friendModeBtn").classList.add("active");$("botModeBtn").classList.remove("active");$("gameMode").value="local4";showPage("four");startMultiGame(4);};
 $("coachModeBtn").onclick=function(){
   const b=$("coachModeBtn"),tips=document.querySelector(".coachTips");
   const on=b.classList.toggle("off");
@@ -1611,7 +1624,8 @@ $("askCoachBtn").onclick=function(){
 };
 $("closeTips").onclick=function(){ const p=document.querySelector(".coachTips"); if(p)p.classList.toggle("tipsClosed"); };
 $("fourDifficulty").onchange=function(){ $("level").value=this.value; };
-$("fourBoardStyle").onchange=function(){ document.body.dataset.boardStyle=this.value.toLowerCase(); };
+$("fourBoardStyle").onchange=function(){document.body.dataset.boardStyle=this.value.toLowerCase();};
+document.body.dataset.boardStyle=$("fourBoardStyle")?.value.toLowerCase()||"classic";
 setLearningOpening("e4");
 showPage("play");
 
@@ -1735,6 +1749,38 @@ function multiPseudo(st,r,c){
   }
   return legal;
 }
+function queueMultiBotMove(){
+  if(multiBotTimer)clearTimeout(multiBotTimer);
+  multiBotTimer=null;
+  if(!multiBotEnabled||!multiState||multiState.winner||multiState.drawAgreed||multiState.turn==="red")return;
+  const color=multiState.turn,options=[],values={p:100,n:320,b:330,r:500,q:900,k:20000};
+  for(let r=0;r<14;r++)for(let c=0;c<14;c++){
+    const p=multiState.board[r][c];if(!p||p.c!==color)continue;
+    for(const m of multiPseudo(multiState,r,c)){
+      const target=multiState.board[m[0]][m[1]],cp=multiClone(multiState);
+      cp.board[m[0]][m[1]]=cp.board[r][c];cp.board[r][c]=null;
+      if(cp.board[m[0]][m[1]]?.t==="p"&&MULTI_PLAYERS[color].promo(m[0],m[1]))cp.board[m[0]][m[1]].t="q";
+      let scoreValue=(target?values[target.t]||0:0)+(cp.board[m[0]][m[1]]?.t==="q"&&p.t!=="q"?120:0);
+      for(const enemy of cp.activeColors.filter(x=>x!==color&&cp.alive[x]))if(multiInCheck(cp,enemy))scoreValue+=35;
+      options.push({r,c,tr:m[0],tc:m[1],score:scoreValue+Math.random()*10});
+    }
+  }
+  if(!options.length){
+    multiState.stalemated[color]=true;
+    const next=multiNextAlive();
+    if(next)multiState.turn=next;else multiState.drawAgreed=true;
+    renderMulti();
+    if(next&&multiBotEnabled&&next!=="red")queueMultiBotMove();
+    return;
+  }
+  options.sort((a,b)=>b.score-a.score);
+  const level=+$("fourDifficulty")?.value||1800;
+  const pool=Math.min(options.length,level>=2200?1:level>=1400?2:5);
+  const pick=options[Math.floor(Math.random()*pool)];
+  const delay=level>=2200?260:level>=1400?380:520;
+  multiBotTimer=setTimeout(()=>{multiBotTimer=null;if(!multiBotEnabled||!multiState||multiState.winner||multiState.drawAgreed||multiState.turn!==color)return;multiSelected=null;multiLegal=[];multiApply(pick.r,pick.c,pick.tr,pick.tc);},delay);
+}
+
 function multiApply(r,c,tr,tc){
   if(multiState.drawAgreed)return;
   const p=multiState.board[r][c];if(!p||p.c!==multiState.turn)return;
@@ -1764,6 +1810,7 @@ function multiApply(r,c,tr,tc){
     multiState.turn=next||p.c;
   }
   multiSelected=null;multiLegal=[];renderMulti();
+  if(multiBotEnabled&&!multiState.winner&&multiState.turn!=="red")queueMultiBotMove();
 }
 function renderMulti(){
   const B=$("multiBoard");if(!B||!multiState)return;
@@ -1806,6 +1853,7 @@ function renderMulti(){
 
 }
 function startMultiGame(count){
+  if(multiBotTimer){clearTimeout(multiBotTimer);multiBotTimer=null;}
   reviewToken++;reviewPending=false;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;updateMistakePracticeUI();if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();
   multiState=multiInitial(count);multiSelected=null;multiLegal=[];
   document.body.classList.toggle("fourPlayerView",count===4);
