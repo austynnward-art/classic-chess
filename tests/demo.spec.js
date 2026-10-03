@@ -1,30 +1,15 @@
 const { test, expect } = require('@playwright/test');
 test.use({ video: 'on' });
-test('Classic Chess visual walkthrough', async ({ page }) => {
-  await page.addInitScript(() => {
-    class DemoWorker {
-      constructor(){ this.onmessage=null; this.onerror=null; }
-      postMessage(message){
-        if(message==='uci' && this.onmessage) setTimeout(()=>this.onmessage({data:'uciok'}),0);
-      }
-      terminate(){}
-    }
-    window.Worker = DemoWorker;
-  });
+
+test('Classic Chess rebuilt visual walkthrough', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
-  await page.waitForTimeout(700);
-  await page.locator('#fourModeBtn').click();
-  await page.waitForTimeout(900);
-  await page.locator('#coursesTopPage').click();
-  await expect(page.locator('.chesslyCourseDash')).toBeVisible();
-  await expect(page.locator('.ytShell')).toBeVisible();
-  await expect(page.locator('.ytShell iframe')).toHaveCount(6);
-  await page.waitForTimeout(1400);
-  await page.locator('#learnTopPage').click();
-  await expect(page.locator('#learningBoard')).toBeVisible();
-  await expect(page.locator('#learningBoard')).toBeVisible();
-  await page.waitForTimeout(1200);
-  await page.locator('#coursesTopPage').click();
-  await page.waitForTimeout(1200);
+  await expect(page.locator('#board .sq')).toHaveCount(64);
+  await page.locator('[data-mode="four"]').first().click();
+  await expect(page.locator('#multiBoard .multiSq')).toHaveCount(196);
+  await page.locator('[data-page="courses"]').first().click();
+  await expect(page.locator('#videos iframe')).toHaveCount(6);
+  await page.locator('[data-page="learn"]').first().click();
+  await expect(page.locator('#learnBoard .sq')).toHaveCount(64);
+  await page.waitForTimeout(500);
 });
