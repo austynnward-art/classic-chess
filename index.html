@@ -137,7 +137,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   <div class="engineStatus" id="engineStatus">Starting Stockfish…</div>
   <label class="small" style="margin-top:8px">Engine strength <span id="eloValue">1800</span></label>
   <input class="range" id="elo" type="range" min="800" max="3000" step="100" value="1800">
-  <div class="gameReview show" id="gameReview"><b>Game Review · Live</b><div class="reviewGrid"><div class="reviewStat"><b id="reviewResult">In progress</b><span>Result</span></div><div class="reviewStat"><b id="reviewMoves">0</b><span>Moves</span></div><div class="reviewStat"><b id="reviewOpening">Starting position</b><span>Opening</span></div><div class="reviewStat"><b id="reviewMaterial">0</b><span>Material</span></div></div><div class="reviewBest"><b>Best move now: <span id="reviewBestMove">—</span></b><div class="reviewWhy" id="reviewWhy">Stockfish will show the strongest move it finds and draw an arrow to it.</div></div><div class="reviewLast"><b>Last move: <span id="reviewLastMove">—</span> · <span id="reviewLastGrade">—</span></b><div class="reviewWhy" id="reviewLastWhy">Play a move to get a Stockfish-based grade.</div></div><div class="reviewMoveList" id="reviewMoveList"></div><div class="reviewText" id="reviewText">Live review updates after every move.</div></div><div class="analysisGraph"><canvas id="evalGraph"></canvas></div>
+  <div class="gameReview show" id="gameReview"><b>Game Review · Live</b><div class="reviewGrid"><div class="reviewStat"><b id="reviewResult">In progress</b><span>Result</span></div><div class="reviewStat"><b id="reviewMoves">0</b><span>Moves</span></div><div class="reviewStat"><b id="reviewOpening">Starting position</b><span>Opening</span></div><div class="reviewStat"><b id="reviewMaterial">0</b><span>Material</span></div></div><div class="reviewBest"><b>Best move now: <span id="reviewBestMove">—</span></b><div class="reviewWhy" id="reviewWhy">Stockfish will show the strongest move it finds and draw an arrow to it.</div></div><div class="reviewLast"><b>Last move: <span id="reviewLastMove">—</span> · <span id="reviewLastGrade">—</span></b><div class="reviewWhy" id="reviewLastWhy">Play a move to get a Stockfish-based grade.</div></div><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:8px"><button class="btn" id="reviewFilter" type="button">Show mistakes only</button><span class="small" id="reviewSummary">0 reviewed</span></div><div class="reviewMoveList" id="reviewMoveList"></div><div class="reviewText" id="reviewText">Live review updates after every move.</div></div><div class="analysisGraph"><canvas id="evalGraph"></canvas></div>
   <div class="small" style="margin-top:5px">Positions analyzed: <span id="movesAnalyzed">0</span></div>
 </div>
 </main>
@@ -499,8 +499,13 @@ function gradeMove(loss,isBest){
 }
 function renderReviewMoveList(){
   const box=$("reviewMoveList");if(!box)return;
-  box.innerHTML=reviewMoveGrades.slice().reverse().map(x=>'<div class="reviewMoveItem"><b>'+x.number+'. '+x.move+' — '+x.grade+'</b><div>'+x.detail+'</div></div>').join("");
+  const filtered=reviewMistakesOnly?reviewMoveGrades.filter(x=>x.grade==="Mistake"||x.grade==="Blunder"):reviewMoveGrades;
+  box.innerHTML=filtered.slice().reverse().map(x=>'<div class="reviewMoveItem"><b>'+x.number+'. '+x.move+' — '+x.grade+'</b><div>'+x.detail+'</div></div>').join("");
+  const counts=reviewMoveGrades.reduce((a,x)=>(a[x.grade]=(a[x.grade]||0)+1,a),{});
+  if($("reviewSummary"))$("reviewSummary").textContent=reviewMoveGrades.length+" reviewed · "+(counts["Great move"]||0)+" great · "+(counts["Good move"]||0)+" good · "+(counts["Mistake"]||0)+" mistakes · "+(counts["Blunder"]||0)+" blunders";
+  if($("reviewFilter"))$("reviewFilter").textContent=reviewMistakesOnly?"Show all moves":"Show mistakes only";
 }
+function toggleReviewFilter(){reviewMistakesOnly=!reviewMistakesOnly;renderReviewMoveList();}
 function setBotFeedback(grade,detail){
   const el=$("botSpeech");if(!el)return;
   el.className="botSpeech";
@@ -951,7 +956,7 @@ function showPage(which){
     syncGameMode();
   }
 }
-$("playPage").onclick=()=>showPage("play");
+$("reviewFilter").onclick=toggleReviewFilter;\n$("playPage").onclick=()=>showPage("play");
 $("botPage").onclick=()=>showPage("bot");
 $("threePage").onclick=()=>showPage("three");
 $("fourPage").onclick=()=>showPage("four");
@@ -1187,7 +1192,7 @@ function newGame(){
   if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}
   if(engine){try{engine.postMessage("stop")}catch(e){}}
   engineBusy=false;engineQueue=null;s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;
-  clock={w:+$("time").value,b:+$("time").value};evalHistory=[];lastEval=0;reviewToken++;reviewBaselineWhite=null;reviewMoveGrades=[];bestEngineMoveBefore=null;if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";if($("movesAnalyzed"))$("movesAnalyzed").textContent="0";if($("accuracy"))$("accuracy").textContent="—";clearArrow();setBotFeedback();render();startClock();if(engineReady)setTimeout(()=>{if(!history.length&&!over)requestLiveReview();},60);if(aiSide==="w")computer();
+  clock={w:+$("time").value,b:+$("time").value};evalHistory=[];lastEval=0;reviewToken++;reviewBaselineWhite=null;reviewMoveGrades=[];bestEngineMoveBefore=null;if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";reviewMistakesOnly=false;if($("reviewSummary"))$("reviewSummary").textContent="0 reviewed";if($("movesAnalyzed"))$("movesAnalyzed").textContent="0";if($("accuracy"))$("accuracy").textContent="—";clearArrow();setBotFeedback();render();startClock();if(engineReady)setTimeout(()=>{if(!history.length&&!over)requestLiveReview();},60);if(aiSide==="w")computer();
 }
 $("side").onchange=function(){
   if(gameMode!=="computer")return;
