@@ -324,6 +324,47 @@ body.focusHome .gameProgressCard{padding:7px}
 .courseResourceGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.courseResource{background:#fff;border:1px solid #e3ddd7;border-radius:11px;padding:12px}.courseResource b{display:block;font-size:14px}.courseResource span{display:block;margin:4px 0 9px;color:#777;font-size:11px;line-height:1.35}.courseResourceLinks{display:flex;gap:6px;flex-wrap:wrap}.courseResourceLinks a{display:inline-block;padding:7px 9px;border-radius:8px;background:#222;color:#fff;text-decoration:none;font-size:11px;font-weight:800}.courseResourceLinks a.secondary{background:#f0ece8;color:#332c27}
 .courseVideo{margin-top:12px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#111}.courseVideo iframe{width:100%;height:100%;border:0;display:block}
 @media(max-width:700px){.courseResourceGrid{grid-template-columns:1fr}}
+
+/* CLEAN HOME OVERRIDE — remove every legacy panel from the first-page view */
+body.focusHome.fourPlayerView .layout > .left > *,
+body.focusHome.fourPlayerView .layout > .center > *,
+body.focusHome.fourPlayerView .layout > .right > *{min-width:0}
+body.focusHome.fourPlayerView .layout > .center > .frame,
+body.focusHome.fourPlayerView .layout > .center > .controls,
+body.focusHome.fourPlayerView .layout > .center > .options,
+body.focusHome.fourPlayerView .layout > .center > .status,
+body.focusHome.fourPlayerView .layout > .center > .analysisCard,
+body.focusHome.fourPlayerView .layout > .center > #analysisPanel,
+body.focusHome.fourPlayerView .layout > .center > #gameReview,
+body.focusHome.fourPlayerView .layout > .center > #mistakePractice,
+body.focusHome.fourPlayerView .layout > .center > #coachLesson,
+body.focusHome.fourPlayerView .layout > .center > #coachMemoryPanel,
+body.focusHome.fourPlayerView .layout > .left > .card:not(.fourControls),
+body.focusHome.fourPlayerView .layout > .left > .analysisCard,
+body.focusHome.fourPlayerView .layout > .right > .card:not(.fourCoachCard),
+body.focusHome.fourPlayerView .layout > .right > .analysisCard,
+body.focusHome.fourPlayerView .layout > .right > #blackCard,
+body.focusHome.fourPlayerView .layout > .right > #botSpeech,
+body.focusHome.fourPlayerView .layout > .right > #bcap{display:none!important}
+body.focusHome.fourPlayerView .layout > .center > .multiFrame{display:block!important}
+body.focusHome.fourPlayerView .layout > .center > .fourBottomGrid{display:grid!important}
+body.focusHome.fourPlayerView .layout > .left > .fourControls{display:block!important}
+body.focusHome.fourPlayerView .layout > .right > .fourCoach{display:block!important}
+body.focusHome.fourPlayerView .layout > .center > .multiFrame + *:not(.fourBottomGrid){display:none!important}
+body.focusHome.fourPlayerView .layout > .center .multiControls,
+body.focusHome.fourPlayerView .layout > .center .multiNote{display:none!important}
+body.focusHome.fourPlayerView .legacyState,
+body.focusHome.fourPlayerView #whiteCard,
+body.focusHome.fourPlayerView #blackCard{display:none!important}
+
+/* Courses: video-first creator cards */
+body.contentPage .courseVideoResources,
+body.contentPage #courseVideoResources{display:block!important;max-width:1160px;margin:18px auto 0;padding:18px;background:#fff;border:1px solid #dbe5ed;border-radius:16px;box-shadow:0 6px 20px #001c3510}
+.courseResourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.courseResource{padding:14px;border:1px solid #dbe5ed;border-radius:12px;background:#f8fbfd}
+.courseResource b{display:block;color:#173b60;font-size:15px}.courseResource span{display:block;color:#68798a;font-size:12px;line-height:1.4;margin:5px 0 10px}
+.courseResourceLinks{display:flex;gap:7px;flex-wrap:wrap}.courseResourceLinks a{display:inline-block;padding:8px 10px;border-radius:8px;background:#1984ef;color:#fff;text-decoration:none;font-size:11px;font-weight:800}.courseResourceLinks a.secondary{background:#fff;color:#173b60;border:1px solid #cbdbe7}
+@media(max-width:850px){.courseResourceGrid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.courseResourceGrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -483,27 +524,15 @@ body.focusHome .gameProgressCard{padding:7px}
   </div>
 </section>
 <div class="courseResourcePanel" id="courseVideoResources">
-  <h3>🎥 Video Courses & Live Chess</h3>
-  <p>Public lessons and live chess you can open from Classic Chess. The links go to the creators' own YouTube or Twitch pages.</p>
+  <h3>🎥 Chess Courses + Video Teachers</h3>
+  <p>Study from public chess videos and open the creators' live channels. Each card gives you YouTube and Twitch links.</p>
   <div class="courseResourceGrid">
-    <article class="courseResource">
-      <b>Beginner Chess Lessons</b><span>Rules, openings, tactics and practical games.</span>
-      <div class="courseResourceLinks"><a href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener">YouTube · GothamChess</a><a class="secondary" href="https://www.twitch.tv/gothamchess" target="_blank" rel="noopener">Twitch · GothamChess</a></div>
-      <div class="courseVideo"><iframe src="https://www.youtube.com/embed/XtaEnxG2lbg" title="GothamChess How To Win At Chess Episode 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-    </article>
-    <article class="courseResource">
-      <b>Chess.com Video Library</b><span>How-to-play lessons, commentary, puzzles and chess education videos.</span>
-      <div class="courseResourceLinks"><a href="https://www.youtube.com/@chess" target="_blank" rel="noopener">YouTube · Chess.com</a><a class="secondary" href="https://www.twitch.tv/chess" target="_blank" rel="noopener">Twitch · Chess</a></div>
-      <div class="courseVideo"><iframe src="https://www.youtube.com/embed/AgTQJUhK2MY" title="Chess.com introduction video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-    </article>
-    <article class="courseResource">
-      <b>Chessly</b><span>Use the existing Chessly course link for structured paid courses and lessons.</span>
-      <div class="courseResourceLinks"><a href="https://chessly.com/" target="_blank" rel="noopener">Open Chessly</a><a class="secondary" href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener">Free YouTube Lessons</a></div>
-    </article>
-    <article class="courseResource">
-      <b>Live Chess Category</b><span>Browse current chess streams and past broadcasts on Twitch.</span>
-      <div class="courseResourceLinks"><a href="https://www.twitch.tv/directory/category/chess" target="_blank" rel="noopener">Open Twitch Chess</a><a class="secondary" href="https://www.twitch.tv/gothamchess/videos?filter=archives" target="_blank" rel="noopener">GothamChess VODs</a></div>
-    </article>
+    <article class="courseResource"><b>GothamChess</b><span>Beginner-friendly lessons, openings, tactics and game breakdowns.</span><div class="courseResourceLinks"><a href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener">YouTube</a><a class="secondary" href="https://www.twitch.tv/gothamchess" target="_blank" rel="noopener">Twitch</a></div></article>
+    <article class="courseResource"><b>Chess.com</b><span>Rules, fundamentals, lessons, events and broad training content.</span><div class="courseResourceLinks"><a href="https://www.youtube.com/@chess" target="_blank" rel="noopener">YouTube</a><a class="secondary" href="https://www.twitch.tv/chess" target="_blank" rel="noopener">Twitch</a></div></article>
+    <article class="courseResource"><b>GMHikaru</b><span>Grandmaster games, speed chess, analysis and live competition.</span><div class="courseResourceLinks"><a href="https://www.youtube.com/@GMHikaru" target="_blank" rel="noopener">YouTube</a><a class="secondary" href="https://www.twitch.tv/gmhikaru" target="_blank" rel="noopener">Twitch</a></div></article>
+    <article class="courseResource"><b>BotezLive</b><span>Chess games, streams and approachable chess entertainment.</span><div class="courseResourceLinks"><a href="https://www.youtube.com/@BotezLive" target="_blank" rel="noopener">YouTube</a><a class="secondary" href="https://www.twitch.tv/botezlive" target="_blank" rel="noopener">Twitch</a></div></article>
+    <article class="courseResource"><b>Chessbrah</b><span>Long-form games, improvement content and live chess.</span><div class="courseResourceLinks"><a href="https://www.youtube.com/@chessbrah" target="_blank" rel="noopener">YouTube</a><a class="secondary" href="https://www.twitch.tv/chessbrah" target="_blank" rel="noopener">Twitch</a></div></article>
+    <article class="courseResource"><b>Eric Rosen</b><span>Opening ideas, puzzles, endgames and instructive games.</span><div class="courseResourceLinks"><a href="https://www.youtube.com/@EricRosen" target="_blank" rel="noopener">YouTube</a><a class="secondary" href="https://www.twitch.tv/ericrosen" target="_blank" rel="noopener">Twitch</a></div></article>
   </div>
 </div>
 
