@@ -1,12 +1,13 @@
 const { test, expect } = require('@playwright/test');
 
-test.describe('Classic Chess rebuilt smoke tests', () => {
+test.describe('Rebuild app smoke tests', () => {
   test('home loads and has a board', async ({ page }) => {
     const errors=[];
     page.on('pageerror', e=>errors.push(e.message));
     await page.goto('/');
     await expect(page.locator('#home')).toBeVisible();
     await expect(page.locator('#board .sq')).toHaveCount(64);
+    await expect(page.locator('#board .pieceImg')).toHaveCount(32);
     expect(errors).toEqual([]);
   });
 
@@ -15,6 +16,11 @@ test.describe('Classic Chess rebuilt smoke tests', () => {
     await page.locator('[data-mode="four"]').first().click();
     await expect(page.locator('#multi')).toBeVisible();
     await expect(page.locator('#multiBoard .multiSq')).toHaveCount(196);
+    const multiSize = await page.locator('#multiBoard').boundingBox();
+    await page.locator('[data-mode="local"]').first().click();
+    const homeSize = await page.locator('#board').boundingBox();
+    expect(multiSize.width).toBe(homeSize.width);
+    expect(multiSize.height).toBe(homeSize.height);
   });
 
   test('courses contain six real YouTube embeds', async ({ page }) => {
@@ -33,8 +39,13 @@ test.describe('Classic Chess rebuilt smoke tests', () => {
     await page.locator('[data-page="learn"]').first().click();
     await expect(page.locator('#learn')).toBeVisible();
     await expect(page.locator('#learnBoard .sq')).toHaveCount(64);
-    await expect(page.locator('#board .rankLabel').first()).toHaveAttribute('data-rank', '8');
-    await expect(page.locator('#board .fileLabel').last()).toHaveAttribute('data-file', 'h');
+    await expect(page.locator('#learnBoard .pieceImg')).toHaveCount(32);
+    await expect(page.locator('#learnBoard .rankLabel').first()).toHaveAttribute('data-rank', '8');
+    await expect(page.locator('#learnBoard .fileLabel').last()).toHaveAttribute('data-file', 'h');
+    const homeSize = await page.locator('#board').boundingBox();
+    const learnSize = await page.locator('#learnBoard').boundingBox();
+    expect(homeSize.width).toBe(learnSize.width);
+    expect(homeSize.height).toBe(learnSize.height);
   });
 
   test('game review opens and contains coaching links', async ({ page }) => {
