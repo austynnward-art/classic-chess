@@ -1670,6 +1670,22 @@ body.focusHome.fourPlayerView .boardRank{
   body.focusHome.fourPlayerView .boardRank{font-size:7px!important}
 }
 
+
+/* PLAY VS COMPUTER — clear Stockfish state */
+body:not(.focusHome):not(.contentPage) .computerPlayBadge{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:8px;
+  padding:8px 10px;
+  border:1px solid #d8e5ee;
+  border-radius:10px;
+  background:#f7fbfe;
+  color:#35536b;
+  font-size:11px;
+}
+.computerPlayBadge b{color:#167ac5}
 </style>
 </head>
 <body>
@@ -1780,7 +1796,9 @@ body.focusHome.fourPlayerView .boardRank{
     <button class="btn" id="reviewGame" type="button">Game review</button>
     <button class="btn" id="clearArrow" type="button">Clear arrow</button>
   </div>
-  <div class="engineStatus" id="engineStatus">Starting Stockfish…</div><div class="arrowHint">↗ Glow green = best move · lighter arrows = useful checks/captures.</div>
+  <div class="engineStatus" id="engineStatus">Starting Stockfish…</div>
+  <div class="computerPlayBadge" id="computerPlayBadge"><span>🤖 Computer</span><b>Stockfish</b></div>
+  <div class="arrowHint">↗ Glow green = best move · lighter arrows = useful checks/captures.</div>
   <label class="small" style="margin-top:8px">Engine strength <span id="eloValue">1800</span></label>
   <input class="range" id="elo" type="range" min="800" max="3000" step="100" value="1800">
   <div class="gameReview show" id="gameReview"><b>Game Review · Live</b><div class="reviewGrid"><div class="reviewStat"><b id="reviewResult">In progress</b><span>Result</span></div><div class="reviewStat"><b id="reviewMoves">0</b><span>Moves</span></div><div class="reviewStat"><b id="reviewOpening">Starting position</b><span>Opening</span></div><div class="reviewStat"><b id="reviewMaterial">0</b><span>Material</span></div></div><div class="coachLesson" id="coachLesson">
@@ -2839,7 +2857,14 @@ $("learnTopPage").onclick=()=>showPage("learn");
 $("coursesTopPage").onclick=()=>showPage("courses");
 $("fourStartBtn").onclick=function(){multiBotEnabled=$("botModeBtn").classList.contains("active");$("gameMode").value="local4";showPage("four");startMultiGame(4);};
 $("fourResetBtn").onclick=function(){ if(multiBotTimer){clearTimeout(multiBotTimer);multiBotTimer=null;} startMultiGame(4); };
-$("twoModeBtn").onclick=function(){multiBotEnabled=false;$("fourModeBtn").classList.remove("active");$("twoModeBtn").classList.add("active");$("gameMode").value="local2";showPage("play");};
+$("twoModeBtn").onclick=function(){
+  multiBotEnabled=false;
+  $("fourModeBtn").classList.remove("active");
+  $("twoModeBtn").classList.add("active");
+  const vsBot=$("botModeBtn").classList.contains("active");
+  $("gameMode").value=vsBot?"computer":"local2";
+  showPage(vsBot?"bot":"play");
+};
 $("botModeBtn").onclick=function(){multiBotEnabled=true;$("botModeBtn").classList.add("active");$("friendModeBtn").classList.remove("active");$("gameMode").value="local4";showPage("four");startMultiGame(4);};
 $("friendModeBtn").onclick=function(){multiBotEnabled=false;$("friendModeBtn").classList.add("active");$("botModeBtn").classList.remove("active");$("gameMode").value="local4";showPage("four");startMultiGame(4);};
 $("coachModeBtn").onclick=function(){
