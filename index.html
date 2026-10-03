@@ -134,7 +134,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   <div class="engineStatus" id="engineStatus">Starting Stockfish…</div>
   <label class="small" style="margin-top:8px">Engine strength <span id="eloValue">1800</span></label>
   <input class="range" id="elo" type="range" min="800" max="3000" step="100" value="1800">
-  <div class="gameReview show" id="gameReview"><b>Game Review · Live</b><div class="reviewGrid"><div class="reviewStat"><b id="reviewResult">In progress</b><span>Result</span></div><div class="reviewStat"><b id="reviewMoves">0</b><span>Moves</span></div><div class="reviewStat"><b id="reviewOpening">Starting position</b><span>Opening</span></div><div class="reviewStat"><b id="reviewMaterial">0</b><span>Material</span></div></div><div class="reviewBest"><b>Best move now: <span id="reviewBestMove">—</span></b><div class="reviewWhy" id="reviewWhy">Stockfish will show the strongest move it finds and draw an arrow to it.</div></div><div class="reviewText" id="reviewText">Live review updates after every move.</div></div><div class="analysisGraph"><canvas id="evalGraph"></canvas></div>
+  <div class="gameReview show" id="gameReview"><b>Game Review · Live</b><div class="reviewGrid"><div class="reviewStat"><b id="reviewResult">In progress</b><span>Result</span></div><div class="reviewStat"><b id="reviewMoves">0</b><span>Moves</span></div><div class="reviewStat"><b id="reviewOpening">Starting position</b><span>Opening</span></div><div class="reviewStat"><b id="reviewMaterial">0</b><span>Material</span></div></div><div class="reviewBest"><b>Best move now: <span id="reviewBestMove">—</span></b><div class="reviewWhy" id="reviewWhy">Stockfish will show the strongest move it finds and draw an arrow to it.</div></div><div class="reviewLast"><b>Last move: <span id="reviewLastMove">—</span> · <span id="reviewLastGrade">—</span></b><div class="reviewWhy" id="reviewLastWhy">Play a move to get a Stockfish-based grade.</div></div><div class="reviewMoveList" id="reviewMoveList"></div><div class="reviewText" id="reviewText">Live review updates after every move.</div></div><div class="analysisGraph"><canvas id="evalGraph"></canvas></div>
   <div class="small" style="margin-top:5px">Positions analyzed: <span id="movesAnalyzed">0</span></div>
 </div>
 </main>
@@ -440,7 +440,7 @@ function san(before,m){
 let engine=null,engineReady=false,engineBusy=false,analysisToken=0,reviewToken=0;
 function makeEngine(){try{const src='importScripts("https://cdn.jsdelivr.net/npm/stockfish@19.0.0/stockfish-19-lite-single.js");';const blob=new Blob([src],{type:"application/javascript"});engine=new Worker(URL.createObjectURL(blob),{name:"classic-chess-stockfish"});engine.onmessage=e=>handleEngine(e.data);engine.postMessage("uci")}catch(err){if($("engineStatus"))$("engineStatus").textContent="Engine unavailable";}}
 function fenFromState(x){const rows=[];for(let r=0;r<8;r++){let row="",empty=0;for(let c=0;c<8;c++){const p=x.b[r][c];if(!p){empty++;continue}if(empty){row+=empty;empty=0}row+=p.c==="w"?p.t.toUpperCase():p.t}if(empty)row+=empty;rows.push(row)}let cast="";if(x.castle.wk)cast+="K";if(x.castle.wq)cast+="Q";if(x.castle.bk)cast+="k";if(x.castle.bq)cast+="q";return rows.join("/")+" "+x.turn+" "+(cast||"-")+" "+(x.ep?F[x.ep[1]]+(8-x.ep[0]):"-")+" 0 "+(Math.floor(history.length/2)+1)}
-let bestEngineMove=null;
+let bestEngineMove=null,bestEngineMoveBefore=null,reviewBaselineWhite=null,reviewMoveGrades=[];
 function drawArrow(from,to){const svg=$("arrowLayer");if(!svg)return;const f=F.indexOf(from[0]),fr=8-+from[1],t=F.indexOf(to[0]),tr=8-+to[1];const fc=flip?7-f:f,tc=flip?7-t:t,fy=flip?7-fr:fr,ty=flip?7-tr:tr;svg.setAttribute("viewBox","0 0 800 800");svg.setAttribute("preserveAspectRatio","none");svg.innerHTML='<defs><marker id="arrowHead" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L9,5 L0,10 Z" fill="#2f8f46"/></marker></defs><line x1="'+(fc*100+50)+'" y1="'+(fy*100+50)+'" x2="'+(tc*100+50)+'" y2="'+(ty*100+50)+'" stroke="#2f8f46" stroke-width="7" stroke-linecap="round" opacity=".8" marker-end="url(#arrowHead)"/>'}
 function clearArrow(){bestEngineMove=null;if($("arrowLayer"))$("arrowLayer").innerHTML="";if($("best-move"))$("best-move").textContent="—";if($("reviewBestMove"))$("reviewBestMove").textContent="—";if($("evalValue"))$("evalValue").textContent="—"}
 function analyzeWithEngine(){if(!engineReady||engineBusy||over)return;engineBusy=true;analysisToken++;clearArrow();if($("engineStatus"))$("engineStatus").textContent="Analyzing…";engine.postMessage("stop");engineStrengthCommands();engine.postMessage("ucinewgame");engine.postMessage("position fen "+fenFromState(s));engine.postMessage("go movetime "+Math.round(Math.max(600,engineMoveTime()*1.8)))}
@@ -485,27 +485,53 @@ function updateOpening(){
   $("openingName").textContent=found;
 }
 function showWinAnimation(title,text){const o=$("winOverlay");if(!o)return;$("winTitle").textContent=title;$("winText").textContent=text;o.classList.add("show");setTimeout(()=>o.classList.remove("show"),2600)}
-function requestLiveReview(){
+function gradeMove(loss,isBest){
+  if(isBest||loss<=0.05)return "Great move";
+  if(loss<=0.25)return "Good move";
+  if(loss<=0.70)return "Mistake";
+  return "Blunder";
+}
+function renderReviewMoveList(){
+  const box=$("reviewMoveList");if(!box)return;
+  box.innerHTML=reviewMoveGrades.slice().reverse().map(x=>'<div class="reviewMoveItem"><b>'+x.number+'. '+x.move+' — '+x.grade+'</b><div>'+x.detail+'</div></div>').join("");
+}
+function recordMoveGrade(move,grade,detail){
+  reviewMoveGrades.push({number:reviewMoveGrades.length+1,move,grade,detail});
+  if($("reviewLastMove"))$("reviewLastMove").textContent=move;
+  if($("reviewLastGrade"))$("reviewLastGrade").textContent=grade;
+  if($("reviewLastWhy"))$("reviewLastWhy").textContent=detail;
+  renderReviewMoveList();
+}
+function requestLiveReview(moveJustPlayed,mover,playedUci){
   const token=++reviewToken;
   const run=()=>{
-    if(token!==reviewToken||!s||over&&false)return;
+    if(token!==reviewToken||!s)return;
     if(!engineReady){if($("reviewWhy"))$("reviewWhy").textContent="Waiting for Stockfish…";return;}
     if(engineBusy){setTimeout(run,250);return;}
-    engineSearch(s,mv=>{
+    const positionToAnalyze=clone(s);
+    engineSearch(positionToAnalyze,mv=>{
       if(token!==reviewToken||!s)return;
+      const afterWhite=positionToAnalyze.turn==="w"?lastEval:-lastEval;
       const side=s.turn==="w"?"White":"Black";
+      if(moveJustPlayed&&reviewBaselineWhite!==null){
+        const loss=Math.max(0,mover==="w"?reviewBaselineWhite-afterWhite:afterWhite-reviewBaselineWhite);
+        const grade=gradeMove(loss,!!playedUci&&playedUci===bestEngineMoveBefore);
+        const detail=grade==="Great move"?"Stockfish sees this as the top move or essentially equal to it.":"Estimated engine loss: "+loss.toFixed(2)+" pawns versus the position before your move.";
+        recordMoveGrade(moveJustPlayed,grade,detail);
+      }
       if(mv&&mv.length>=4){
         const u=mv.slice(0,4);
-        const from=u.slice(0,2),to=u.slice(2,4);
-        bestEngineMove=u;
-        drawArrow(from,to);
+        bestEngineMove=u;bestEngineMoveBefore=u;
+        drawArrow(u.slice(0,2),u.slice(2,4));
         if($("best-move"))$("best-move").textContent=u;
         if($("reviewBestMove"))$("reviewBestMove").textContent=u;
-        if($("reviewWhy"))$("reviewWhy").textContent=side+" to move. Stockfish's principal variation starts with "+u+"; the arrow marks the engine's current best move.";
+        if($("reviewWhy"))$("reviewWhy").textContent=side+" to move. Stockfish's top line starts with "+u+".";
       }else{
+        bestEngineMoveBefore=null;
         if($("reviewBestMove"))$("reviewBestMove").textContent="—";
-        if($("reviewWhy"))$("reviewWhy").textContent="No legal engine move is available in this position.";
+        if($("reviewWhy"))$("reviewWhy").textContent="No legal engine move is available.";
       }
+      reviewBaselineWhite=afterWhite;
       reviewGame();
     });
   };
@@ -525,7 +551,7 @@ $("whiteCard").classList.toggle("active",s.turn==="w"&&!over);$("blackCard").cla
 renderCourseBoard();
 }
 function renderCourseBoard(){const B=$("courseBoard");if(!B)return;B.innerHTML="";for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.type="button";e.className="courseSq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="coursePiece "+(p.c==="w"?"whitePiece":"blackPiece");z.innerHTML=pieceSVG(p.c,p.t);e.appendChild(z)}e.onclick=()=>tap(r,c);B.appendChild(e)}}
-function tap(r,c){if(over||thinking||s.turn===aiSide)return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));s=apply(s,sel,[r,c]);history.push(san(old,{f:sel,t:[r,c]}));recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];render();finish();if(!over&&s.turn===aiSide)computer();else requestLiveReview();return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
+function tap(r,c){if(over||thinking||s.turn===aiSide)return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));const playedSan=san(old,{f:sel,t:[r,c]}),playedUci=String.fromCharCode(97+sel[1])+(8-sel[0])+String.fromCharCode(97+c)+(8-r),mover=old.turn;s=apply(s,sel,[r,c]);history.push(playedSan);recordEval(score(s,"w")/100);updateOpening();sel=null;legal=[];render();finish();if(!over&&s.turn===aiSide)computer();else requestLiveReview(playedSan,mover,playedUci);return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
 const val={p:100,n:320,b:330,r:500,q:900,k:20000};
 function score(x,c){let sc=0;for(let r=0;r<8;r++)for(let q=0;q<8;q++){let p=x.b[r][q];if(p)sc+=(p.c===c?1:-1)*val[p.t]}return sc}
 function eloDepth(){const e=+$("elo")?.value||+$("level")?.value||1800;return Math.max(10,Math.min(24,Math.round(10+(e-800)/220)))}
