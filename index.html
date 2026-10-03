@@ -265,20 +265,39 @@ function computer(){
   if(over||!s||s.turn!==aiSide)return;
   if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}
   if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}
-  const request=++computerRequestToken; thinking=true; render();
-  const fallback=()=>{
+  const request=++computerRequestToken;
+  thinking=true;
+  render();
+
+  const playFallback=()=>{
     if(request!==computerRequestToken||over||!s||s.turn!==aiSide)return;
-    const m=fallbackComputerMove();
-    if(m){const before=clone(s);snapshots.push(clone(s));s=apply(s,m.f,m.t);history.push(san(before,m));updateOpening();}
-    thinking=false;render();finish();
+    try{
+      const moves=all(s,s.turn);
+      if(!moves.length){thinking=false;render();finish();return;}
+      const m=fallbackComputerMove()||moves[0];
+      const before=clone(s);
+      snapshots.push(clone(s));
+      s=apply(s,m.f,m.t);
+      history.push(san(before,m));
+      updateOpening();
+    }catch(err){
+      const moves=all(s,s.turn);
+      if(moves.length){
+        const m=moves[0],before=clone(s);
+        snapshots.push(clone(s));s=apply(s,m.f,m.t);history.push(san(before,m));updateOpening();
+      }
+    }
+    thinking=false;
+    render();
+    finish();
   };
-  if(!engineReady||engineBusy){
-    if($("result"))$("result").textContent="Starting computer…";
-    computerRetryTimer=setTimeout(()=>{computerRetryTimer=null;if(engineReady&&!engineBusy&&!over&&s.turn===aiSide)computer();else fallback();},1000);
-    return;
-  }
+
+  // Always guarantee a Black move, even if Stockfish/CDN is unavailable.
+  computerMoveTimer=setTimeout(()=>{computerMoveTimer=null;playFallback();},1200);
+
+  if(!engineReady||engineBusy)return;
+
   const before=clone(s);
-  computerMoveTimer=setTimeout(()=>{computerMoveTimer=null;fallback();},3500);
   engineSearch(s,mv=>{
     if(request!==computerRequestToken)return;
     if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}
@@ -290,7 +309,7 @@ function computer(){
         snapshots.push(clone(s));s=apply(s,m.f,m.t);history.push(san(before,m));recordEval(lastEval);updateOpening();played=true;
       }
     }
-    if(!played){fallback();return;}
+    if(!played){playFallback();return;}
     thinking=false;render();finish();
   });
 }
