@@ -58,36 +58,85 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 .courseCarousel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.courseCard{background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:18px;box-shadow:0 4px 14px #0000000b}.courseTag{font-size:10px;font-weight:900;letter-spacing:1.2px;color:#765542}.courseCard h3{margin:6px 0 7px;font-size:19px}.courseCard p{margin:0;color:#666;line-height:1.5;font-size:13px}.courseBtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.learningTrainer{margin-top:18px;background:#fff;border:1px solid #ddd3c8;border-radius:14px;padding:16px}.trainerHead{display:flex;justify-content:space-between;gap:12px;align-items:center}.trainerHead h3{margin:0 0 4px}.trainerHead p{margin:0;color:#777;font-size:12px}.trainerGrid{display:grid;grid-template-columns:minmax(320px,620px) 1fr;gap:16px;margin-top:14px}.learningBoard{display:grid;grid-template-columns:repeat(8,1fr);width:100%;aspect-ratio:1;border-radius:9px;overflow:hidden;box-shadow:0 3px 12px #0002}.learningSq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(24px,5.2vw,50px);line-height:1;overflow:hidden}.learningBoard .learningSq.light{background-color:#f0d9b5 !important;background-image:none}.learningBoard .learningSq.dark{background-color:#b58863 !important;background-image:none}.learningSq.selected{outline:4px solid #2563eb;outline-offset:-4px}.learningSq.hint{box-shadow:inset 0 0 0 4px #22c55e}.learningPiece{font-family:"Times New Roman",serif}.learningPiece.whitePiece{color:#fffdf7;text-shadow:0 2px 0 #8b633b,1px 0 0 #805a32,-1px 0 0 #805a32,0 4px 2px #0006}.learningPiece.blackPiece{color:#15120f;text-shadow:0 2px 0 #050403,1px 0 0 #302318,-1px 0 0 #302318,0 4px 3px #0007}.trainerSide{display:grid;align-content:start;gap:10px}.trainerPanel{border:1px solid #e5ddd5;border-radius:10px;padding:12px;background:#faf8f6}.trainerPanel b{display:block;margin-bottom:6px}.trainerPanel span,.trainerPanel a{display:block;color:#777;font-size:12px;line-height:1.45}.trainerPanel a{color:#2563eb;text-decoration:none;margin-top:6px}@media(max-width:800px){.courseCarousel,.trainerGrid{grid-template-columns:1fr}.trainerHead{align-items:flex-start}}
 
 .courseBoard,.learningBoard{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));aspect-ratio:1/1;width:100%;height:auto}.courseSq,.learningSq{aspect-ratio:1/1;min-width:0;min-height:0;width:100%;height:100%}.gameReview{margin-top:12px;padding:13px;border:1px solid #d9dee5;border-radius:10px;background:#fff;display:none}.gameReview.show{display:block}.reviewGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}.reviewStat{padding:9px;border-radius:8px;background:#f7f4ef}.reviewStat b{display:block;font-size:17px}.reviewStat span{font-size:11px;color:#777}.reviewBreakdown{margin-top:9px;padding:10px;border-radius:10px;background:#f8f5f0;border:1px solid #e7ded3;font-size:12px;line-height:1.4}.reviewBreakdownGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0}.reviewBreakdownGrid span{padding:7px;border-radius:7px;background:#fff;text-align:center;color:#666}.reviewBreakdownGrid b{display:block;font-size:15px;color:#292522}.mistakePractice{margin-top:10px;padding:10px;border:1px solid #d9dee5;border-radius:10px;background:#fbfaf8}.mistakePracticeHead{display:flex;justify-content:space-between;gap:8px;align-items:center}.mistakePracticeTitle{font-weight:800}.mistakePracticeMeta{font-size:11px;color:#777}.mistakePracticeControls{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.mistakePracticeControls .btn:disabled{opacity:.5;cursor:not-allowed}.mistakePracticeStatus{margin-top:7px;font-size:12px;line-height:1.4;color:#555}.coachLesson{margin-top:10px;padding:11px;border:1px solid #d9c8b6;border-radius:10px;background:#fffaf3;font-size:12px;line-height:1.45}.coachLesson>b{font-size:13px}.coachChecklist{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0}.coachChecklist span{padding:6px;border-radius:7px;background:#fff;border:1px solid #eadfd3;text-align:center;font-weight:700;color:#6b5846}@media(max-width:700px){.coachChecklist{grid-template-columns:repeat(2,1fr)}}.reviewTimeline{display:flex;gap:3px;flex-wrap:wrap;margin-top:8px}.reviewDot{width:13px;height:13px;border-radius:3px;border:1px solid #ddd}.reviewDot.great{background:#8fd19e}.reviewDot.good{background:#9fc8ea}.reviewDot.mistake{background:#f0c86a}.reviewDot.blunder{background:#e38b8b}.criticalMoments{margin-top:10px;padding:10px;border:1px solid #e1d7cb;border-radius:10px;background:#fcfaf7}.criticalMoment{padding:7px 0;border-top:1px solid #eee5dc;font-size:12px}.criticalMoment:first-child{border-top:0}.criticalMoment button{margin-left:6px}.reviewText{margin-top:9px;font-size:13px;line-height:1.45;color:#555}.botBadge{display:flex;flex-direction:column;gap:9px;align-items:center;margin-top:8px;padding:14px 10px;border-radius:12px;background:#f6f1eb;text-align:center}.botAvatar{width:190px;height:190px;max-width:100%;border-radius:18px;display:block;position:relative;overflow:hidden;background:linear-gradient(#79b83f 0 57%,#f0c85b 57% 64%,#78ad3e 64% 100%);box-shadow:0 4px 12px #0004;font-size:0}.botAvatar:before{content:"";position:absolute;left:35px;top:18px;width:120px;height:122px;border-radius:48% 48% 46% 46%;background:radial-gradient(ellipse at 50% 28%,#1d1716 0 34%,transparent 35%),linear-gradient(#f2c4a1 0 100%);box-shadow:0 74px 0 1px #171515}.botAvatar:after{content:"";position:absolute;left:29px;top:68px;width:132px;height:34px;border:4px solid rgba(255,255,255,.95);border-radius:17px;box-shadow:0 0 0 1px #b9b9b9,66px 0 0 -1px rgba(255,255,255,.95)}.botFace2{background:linear-gradient(#76b83f 0 57%,#f0c85b 57% 64%,#76ad3f 64% 100%)}.botFace3{background:linear-gradient(#78b941 0 57%,#f2cc68 57% 64%,#78ad3e 64% 100%)}.coachQuickTips{width:100%;display:grid;gap:5px;margin-top:2px;padding:10px;border-radius:10px;background:#fff;border:1px solid #ddd3c8;font-size:12px;line-height:1.35;color:#4b4038;text-align:left}.coachQuickTips span{display:block}.botCoach{margin-top:10px}.botSpeech{position:relative;padding:8px 10px;border-radius:10px;background:#fff;border:1px solid #ddd3c8;font-size:12px;line-height:1.35;color:#433a34;box-shadow:0 2px 6px #0000000b}.botSpeech:before{content:"";position:absolute;left:17px;top:-6px;width:10px;height:10px;background:#fff;border-left:1px solid #ddd3c8;border-top:1px solid #ddd3c8;transform:rotate(45deg)}.botSpeech.gradeGreat{border-color:#8fcf9d;background:#f1fff4}.botSpeech.gradeGood{border-color:#9fc8ea;background:#f3f8ff}.botSpeech.gradeMistake{border-color:#e9c779;background:#fffaf0}.botSpeech.gradeBlunder{border-color:#e5a1a1;background:#fff3f3}.botBadge a{color:#2563eb;text-decoration:none;font-size:11px;font-weight:800}.winOverlay{position:fixed;inset:0;z-index:1000;display:none;place-items:center;background:#0008;pointer-events:none}.winOverlay.show{display:grid}.winCard{padding:28px 34px;border-radius:18px;background:#fff;box-shadow:0 16px 50px #0008;text-align:center;animation:winPop .45s ease-out}.winCard .winIcon{font-size:62px;animation:winBounce .8s ease-in-out infinite alternate}.winCard h2{margin:7px 0 4px;font-size:30px}.winCard p{margin:0;color:#666}@keyframes winPop{from{transform:scale(.65);opacity:0}to{transform:scale(1);opacity:1}}@keyframes winBounce{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-9px) rotate(5deg)}}
+
+/* Four-player dashboard theme */
+body.fourPlayerView{background:linear-gradient(135deg,#0b3157,#174e7f 48%,#28689d);color:#f7fbff}
+body.fourPlayerView .app{max-width:1540px;padding:0 0 24px}
+body.fourPlayerView .top{height:88px;margin:0;border:0;border-radius:0;background:linear-gradient(100deg,#173b60,#123556);box-shadow:0 5px 20px #001a332e;padding:10px 26px;color:#fff}
+body.fourPlayerView .brand h1{font-size:32px;color:#fff}.fourPlayerView .brand small{display:none}.fourPlayerView .brand .horse{color:#fff}
+.fourPlayerView .pageNav{gap:28px}.fourPlayerView .pageBtn{border:0;background:#2467a6;color:#fff;border-radius:11px;padding:12px 24px;font-size:17px}.fourPlayerView .pageBtn.active{background:#2c76bd}.fourPlayerView .pageBtn span{margin-left:7px}
+.topTools{display:flex;gap:14px}.iconBtn{width:48px;height:48px;border:0;border-radius:50%;background:#082a4b;color:#fff;font-size:25px;cursor:pointer}
+.fourPlayerView .layout{grid-template-columns:342px minmax(560px,1fr) 360px;gap:20px;margin:0;align-items:stretch;padding:18px 0}
+.fourPlayerView .left,.fourPlayerView .right,.fourPlayerView .center{min-width:0}
+.fourPlayerView .card{background:#0b3157;border:0;box-shadow:0 8px 20px #001c3528;color:#fff}
+.fourControls{border-radius:0 14px 14px 0;padding:26px 26px 22px;background:linear-gradient(180deg,#0b3157,#09294a)!important;height:100%}
+.fourControls h2{font-size:22px;margin:0 0 10px}.fourControls h2:not(:first-child){margin-top:25px}
+.fourModeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fourModeBtn{height:96px;border:1px solid #23486d;background:#193c61;color:#fff;border-radius:12px;font-size:27px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px;cursor:pointer}.fourModeBtn strong{font-size:17px}.fourModeBtn.active{background:#1984ef;border-color:#bfe1ff;box-shadow:0 0 0 2px #2b90f5}
+.dashboardSelect{width:100%;height:58px;border:1px solid #3e6890;border-radius:11px;background:#1a4168;color:#fff;padding:0 18px;font-size:17px;font-weight:700}
+.startDashboardBtn,.resetDashboardBtn{width:100%;height:58px;border:0;border-radius:11px;margin-top:28px;font-size:19px;font-weight:800;cursor:pointer}.startDashboardBtn{background:#17c35b;color:#fff}.resetDashboardBtn{margin-top:14px;background:#214b73;color:#fff}
+.legacyState{display:none!important}
+.fourPlayerView .center{padding:0 0 0 0}.fourPlayerView .frame{display:none}.fourPlayerView .multiFrame{display:block!important;background:#0b3157;border:0;border-radius:15px;padding:18px;box-shadow:0 8px 20px #001c3528}.fourBoardWrap{padding:0;display:grid;place-items:center}.fourPlayerView .multiBoard{width:min(100%,720px);border:0;border-radius:12px;clip-path:none;box-shadow:0 10px 25px #001b3345;background:#102d48;overflow:hidden}
+.fourPlayerView .multiSq.playable{border:1px solid #ffffff1a}.fourPlayerView .multiSq.playable.redZone{background:#ef5a52}.fourPlayerView .multiSq.playable.redZone:nth-child(even){background:#f47b73}.fourPlayerView .multiSq.playable.blueZone{background:#2992e5}.fourPlayerView .multiSq.playable.blueZone:nth-child(even){background:#55afea}.fourPlayerView .multiSq.playable.greenZone{background:#45b85d}.fourPlayerView .multiSq.playable.greenZone:nth-child(even){background:#6bcf7c}.fourPlayerView .multiSq.playable.yellowZone{background:#f2c43c}.fourPlayerView .multiSq.playable.yellowZone:nth-child(even){background:#f7d35f}.fourPlayerView .multiSq.void{background:#102d48}.fourPlayerView .multiPiece{width:84%;height:84%;filter:drop-shadow(0 4px 2px #0006)}
+.fourPlayerView .multiPiece.red{color:#b52323}.fourPlayerView .multiPiece.blue{color:#0f5db7}.fourPlayerView .multiPiece.green{color:#16773b}.fourPlayerView .multiPiece.yellow{color:#a56a00}
+.fourPlayerView .multiSq.selected{outline:4px solid #fff;outline-offset:-4px}.fourPlayerView .multiSq.legal:after{background:#ffffffaa}.fourPlayerView .multiSq.capture:after{border-color:#fff}
+.fourPlayerView .multiInfo{margin:0 0 10px}.fourPlayerView .multiBadge{background:#143d62;color:#fff;border:1px solid #2b5e88}
+.fourPlayerView .multiControls,.fourPlayerView .multiNote{display:none}
+.fourBottomGrid{display:grid;grid-template-columns:1.1fr 1fr;gap:12px;margin-top:12px}.bottomCard{background:#0b3157;border-radius:14px;padding:18px;color:#fff;min-height:120px;box-shadow:0 8px 20px #001c3528}.bottomCard h3{margin:0 0 14px;font-size:20px}.fourMoveList{background:#123b61;border:1px solid #1e4e76;border-radius:10px;padding:12px;min-height:55px;font-size:14px;color:#cfe2f4}.playerLegend{display:flex;align-items:center;justify-content:space-around;gap:8px}.legendItem{display:grid;grid-template-columns:auto auto;column-gap:7px;align-items:center;padding:0 10px;border-right:1px solid #2a5377}.legendItem:last-child{border:0}.legendItem i{width:20px;height:20px;border-radius:50%;grid-row:1 / span 2}.legendItem span{font-size:12px;color:#a9c4dc}.redDot{background:#f15a50}.blueDot{background:#2992e5}.greenDot{background:#45b85d}.yellowDot{background:#f2c43c}
+.fourCoach{padding:0!important;background:transparent!important;box-shadow:none!important}.coachHero{background:#15406a;border-radius:14px;overflow:hidden;padding:12px}.fourPlayerView .botBadge{background:linear-gradient(180deg,#1a4b77,#17426b);margin:0;padding:0;border-radius:10px}.fourPlayerView .botAvatar{width:100%;height:270px;border-radius:10px;background:linear-gradient(#7dbd42 0 55%,#f0c85b 55% 62%,#78ad3e 62% 100%);box-shadow:none}.fourPlayerView .botAvatar:before{left:28%;top:22px;width:44%;height:174px}.fourPlayerView .botAvatar:after{left:24%;top:94px;width:52%;height:45px}.coachName{padding:10px 6px 5px;text-align:left}.coachName b{display:block;font-size:18px}.coachName span{display:block;color:#b8d0e5;font-size:13px;margin-top:3px}.fourPlayerView .botSpeech{margin:0 8px 4px;padding:14px 16px;font-size:17px;line-height:1.45;background:#fff;color:#1b2633;border:0;border-radius:14px;box-shadow:0 5px 12px #001a3333}.fourPlayerView .botSpeech:before{display:none}
+.coachTips{margin-top:12px;background:#0b3157;border-radius:14px;padding:18px 20px}.coachTipsHead{display:flex;justify-content:space-between;align-items:center;font-size:21px;margin-bottom:16px}.coachTipsHead button{border:0;background:none;color:#fff;font-size:28px;cursor:pointer}.tipRow{display:flex;gap:14px;margin:15px 0;align-items:flex-start}.tipRow i{font-style:normal;flex:0 0 44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#26b85d;color:#fff;font-weight:900;font-size:23px}.tipRow:nth-of-type(3) i{background:#2b8eea}.tipRow:nth-of-type(4) i{background:#f3c341}.tipRow:nth-of-type(5) i{background:#7a57ed}.tipRow b{display:block;font-size:17px}.tipRow span{display:block;color:#aac4da;font-size:14px;line-height:1.35;margin-top:3px}.askCoachBtn{width:100%;height:54px;border:0;border-radius:11px;background:#1984ef;color:#fff;font-size:17px;font-weight:800;cursor:pointer;margin-top:8px}.gameProgressCard{margin-top:12px;background:#0b3157;border-radius:14px;padding:18px 20px}.gameProgressCard b{display:block;font-size:17px}.gameProgressCard span{display:block;margin-top:6px;color:#c2d7e8}
+.fourPlayerView .controls,.fourPlayerView .options,.fourPlayerView .status,.fourPlayerView #analysisPanel{display:none!important}
+.fourPlayerView .pageNav .pageBtn[id="threePage"],.fourPlayerView .pageNav .pageBtn[id="fourPage"],.fourPlayerView .pageNav .pageBtn[id="botPage"]{display:none}
+@media(max-width:1100px){.fourPlayerView .layout{grid-template-columns:260px minmax(430px,1fr)}.fourPlayerView .right{grid-column:1 / -1}.fourPlayerView .fourCoach{display:grid;grid-template-columns:1fr 1fr;gap:12px}.fourPlayerView .gameProgressCard{grid-column:1/-1}}
+@media(max-width:760px){.fourPlayerView .top{padding:10px 14px}.fourPlayerView .pageNav{gap:6px}.fourPlayerView .pageBtn{padding:10px 12px}.fourPlayerView .layout{grid-template-columns:1fr;padding:10px}.fourControls{border-radius:14px}.fourBottomGrid{grid-template-columns:1fr}.playerLegend{flex-wrap:wrap}.fourPlayerView .fourCoach{display:block}}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="top"><div class="brand"><div class="horse">♞</div><div><h1>Classic Chess</h1><small>Strategy  ·  Focus  ·  Victory</small></div></div><nav class="pageNav" aria-label="Chess game pages">
-<button class="pageBtn active" id="playPage" type="button">1 · 2 Player</button>
-<button class="pageBtn" id="botPage" type="button">2 · Play Bot</button>
-<button class="pageBtn" id="threePage" type="button">3 · Three Player</button>
-<button class="pageBtn" id="fourPage" type="button">4 · Four Player</button>
-<button class="pageBtn" id="learnTopPage" type="button">📚 Learn</button>
-<button class="pageBtn" id="coursesTopPage" type="button">🎓 Courses</button>
-</nav></header>
+<header class="top">
+  <div class="brand"><div class="horse">♞</div><div><h1>Classic Chess</h1><small>Strategy · Focus · Victory</small></div></div>
+  <nav class="pageNav" aria-label="Chess game pages">
+    <button class="pageBtn active" id="playPage" type="button">⌂ <span>Home</span></button>
+    <button class="pageBtn" id="coursesTopPage" type="button">🎓 <span>Courses</span></button>
+    <button class="pageBtn" id="learnTopPage" type="button">📖 <span>Learn</span></button>
+  </nav>
+  <div class="topTools"><button type="button" class="iconBtn" id="settingsBtn" aria-label="Settings">⚙</button><button type="button" class="iconBtn" id="profileBtn" aria-label="Profile">●</button></div>
+</header>
 <div class="layout">
 <aside class="left">
-<div class="card" id="whiteCard"><div class="player">White <span class="small" id="whiteLabel">You</span></div><div class="clock" id="wc">10:00</div></div>
-<div class="card"><b>Captured</b><div class="captured" id="wcap">—</div></div>
+  <div class="fourControls card">
+    <h2>Game Mode</h2>
+    <div class="fourModeGrid">
+      <button class="fourModeBtn active" id="fourModeBtn" type="button">👥<strong>4 Player</strong></button>
+      <button class="fourModeBtn" id="twoModeBtn" type="button">♟<strong>2 Player</strong></button>
+    </div>
+    <h2>Play Against</h2>
+    <div class="fourModeGrid">
+      <button class="fourModeBtn active" id="botModeBtn" type="button">🤖<strong>Bot</strong></button>
+      <button class="fourModeBtn" id="friendModeBtn" type="button">♟<strong>Friend</strong></button>
+    </div>
+    <h2>Difficulty</h2>
+    <select class="dashboardSelect" id="fourDifficulty"><option value="1000">Easy</option><option value="1800" selected>Medium</option><option value="2400">Hard</option></select>
+    <h2>Board Style</h2>
+    <select class="dashboardSelect" id="fourBoardStyle"><option>Classic</option><option>Bright</option><option>Dark</option></select>
+    <button class="startDashboardBtn" id="fourStartBtn" type="button">▶ <span>Start Game</span></button>
+    <button class="resetDashboardBtn" id="fourResetBtn" type="button">↻ <span>Reset</span></button>
+  </div>
+  <div class="legacyState" aria-hidden="true">
+    <div class="card" id="whiteCard"><div class="player">White <span class="small" id="whiteLabel">You</span></div><div class="clock" id="wc">10:00</div></div>
+    <div class="card"><b>Captured</b><div class="captured" id="wcap">—</div></div>
+  </div>
 </aside>
 <main class="center">
 <div class="frame"><div style="position:relative;width:100%;height:100%"><div class="board" id="board"></div><svg class="arrowLayer" id="arrowLayer" viewBox="0 0 800 800" preserveAspectRatio="none"></svg></div></div>
 <div class="multiFrame" id="multiFrame">
-  <div class="multiInfo">
-    <span class="multiBadge" id="multiTurn">Red to move</span>
-    <span class="multiBadge" id="multiAlive">Players alive: 4</span>
-  </div>
-  <div id="multiBoard" class="multiBoard" aria-label="Local multiplayer chess board"></div>
-  <div class="multiControls">
-    <button class="btn primary" id="multiNew" type="button">＋ New Multiplayer Game</button>
-    <button class="btn" id="multiReset" type="button">↻ Reset</button>
-  </div>
-  <div class="multiNote" id="multiNote">Local pass-and-play mode. Three-player and four-player chess use variant rules; this local version uses standard piece movement on a multi-arm board and king-capture elimination.</div>
+  <div class="multiInfo"><span class="multiBadge" id="multiTurn">Red to move</span><span class="multiBadge" id="multiAlive">Players alive: 4</span></div>
+  <div class="fourBoardWrap"><div id="multiBoard" class="multiBoard" aria-label="Four player chess board"></div></div>
+  <div class="multiControls"><button class="btn primary" id="multiNew" type="button">＋ New Multiplayer Game</button><button class="btn" id="multiReset" type="button">↻ Reset</button></div>
+  <div class="multiNote" id="multiNote">Four players share one board. Each side has a full army and a king.</div>
+</div>
+<div class="fourBottomGrid">
+  <div class="bottomCard"><h3>◷ Moves</h3><div class="fourMoveList" id="fourMoveList">No moves yet</div></div>
+  <div class="bottomCard playerLegend"><div class="legendItem"><i class="redDot"></i><b>Red</b><span>You</span></div><div class="legendItem"><i class="blueDot"></i><b>Blue</b><span>Bot</span></div><div class="legendItem"><i class="greenDot"></i><b>Green</b><span>Bot</span></div><div class="legendItem"><i class="yellowDot"></i><b>Yellow</b><span>Bot</span></div></div>
 </div>
 <div class="controls"><button class="btn" id="coachCheckBtn" type="button">🧠 Coach checklist</button>
 <button class="btn primary" id="new">＋ New Game</button>
@@ -381,9 +430,27 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
   </div></div>
 </section>
 <aside class="right">
-<div class="card" id="blackCard"><div class="player">Black <span class="small" id="blackLabel">Computer</span></div><div class="clock" id="bc">10:00</div><div class="botBadge"><div class="botAvatar botFace1" aria-label="Large cartoon chess coach avatar"></div><div><b>GothamChess Bot</b><br><span class="small">Your chess coach</span><br><a href="https://www.youtube.com/@GothamChess" target="_blank" rel="noopener">Coach videos →</a></div><div class="coachQuickTips"><b>🧠 Coach says</b><span>Before every move: check <strong>checks, captures, threats</strong>.</span><span>Then ask: <strong>what changed?</strong></span><span>Make your move and look for the reply.</span></div></div><div class="botCoach"><div class="botSpeech" id="botSpeech" aria-live="polite">Make your move — I’ll review it and explain what to improve.</div></div></div>
-<div class="card"><b>Captured</b><div class="captured" id="bcap">—</div></div>
-<div class="card"><b>Move History</b><div class="moves" id="moves"></div></div>
+  <div class="fourCoach card" id="blackCard">
+    <div class="coachHero">
+      <div class="botBadge">
+        <div class="botAvatar botFace1" aria-label="Large cartoon chess coach avatar"></div>
+        <div class="coachName"><b>GothamChess Bot</b><span>Your chess coach</span></div>
+      </div>
+      <div class="botSpeech" id="botSpeech" aria-live="polite">Let's get started! You're playing 4 players on one board. Control the center and watch all four sides.</div>
+    </div>
+    <div class="coachTips">
+      <div class="coachTipsHead"><b>💡 Coach Tips</b><button id="closeTips" type="button" aria-label="Close tips">×</button></div>
+      <div class="tipRow"><i>✓</i><div><b>Control the center</b><span>The center gives you more options and faster attacks.</span></div></div>
+      <div class="tipRow"><i>♜</i><div><b>Develop your pieces</b><span>Get your knights and bishops out early.</span></div></div>
+      <div class="tipRow"><i>!</i><div><b>Watch all four players</b><span>Don't just focus on one side.</span></div></div>
+      <div class="tipRow"><i>♔</i><div><b>Keep your king safe</b><span>Always check threats before moving.</span></div></div>
+      <button class="askCoachBtn" id="askCoachBtn" type="button">💬 <span>Ask Coach</span> ›</button>
+    </div>
+    <div class="gameProgressCard"><b id="fourProgressTitle">Game in progress...</b><span id="fourProgressText">Make your move!</span></div>
+  </div>
+  <div class="legacyState" aria-hidden="true">
+    <span id="bc">10:00</span><span id="blackLabel">Computer</span><div id="bcap">—</div><div id="moves"></div>
+  </div>
 </aside>
 </div>
 </div>
@@ -1066,6 +1133,15 @@ $("threePage").onclick=()=>showPage("three");
 $("fourPage").onclick=()=>showPage("four");
 $("learnTopPage").onclick=()=>showPage("learn");
 $("coursesTopPage").onclick=()=>showPage("courses");
+$("fourStartBtn").onclick=function(){ $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
+$("fourResetBtn").onclick=function(){ startMultiGame(4); };
+$("twoModeBtn").onclick=function(){ $("gameMode").value="local2"; showPage("play"); syncGameMode(); };
+$("botModeBtn").onclick=function(){ $("gameMode").value="computer"; showPage("bot"); syncGameMode(); };
+$("friendModeBtn").onclick=function(){ $("gameMode").value="local4"; showPage("four"); startMultiGame(4); };
+$("askCoachBtn").onclick=function(){ if(typeof coachCheck==="function")coachCheck(); else if($("botSpeech"))$("botSpeech").textContent="Before every move: checks, captures, threats — then check what changed."; };
+$("closeTips").onclick=function(){ const p=document.querySelector(".coachTips"); if(p)p.classList.toggle("tipsClosed"); };
+$("fourDifficulty").onchange=function(){ $("level").value=this.value; };
+$("fourBoardStyle").onchange=function(){ document.body.dataset.boardStyle=this.value.toLowerCase(); };
 setLearningOpening("e4");
 showPage("play");
 
@@ -1136,7 +1212,7 @@ function multiInitial(count){
     }
   }
   place("red");place("blue");place("yellow");if(count===4)place("green");
-  return {board:board,turn:"red",activeColors:colors,alive:Object.fromEntries(colors.map(function(x){return [x,true];})),ply:0,winner:null,stalemated:{},drawOffer:null,drawAgreed:false};
+  return {board:board,turn:"red",activeColors:colors,alive:Object.fromEntries(colors.map(function(x){return [x,true];})),ply:0,moves:[],winner:null,stalemated:{},drawOffer:null,drawAgreed:false};
 }
 function multiPseudoRaw(st,r,c){
   const piece=st.board[r][c]; if(!piece||!st.alive[piece.c])return [];
@@ -1202,6 +1278,8 @@ function multiApply(r,c,tr,tc){
   const target=multiState.board[tr][tc];
   if(target&&target.t==="k")return;
   multiState.board[tr][tc]=p;multiState.board[r][c]=null;multiState.ply++;
+  const fromFile=String.fromCharCode(97+c),fromRank=14-r,toFile=String.fromCharCode(97+tc),toRank=14-tr;
+  multiState.moves.push(MULTI_PLAYERS[p.c].name+" "+fromFile+fromRank+"-"+toFile+toRank+(target?" ×":""));
   if(p.t==="p"&&MULTI_PLAYERS[p.c].promo(tr,tc))p.t="q";
   multiState.drawOffer=null;multiState.drawAgreed=false;
   const checked=[];
@@ -1252,10 +1330,15 @@ function renderMulti(){
     else turn.textContent=MULTI_PLAYERS[multiState.turn].name+(multiInCheck(multiState,multiState.turn)?" — CHECK":"")+" to move";
   }
   if(alive)alive.textContent="Players alive: "+multiState.activeColors.length;
+  const ml=$("fourMoveList");if(ml)ml.textContent=multiState.moves&&multiState.moves.length?multiState.moves.slice(-8).join("   ·   "):"No moves yet";
+  const pt=$("fourProgressTitle"),px=$("fourProgressText");
+  if(pt&&px){pt.textContent=multiState.winner?MULTI_PLAYERS[multiState.winner].name+" wins!":"Game in progress...";px.textContent=multiState.winner?"Checkmate — game over.":MULTI_PLAYERS[multiState.turn].name+" to move · "+multiState.ply+" moves played.";}
+
 }
 function startMultiGame(count){
   reviewToken++;reviewPending=false;reviewBaselineWhite=null;reviewPositionBefore=null;reviewBaselineBestMove=null;reviewMoveGrades=[];mistakePracticePositions=[];mistakePracticeActive=false;mistakePracticeIndex=0;mistakePracticeReturnState=null;bestEngineMoveBefore=null;updateMistakePracticeUI();if($("reviewLastMove"))$("reviewLastMove").textContent="—";if($("reviewLastGrade"))$("reviewLastGrade").textContent="—";if($("reviewLastWhy"))$("reviewLastWhy").textContent="Play a move to get a Stockfish-based grade.";if($("reviewMoveList"))$("reviewMoveList").innerHTML="";setBotFeedback();
   multiState=multiInitial(count);multiSelected=null;multiLegal=[];
+  document.body.classList.toggle("fourPlayerView",count===4);
   $("multiBoard").classList.toggle("fourPlayer",count===4);
   $("multiBoard").classList.toggle("threePlayer",count===3);
   renderMulti();
@@ -1268,6 +1351,7 @@ function startMultiGame(count){
     "3-player local pass-and-play on a three-arm hexagonal-style board. George R. Dekle's 1984 Three-Man Chess uses a 96-cell quadrilateral-cell hexagonal board, clockwise turns, and checkmate as the win condition; this app keeps its local trainer implementation separate from the official ruleset.";
 }
 function stopMultiGame(){
+  document.body.classList.remove("fourPlayerView");
   $("multiFrame").classList.remove("active");
   $("board").parentElement.classList.remove("hiddenStandardBoard");
   $("analysisPanel").classList.remove("hiddenStandardBoard");
