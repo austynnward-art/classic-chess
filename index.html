@@ -419,7 +419,29 @@ function check(x,c){let k=king(x,c);return k?attacked(x,k[0],k[1],opp(c)):true}
 function apply(x,f,t){let n=clone(x),p=n.b[f[0]][f[1]],q=n.b[t[0]][t[1]],pawnMove=p?.t==="p",capture=!!q;n.b[f[0]][f[1]]=null;if(q)n.captured[p.c].push(q.t);if(p.t==="p"&&n.ep&&t[0]===n.ep[0]&&t[1]===n.ep[1]&&!q){let rr=p.c==="w"?t[0]+1:t[0]-1;if(n.b[rr][t[1]])n.captured[p.c].push(n.b[rr][t[1]].t);n.b[rr][t[1]]=null}if(p.t==="k"&&Math.abs(t[1]-f[1])===2){let rr=f[0],rf=t[1]>f[1]?7:0,rt=t[1]>f[1]?5:3;n.b[rr][rt]=n.b[rr][rf];n.b[rr][rf]=null}if(p.t==="p"&&(t[0]===0||t[0]===7))p.t="q";n.b[t[0]][t[1]]=p;n.ep=null;if(p.t==="p"&&Math.abs(t[0]-f[0])===2)n.ep=[(f[0]+t[0])/2,f[1]];if(p.t==="k"){n.castle[p.c+"k"]=0;n.castle[p.c+"q"]=0}if(q?.t==="r"){if(t[0]===7&&t[1]===0)n.castle.wq=0;if(t[0]===7&&t[1]===7)n.castle.wk=0;if(t[0]===0&&t[1]===0)n.castle.bq=0;if(t[0]===0&&t[1]===7)n.castle.bk=0}n.halfmove=(pawnMove||capture)?0:(x.halfmove||0)+1;if(p.t==="r"){if(f[0]===7&&f[1]===0)n.castle.wq=0;if(f[0]===7&&f[1]===7)n.castle.wk=0;if(f[0]===0&&f[1]===0)n.castle.bq=0;if(f[0]===0&&f[1]===7)n.castle.bk=0}n.turn=opp(n.turn);n.last=[f[0]*8+f[1],t[0]*8+t[1]];return n}
 function legalFrom(x,r,c){let p=x.b[r][c];if(!p||p.c!==x.turn)return[];return pseudo(x,r,c).filter(t=>!check(apply(x,[r,c],t),p.c))}
 function all(x,c=x.turn){let old=x.turn;x.turn=c;let a=[];for(let r=0;r<8;r++)for(let q=0;q<8;q++)if(x.b[r][q]?.c===c)for(let t of legalFrom(x,r,q))a.push({f:[r,q],t});x.turn=old;return a}
-function san(before,m){let p=before.b[m.f[0]][m.f[1]],q=before.b[m.t[0]][m.t[1]],a=p.t==="p"?"":p.t.toUpperCase();if(p.t==="k"&&Math.abs(m.t[1]-m.f[1])===2)return m.t[1]>m.f[1]?"O-O":"O-O-O";if(q)a+="x";return a+F[m.t[1]]+(8-m.t[0])}
+function san(before,m){
+  const p=before.b[m.f[0]][m.f[1]],q=before.b[m.t[0]][m.t[1]],dest=F[m.t[1]]+(8-m.t[0]);
+  if(p.t==="k"&&Math.abs(m.t[1]-m.f[1])===2)return m.t[1]>m.f[1]?"O-O":"O-O-O";
+  let a=p.t==="p"?"":p.t.toUpperCase();
+  const epCapture=p.t==="p"&&before.ep&&m.t[0]===before.ep[0]&&m.t[1]===before.ep[1]&&!q;
+  const capture=!!q||epCapture;
+  if(p.t==="p"){
+    if(capture)a+=F[m.f[1]]+"x";
+  }else{
+    const alternatives=all(before,before.turn).filter(v=>v.f[0]!==m.f[0]||v.f[1]!==m.f[1]).filter(v=>{const z=before.b[v.f[0]][v.f[1]];return z&&z.t===p.t&&v.t[0]===m.t[0]&&v.t[1]===m.t[1];});
+    if(alternatives.length){
+      const sameFile=alternatives.some(v=>v.f[1]===m.f[1]);
+      const sameRank=alternatives.some(v=>v.f[0]===m.f[0]);
+      if(!sameFile)a+=F[m.f[1]];else if(!sameRank)a+=(8-m.f[0]);else a+=F[m.f[1]]+(8-m.f[0]);
+    }
+    if(capture)a+="x";
+  }
+  a+=dest;
+  if(p.t==="p"&&(m.t[0]===0||m.t[0]===7))a+="=Q";
+  const after=apply(before,m.f,m.t),reply=after.turn;
+  if(check(after,reply))a+=all(after,reply).length?"+" : "#";
+  return a;
+}
 
 // Stockfish analysis engine
 let engine=null,engineReady=false,engineBusy=false,analysisToken=0;
