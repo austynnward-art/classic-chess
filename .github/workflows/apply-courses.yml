@@ -1,0 +1,58 @@
+name: Apply Courses redesign
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/apply-courses.yml
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply CSS
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("index.html")
+          s=p.read_text()
+          if "COURSES-REDESIGN-V4" in s:
+              raise SystemExit(0)
+          css="""
+/* COURSES-REDESIGN-V4 */
+body.contentPage .coursesShell{max-width:1160px!important;margin:0 auto!important}
+body.contentPage .courseReferenceHero{display:grid!important;grid-template-columns:1.15fr .85fr!important;min-height:310px!important;margin:0 0 22px!important;border-radius:24px!important;overflow:hidden!important;background:linear-gradient(135deg,#f7fbff,#eef6ff 52%,#f4efff)!important;border:1px solid #d7e5f0!important;box-shadow:0 18px 42px rgba(8,45,75,.14)!important}
+body.contentPage .courseReferenceHeroCopy{padding:46px 48px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+body.contentPage .courseReferenceHeroCopy h2{margin:9px 0 10px!important;font-size:42px!important;line-height:1.04!important;color:#123a58!important}
+body.contentPage .courseReferenceHeroCopy p{max-width:560px!important;font-size:15px!important;color:#60788a!important;line-height:1.6!important}
+body.contentPage .courseReferenceKicker,body.contentPage .courseRefSectionHead>div>span,body.contentPage .refSectionTag{font-size:11px!important;letter-spacing:1.8px!important;color:#1778bb!important}
+body.contentPage .courseHeroActionRow{display:flex!important;gap:10px!important;margin-top:20px!important}
+body.contentPage .courseRefPrimary,body.contentPage .courseRefSecondary{height:42px!important;padding:0 18px!important;border-radius:10px!important;font-size:13px!important}
+body.contentPage .courseReferenceHeroArt{min-height:310px!important}
+body.contentPage .courseRefBubble{right:24px!important;top:22px!important;width:190px!important;padding:12px!important;border-radius:12px!important}
+body.contentPage .courseRefCoach{width:180px!important;height:220px!important}
+body.contentPage .courseRefSection{margin-top:22px!important}
+body.contentPage .courseRefSectionHead{margin-bottom:12px!important}
+body.contentPage .courseRefSectionHead h3{font-size:21px!important}
+body.contentPage .courseRefGrid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important}
+body.contentPage .courseRefCard{min-height:190px!important;border-radius:16px!important;border:1px solid #d9e6ee!important;box-shadow:0 10px 24px rgba(18,58,89,.08)!important}
+body.contentPage .courseRefIcon{left:13px!important;top:13px!important;width:42px!important;height:42px!important;border-radius:12px!important}
+body.contentPage .courseRefCard h4{font-size:16px!important;margin:64px 14px 6px!important}
+body.contentPage .courseRefCard p{font-size:12px!important;line-height:1.45!important;margin:0 14px!important}
+body.contentPage .courseRefCard button{margin:13px 14px 14px!important;height:34px!important;border-radius:9px!important;font-size:11px!important}
+body.contentPage .courseRefLowerGrid{display:grid!important;grid-template-columns:1.35fr .65fr!important;gap:14px!important;margin-top:22px!important}
+body.contentPage .courseProgressCard,body.contentPage .coursePreviewCard,body.contentPage .courseResourceCard{background:#fff!important;border:1px solid #d9e6ee!important;border-radius:16px!important;box-shadow:0 10px 24px rgba(18,58,89,.07)!important;padding:20px!important}
+@media(max-width:900px){body.contentPage .courseReferenceHero{grid-template-columns:1fr!important}body.contentPage .courseRefGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.contentPage .courseRefLowerGrid{grid-template-columns:1fr!important}}
+@media(max-width:560px){body.contentPage .courseReferenceHeroCopy{padding:30px 24px!important}body.contentPage .courseReferenceHeroCopy h2{font-size:32px!important}body.contentPage .courseRefGrid{grid-template-columns:1fr!important}}
+"""
+          p.write_text(s.replace("</style>",css+"\n</style>",1))
+          PY
+      - name: Commit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html
+          git commit -m "Apply Courses redesign [skip ci]"
+          git push
