@@ -483,7 +483,15 @@ $("hint").onclick=()=>{if(over||thinking||s.turn===aiSide)return;engineSearch(s,
 function positionKey(x){
   let board="";
   for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=x.b[r][c];board+=p?(p.c+p.t):"--";}
-  return board+"|"+x.turn+"|"+(x.castle.wk?"K":"")+(x.castle.wq?"Q":"")+(x.castle.bk?"k":"")+(x.castle.bq?"q":"")+"|"+(x.ep?x.ep.join(","):"-");
+  let epKey="-";
+  if(x.ep){
+    const er=x.ep[0],ec=x.ep[1],row=x.turn==="w"?er+1:er-1;
+    for(const dc of [-1,1]){
+      const cc=ec+dc;
+      if(row>=0&&row<8&&cc>=0&&cc<8&&x.b[row][cc]?.c===x.turn&&x.b[row][cc]?.t==="p"){epKey=x.ep.join(",");break;}
+    }
+  }
+  return board+"|"+x.turn+"|"+(x.castle.wk?"K":"")+(x.castle.wq?"Q":"")+(x.castle.bk?"k":"")+(x.castle.bq?"q":"")+"|"+epKey;
 }
 function repetitionCount(){
   const key=positionKey(s);
@@ -558,19 +566,47 @@ $("playPage").onclick=()=>showPage("play");
 $("learnPage").onclick=()=>showPage("learn");
 showPage("play");
 
-function newGame(){computerRequestToken++;if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}if(engine){try{engine.postMessage("stop")}catch(e){}}engineBusy=false;engineQueue=null;s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;clock={w:+$("time").value,b:+$("time").value};render();if(aiSide==="w")computer();}
+function newGame(){computerRequestToken++;if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}if(engine){try{engine.postMessage("stop")}catch(e){}}engineBusy=false;engineQueue=null;s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;clock={w:+$("time").value,b:+$("time").value};render();startClock();if(aiSide==="w")computer();}
 $("side").onchange=()=>{aiSide=$("side").value==="w"?"b":"w";$("whiteLabel").textContent=aiSide==="w"?"Computer":"You";$("blackLabel").textContent=aiSide==="b"?"Computer":"You";newGame();};
 $("time").onchange=()=>{newGame()};
 function formatTime(n){n=Math.max(0,Math.floor(n));return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
+function opponentCanWin(side){
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const p=s.b[r][c];
+    if(p&&p.c===side&&["q","r","b","n","p"].includes(p.t))return true;
+  }
+  return false;
+}
+function handleTimeLoss(side){
+  if(over)return;
+  const winner=opp(side);
+  if(!opponentCanWin(winner)){
+    over=true;thinking=false;$("status").textContent="Draw — time expired, opponent cannot force checkmate";render();return;
+  }
+  over=true;thinking=false;$("status").textContent=(side==="w"?"White":"Black")+" lost on time";render();
+}
+function updateClock(){
+  if(over||thinking||!s||!clock)return;
+  const side=s.turn;
+  clock[side]=Math.max(0,clock[side]-0.1);
+  if(clock[side]<=0){clock[side]=0;handleTimeLoss(side);return;}
+  if($("wc"))$("wc").textContent=formatTime(clock.w);
+  if($("bc"))$("bc").textContent=formatTime(clock.b);
+}
+function startClock(){
+  if(clockTimer)clearInterval(clockTimer);
+  clockTimer=setInterval(updateClock,100);
+}
 function finish(){
   if(over)return;
   const automatic=drawReason();
-  if(automatic){over=true;thinking=false;$("status").textContent=automatic;return;}
+  if(automatic){over=true;thinking=false;$("status").textContent=automatic;render();return;}
   const moves=all(s,s.turn);
   if(!moves.length){
     over=true;
     thinking=false;
     $("status").textContent=check(s,s.turn)?((s.turn==="w"?"White":"Black")+" is checkmated"):"Draw — stalemate";
+    render();
   }
 }
 newGame();
