@@ -1308,6 +1308,12 @@ function renderMulti(){
     const e=document.createElement("button");e.type="button";
     if(!multiPlayable(r,c)){e.className="multiSq void";e.disabled=true;B.appendChild(e);continue;}
     e.className="multiSq playable "+(((r+c)%2)?"dark":"light");
+    if(document.body.classList.contains("fourPlayerView")){
+      if(r<7&&c>=3&&c<=10)e.classList.add("redZone");
+      else if(c>=7&&r>=3&&r<=10)e.classList.add("blueZone");
+      else if(r>=7&&c>=3&&c<=10)e.classList.add("yellowZone");
+      else if(c<7&&r>=3&&r<=10)e.classList.add("greenZone");
+    }
     if(multiSelected&&multiSelected[0]===r&&multiSelected[1]===c)e.classList.add("selected");
     if(multiLegal.some(function(m){return m[0]===r&&m[1]===c;}))e.classList.add(multiState.board[r][c]?"capture":"legal");
     const p=multiState.board[r][c];
