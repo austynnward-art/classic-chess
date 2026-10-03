@@ -371,7 +371,8 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 </div>
 <script>
 (()=> {
-const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"}},F="abcdefgh".split("");\nfunction pieceSVG(color,type){
+const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"}},F="abcdefgh".split("");
+function pieceSVG(color,type){
   const fill=color==="w"?"#fffdf8":color==="b"?"#17120e":"currentColor";
   const stroke=color==="w"?"#7d5a38":color==="b"?"#000":"currentColor";
   const common='<path d="M20 90Q22 82 31 80L35 76H65L69 80Q78 82 80 90Q82 96 74 97H26Q18 96 20 90Z"/>';
@@ -382,7 +383,7 @@ const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",
     q:'<path d="M30 24L38 37L50 22L62 37L70 24L65 55Q64 64 70 74H30Q36 64 35 55Z"/><circle cx="30" cy="21" r="4"/><circle cx="50" cy="18" r="4"/><circle cx="70" cy="21" r="4"/>',
     k:'<rect x="46" y="8" width="8" height="23" rx="2"/><rect x="39" y="15" width="22" height="8" rx="2"/><path d="M38 31Q42 39 50 45Q58 39 62 31L66 55Q65 64 71 74H29Q35 64 34 55Z"/>'
   };
-  return '<svg class="pieceSvg" viewBox="0 0 100 100" aria-hidden="true" focusable="false" style="color:'+fill+'"><g fill="'+fill+'" stroke="'+stroke+'" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">'+common+(type==="n"?'<path d="M30 76Q33 66 31 54Q29 42 39 31Q48 21 64 24Q72 26 78 34Q68 32 64 39Q61 44 67 51Q72 58 66 66Q61 73 58 76Z"/><path d="M42 34Q48 39 53 44Q58 49 63 55" fill="none" stroke="'+stroke+'" stroke-width="3"/><circle cx="61" cy="34" r="2.8" fill="'+(color==="w"?"#17120e":"#fffdf8")+'" stroke="none"/><path d="M37 51Q47 49 55 54" fill="none" stroke="'+stroke+'" stroke-width="2.4"/>':shapes[type]||shapes.p)+'</g></svg>';
+  return '<svg class="pieceSvg" data-piece="'+color+type+'" viewBox="0 0 100 100" aria-hidden="true" focusable="false" style="color:'+fill+'"><g fill="'+fill+'" stroke="'+stroke+'" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">'+common+(type==="n"?'<path d="M30 76Q33 66 31 54Q29 42 39 31Q48 21 64 24Q72 26 78 34Q68 32 64 39Q61 44 67 51Q72 58 66 66Q61 73 58 76Z"/><path d="M42 34Q48 39 53 44Q58 49 63 55" fill="none" stroke="'+stroke+'" stroke-width="3"/><circle cx="61" cy="34" r="2.8" fill="'+(color==="w"?"#17120e":"#fffdf8")+'" stroke="none"/><path d="M37 51Q47 49 55 54" fill="none" stroke="'+stroke+'" stroke-width="2.4"/>':shapes[type]||shapes.p)+'</g></svg>';
 }
 let s,history=[],snapshots=[],sel=null,legal=[],flip=false,over=false,thinking=false,aiSide="b",timer=null,clock={w:600,b:600};
 let computerRetryTimer=null,computerMoveTimer=null,computerRequestToken=0;
