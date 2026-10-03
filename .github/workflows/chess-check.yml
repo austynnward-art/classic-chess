@@ -46,8 +46,36 @@ jobs:
             if(errors.length) { console.error(errors.join("\n---\n")); process.exit(1); }
             if(board!==64) { console.error("Main board has",board,"squares"); process.exit(1); }
             if(course!==64) { console.error("Course board has",course,"squares"); process.exit(1); }
-            if(!dom.window.document.querySelector("#playPage") || !dom.window.document.querySelector("#learnPage")) { console.error("Page navigation missing"); process.exit(1); }
-            console.log("STARTUP TEST PASSED: boards=64/64");
+            if(!dom.window.document.querySelector("#playPage") || !dom.window.document.querySelector("#learnPage") || !dom.window.document.querySelector("#coursesPage")) { console.error("Page navigation missing"); process.exit(1); }
+
+            // Exercise the actual UI in local two-player mode.
+            const local2=dom.window.document.querySelector('[data-mode="local2"]');
+            local2.click();
+            const squares=[...dom.window.document.querySelectorAll("#board .sq")];
+            const move=(from,to)=>{
+              const file=c=>c.charCodeAt(0)-97;
+              const idx=algebraic=>{const f=file(algebraic[0]),r=8-Number(algebraic[1]);return r*8+f;};
+              squares[idx(from)].click(); squares[idx(to)].click();
+            };
+            move("e2","e4"); move("e7","e5");
+            move("g1","f3"); move("g8","f6");
+            move("f1","e2"); move("f8","e7");
+            move("e1","g1");
+            const finalSquares=[...dom.window.document.querySelectorAll("#board .sq")];
+            const kingG1=finalSquares[6+7*8]?.textContent.includes("♔");
+            const rookF1=finalSquares[5+7*8]?.textContent.includes("♖");
+            if(!kingG1 || !rookF1) { console.error("Castling UI test failed"); process.exit(1); }
+
+            // Exercise the page switching and 3/4-player board creation.
+            dom.window.document.querySelector("#learnPage").click();
+            if(!dom.window.document.querySelector(".layout").classList.contains("learnPageMode")) { console.error("Learn page switch failed"); process.exit(1); }
+            dom.window.document.querySelector("#coursesPage").click();
+            if(!dom.window.document.querySelector(".layout").classList.contains("coursesPageMode")) { console.error("Courses page switch failed"); process.exit(1); }
+            dom.window.document.querySelector('[data-mode="local4"]').click();
+            const multi=dom.window.document.querySelectorAll("#multiBoard .multiSq");
+            if(multi.length!==196) { console.error("4-player board has",multi.length,"squares"); process.exit(1); }
+
+            console.log("DEEP UI TEST PASSED: boards=64/64, local moves, castling, pages, 4-player board");
             dom.window.close();
           },100);
           NODE
