@@ -1,4 +1,4 @@
-name: Chess app syntax check
+name: Chess app syntax and startup check
 on:
   push:
     branches: [main]
@@ -14,6 +14,40 @@ jobs:
       - name: Extract JavaScript
         run: |
           sed -n '/<script>/,/<\\/script>/p' index.html | sed '1d;$d' > /tmp/app.js
-          wc -c /tmp/app.js
-      - name: Check JavaScript syntax
-        run: node --check /tmp/app.js
+          node --check /tmp/app.js
+      - name: Install DOM test runner
+        run: npm install --no-save jsdom@26.1.0
+      - name: Run startup test
+        run: |
+          node <<'NODE'
+          const fs=require("fs");
+          const {JSDOM,VirtualConsole}=require("jsdom");
+          const html=fs.readFileSync("index.html","utf8");
+          const errors=[];
+          const vc=new VirtualConsole();
+          vc.on("jsdomError",e=>errors.push(String(e && e.stack || e)));
+          const dom=new JSDOM(html,{
+            runScripts:"dangerously",
+            pretendToBeVisual:true,
+            virtualConsole:vc,
+            beforeParse(window){
+              window.Worker=class{
+                constructor(){this.onmessage=null}
+                postMessage(msg){if(msg==="uci"&&this.onmessage)this.onmessage({data:"uciok"});}
+                terminate(){}
+              };
+              if(!window.URL.createObjectURL)window.URL.createObjectURL=()=> "blob:stub";
+              window.URL.revokeObjectURL=()=>{};
+            }
+          });
+          setTimeout(()=>{
+            const board=dom.window.document.querySelectorAll("#board .sq").length;
+            const course=dom.window.document.querySelectorAll("#courseBoard .courseSq").length;
+            if(errors.length) { console.error(errors.join("\n---\n")); process.exit(1); }
+            if(board!==64) { console.error("Main board has",board,"squares"); process.exit(1); }
+            if(course!==64) { console.error("Course board has",course,"squares"); process.exit(1); }
+            if(!dom.window.document.querySelector("#playPage") || !dom.window.document.querySelector("#learnPage")) { console.error("Page navigation missing"); process.exit(1); }
+            console.log("STARTUP TEST PASSED: boards=64/64");
+            dom.window.close();
+          },100);
+          NODE
