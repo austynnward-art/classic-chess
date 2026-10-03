@@ -142,7 +142,7 @@ body{margin:0;background:#eef1f5;color:#20242a;font-family:Inter,Arial,sans-seri
 <script>
 (()=> {
 const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"}},F="abcdefgh".split("");
-let s,history=[],snapshots=[],sel=null,legal=[],flip=false,over=false,thinking=false,aiSide="b",timer=null,clock={w:600,b:600};
+let s,history=[],snapshots=[],sel=null,legal=[],flip=false,over=false,thinking=false,aiSide="b",timer=null,clock={w:600,b:600};\nlet computerRetryTimer=null,computerMoveTimer=null,computerRequestToken=0;
 const $=id=>document.getElementById(id),opp=c=>c==="w"?"b":"w",inside=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
 function initial(){let b=Array.from({length:8},()=>Array(8).fill(null)),a=["r","n","b","q","k","b","n","r"];for(let c=0;c<8;c++){b[0][c]={c:"b",t:a[c]};b[1][c]={c:"b",t:"p"};b[6][c]={c:"w",t:"p"};b[7][c]={c:"w",t:a[c]}}return{b,turn:"w",castle:{wk:1,wq:1,bk:1,bq:1},ep:null,last:null,captured:{w:[],b:[]}}}
 function clone(x){return JSON.parse(JSON.stringify(x))}
@@ -247,28 +247,50 @@ function handleEngine(msg){
   }
 }
 let lastEval=0;
+function fallbackComputerMove(){
+  const moves=all(s,s.turn); if(!moves.length)return null;
+  let best=moves[0],bestScore=-Infinity;
+  for(const m of moves){
+    const target=s.b[m.t[0]][m.t[1]], next=apply(s,m.f,m.t);
+    let v=score(next,aiSide);
+    if(target)v+=val[target.t]*1.5;
+    if(next.b[m.t[0]][m.t[1]]?.t==="p"&&(m.t[0]===0||m.t[0]===7))v+=800;
+    v+=(3.5-Math.max(Math.abs(m.t[0]-3.5),Math.abs(m.t[1]-3.5)))*3;
+    if(v>bestScore){bestScore=v;best=m;}
+  }
+  return best;
+}
 function computer(){
-  if(over) return;
-  thinking=true; render();
-  if(!engineReady){
-    if($("result")) $("result").textContent="Starting Stockfish…";
-    setTimeout(()=>{thinking=false; if(!over) computer()},700);
+  if(over||!s||s.turn!==aiSide)return;
+  if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}
+  if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}
+  const request=++computerRequestToken; thinking=true; render();
+  const fallback=()=>{
+    if(request!==computerRequestToken||over||!s||s.turn!==aiSide)return;
+    const m=fallbackComputerMove();
+    if(m){const before=clone(s);snapshots.push(clone(s));s=apply(s,m.f,m.t);history.push(san(before,m));updateOpening();}
+    thinking=false;render();finish();
+  };
+  if(!engineReady||engineBusy){
+    if($("result"))$("result").textContent="Starting computer…";
+    computerRetryTimer=setTimeout(()=>{computerRetryTimer=null;if(engineReady&&!engineBusy&&!over&&s.turn===aiSide)computer();else fallback();},1000);
     return;
   }
   const before=clone(s);
+  computerMoveTimer=setTimeout(()=>{computerMoveTimer=null;fallback();},3500);
   engineSearch(s,mv=>{
-    if(over){thinking=false;render();return}
+    if(request!==computerRequestToken)return;
+    if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}
+    if(over||!s||s.turn!==aiSide){thinking=false;render();return;}
+    let played=false;
     if(mv&&mv.length>=4){
       const m={f:[8-+mv[1],F.indexOf(mv[0])],t:[8-+mv[3],F.indexOf(mv[2])]};
       if(legalFrom(s,m.f[0],m.f[1]).some(t=>t[0]===m.t[0]&&t[1]===m.t[1])){
-        snapshots.push(clone(s));
-        s=apply(s,m.f,m.t);
-        history.push(san(before,m));
-        recordEval(lastEval);
-        updateOpening();
+        snapshots.push(clone(s));s=apply(s,m.f,m.t);history.push(san(before,m));recordEval(lastEval);updateOpening();played=true;
       }
     }
-    thinking=false; render(); finish();
+    if(!played){fallback();return;}
+    thinking=false;render();finish();
   });
 }
 
@@ -277,7 +299,7 @@ $("undo").onclick=()=>{if(snapshots.length&&!thinking){s=clone(snapshots.pop());
 $("flip").onclick=()=>{flip=!flip;render();};
 $("resign").onclick=()=>{if(!over){over=true;thinking=false;$("status").textContent=(s.turn==="w"?"White":"Black")+" resigned";render();}};
 $("hint").onclick=()=>{if(over||thinking||s.turn===aiSide)return;engineSearch(s,mv=>{if(mv&&mv.length>=4){drawArrow([mv[0],mv[1]],[mv[2],mv[3]]);if($("best-move"))$("best-move").textContent=mv}})};
-function newGame(){if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}if(engine){try{engine.postMessage("stop")}catch(e){}}engineBusy=false;engineQueue=null;s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;clock={w:+$("time").value,b:+$("time").value};render();if(aiSide==="w")computer();}
+function newGame(){computerRequestToken++;if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}if(computerMoveTimer){clearTimeout(computerMoveTimer);computerMoveTimer=null;}if(engine){try{engine.postMessage("stop")}catch(e){}}engineBusy=false;engineQueue=null;s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;clock={w:+$("time").value,b:+$("time").value};render();if(aiSide==="w")computer();}
 $("side").onchange=()=>{aiSide=$("side").value==="w"?"b":"w";$("whiteLabel").textContent=aiSide==="w"?"Computer":"You";$("blackLabel").textContent=aiSide==="b"?"Computer":"You";newGame();};
 $("time").onchange=()=>{newGame()};
 function formatTime(n){n=Math.max(0,Math.floor(n));return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
