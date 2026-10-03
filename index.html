@@ -63,7 +63,7 @@ body{margin:0;background:linear-gradient(#f5ead4,#e9dcc1);color:#3b2918;font-fam
 @media(max-width:950px){.layout{grid-template-columns:1fr}.center{order:1}.left{order:2}.right{order:3}.controls{grid-template-columns:repeat(3,1fr)}.options{justify-content:flex-start;border-left:0;padding-left:0}}
 
 .analysisCard{margin-top:12px}.analysisGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.analysisValue{font-size:20px;font-weight:bold}.range{width:100%;margin-top:8px}.analyzeRow{display:flex;gap:8px;margin-top:9px}.analyzeRow .btn{flex:1}.engineStatus{font-size:13px;color:#6d5538;margin-top:7px}.arrowLayer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
-</style>
+.analysisGraph{height:120px;margin-top:10px;border:1px solid #d5c3a4;border-radius:6px;background:#fffdf7}.opening{font-size:15px;margin-top:6px}.accuracy{font-size:20px;font-weight:bold}.analysisGraph canvas{width:100%;height:100%}</style>
 </head>
 <body>
 <div class="app">
@@ -125,99 +125,50 @@ function san(before,m){let p=before.b[m.f[0]][m.f[1]],q=before.b[m.t[0]][m.t[1]]
 let engine=null,engineReady=false,engineBusy=false,analysisToken=0;
 function makeEngine(){try{const src='importScripts("https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js");';const blob=new Blob([src],{type:"application/javascript"});engine=new Worker(URL.createObjectURL(blob),{name:"classic-chess-stockfish"});engine.onmessage=e=>handleEngine(e.data);engine.postMessage("uci")}catch(err){$("engineStatus").textContent="Engine unavailable";}}
 function fenFromState(x){const rows=[];for(let r=0;r<8;r++){let row="",empty=0;for(let c=0;c<8;c++){const p=x.b[r][c];if(!p){empty++;continue}if(empty){row+=empty;empty=0}row+=p.c==="w"?p.t.toUpperCase():p.t}if(empty)row+=empty;rows.push(row)}let cast="";if(x.castle.wk)cast+="K";if(x.castle.wq)cast+="Q";if(x.castle.bk)cast+="k";if(x.castle.bq)cast+="q";return rows.join("/")+" "+x.turn+" "+(cast||"-")+" "+(x.ep?F[x.ep[1]]+(8-x.ep[0]):"-")+" 0 "+(Math.floor(history.length/2)+1)}
-function handleEngine(msg){if(typeof msg!=="string")return;if(msg.includes("uciok")){engineReady=true;$("engineStatus").textContent="Stockfish ready";return}if(msg.startsWith("bestmove")){engineBusy=false;$("engineStatus").textContent="Analysis complete";const mv=msg.split(/\\s+/)[1];if(mv&&mv!=="(none)"){bestEngineMove=mv;$("best-move").textContent=mv.slice(0,2)+" → "+mv.slice(2,4);drawArrow(mv.slice(0,2),mv.slice(2,4))}return}const m=msg.match(/\\bscore\\s+(cp|mate)\\s+(-?\\d+)/);if(m){const n=+m[2];$("evalValue").textContent=m[1]==="mate"?"Mate "+(n>0?"+":"")+n:(n/100).toFixed(2)}}
 let bestEngineMove=null;
 function drawArrow(from,to){const svg=$("arrowLayer");if(!svg)return;const f=F.indexOf(from[0]),fr=8-+from[1],t=F.indexOf(to[0]),tr=8-+to[1];const fc=flip?7-f:f,tc=flip?7-t:t,fy=flip?7-fr:fr,ty=flip?7-tr:tr;svg.innerHTML='<defs><marker id="arrowHead" markerWidth="14" markerHeight="14" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2f8f46"/></marker></defs><line x1="'+(fc*100+50)+'" y1="'+(fy*100+50)+'" x2="'+(tc*100+50)+'" y2="'+(ty*100+50)+'" stroke="#2f8f46" stroke-width="16" stroke-linecap="round" opacity=".8" marker-end="url(#arrowHead)"/>'}
 function clearArrow(){bestEngineMove=null;$("arrowLayer").innerHTML="";$("best-move").textContent="—";$("evalValue").textContent="—"}
 function analyzeWithEngine(){if(!engineReady||engineBusy||over)return;engineBusy=true;analysisToken++;clearArrow();const elo=+$("elo").value;$("engineStatus").textContent="Analyzing…";engine.postMessage("stop");engine.postMessage("setoption name UCI_LimitStrength value true");engine.postMessage("setoption name UCI_Elo value "+elo);engine.postMessage("ucinewgame");engine.postMessage("position fen "+fenFromState(s));engine.postMessage("go depth "+Math.max(10,Math.min(24,Math.round(10+(elo-800)/220))))}
 $("analyze").onclick=analyzeWithEngine;$("clearArrow").onclick=clearArrow;$("elo").oninput=()=>{$("eloValue").textContent=$("elo").value};$("eloValue").textContent=$("elo").value;makeEngine();
-\nfunction render(){let B=$("board");B.innerHTML="";for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.className="sq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="piece "+(p.c==="w"?"whitePiece":"blackPiece");z.textContent=U[p.c][p.t];e.appendChild(z)}let ra=document.createElement("span");ra.className="coord rank";ra.textContent=8-r;e.appendChild(ra);let fi=document.createElement("span");fi.className="coord file";fi.textContent=F[c];e.appendChild(fi);e.onclick=()=>tap(r,c);B.appendChild(e)}
+\nlet evalHistory=[];
+function recordEval(v){evalHistory.push(Number(v)||0);$("movesAnalyzed").textContent=evalHistory.length;drawEvalGraph()}
+function drawEvalGraph(){const cv=$("evalGraph"),ctx=cv?.getContext("2d");if(!ctx)return;const w=cv.clientWidth*devicePixelRatio,h=cv.clientHeight*devicePixelRatio;cv.width=w;cv.height=h;ctx.clearRect(0,0,w,h);if(!evalHistory.length)return;const mid=h/2,scale=Math.max(18,Math.min(h/2-8,h/8));ctx.beginPath();evalHistory.forEach((v,i)=>{const x=8+(w-16)*(i/Math.max(1,evalHistory.length-1));const y=mid-Math.max(-4,Math.min(4,v))*scale/4;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.strokeStyle="#70451f";ctx.lineWidth=3*devicePixelRatio;ctx.stroke();ctx.strokeStyle="#c7b596";ctx.lineWidth=1*devicePixelRatio;ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(w,mid);ctx.stroke()}
+const openingBook={
+"":"Starting position",
+"e2e4":"King's Pawn Game",
+"e2e4 e7e5":"Open Game",
+"e2e4 c7c5":"Sicilian Defense",
+"e2e4 e7e6":"French Defense",
+"e2e4 c7c6":"Caro-Kann Defense",
+"e2e4 d7d5":"Scandinavian Defense",
+"e2e4 g8f6":"Alekhine Defense",
+"d2d4 d7d5":"Queen's Pawn Game",
+"d2d4 g8f6":"Indian Game",
+"d2d4 d7d6":"Old Indian Defense",
+"c2c4":"English Opening",
+"g1f3":"Zukertort Opening",
+"e2e4 e7e5 g1f3":"King's Knight Opening",
+"e2e4 e7e5 g1f3 b8c6":"Three Knights Game",
+"e2e4 e7e5 g1f3 b8c6 f1b5":"Ruy Lopez"
+};
+function currentMoveUcis(){return history.map((m,i)=>{const p=history[i];return p}).join(" ")}
+function updateOpening(){const key=history.length?history.slice(0,10).map((m,i)=>{return ""}).join(" "):"";let found="Starting position";const text=history.join("|");if(history[0]==="e4")found="King's Pawn Game";if(history[0]==="e4"&&history[1]==="c5")found="Sicilian Defense";if(history[0]==="e4"&&history[1]==="e5"&&history[2]==="Nf3")found="King's Knight Opening";if(history[0]==="e4"&&history[1]==="e5"&&history[2]==="Nf3"&&history[3]==="Nc6"&&history[4]==="Bb5")found="Ruy Lopez";if(history[0]==="d4"&&history[1]==="d5")found="Queen's Pawn Game";if(history[0]==="d4"&&history[1]==="Nf6")found="Indian Game";if(history[0]==="c4")found="English Opening";$("openingName").textContent=found}
+function updateAccuracy(){if(!evalHistory.length){$("accuracy").textContent="—";return}let total=0;for(let i=1;i<evalHistory.length;i++){const loss=Math.max(0,Math.abs(evalHistory[i-1]-evalHistory[i]));total+=Math.min(100,loss*18)}$("accuracy").textContent=Math.max(0,Math.round(100-total/Math.max(1,evalHistory.length-1)))+"%"}
+let B=$("board");B.innerHTML="";for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,e=document.createElement("button");e.className="sq "+((r+c)%2?"dark":"light");if(s.last?.includes(r*8+c))e.classList.add("last");if(sel?.[0]===r&&sel?.[1]===c)e.classList.add("selected");if(legal.some(a=>a[0]===r&&a[1]===c))e.classList.add(s.b[r][c]?"capture":"legal");let p=s.b[r][c];if(p){let z=document.createElement("span");z.className="piece "+(p.c==="w"?"whitePiece":"blackPiece");z.textContent=U[p.c][p.t];e.appendChild(z)}let ra=document.createElement("span");ra.className="coord rank";ra.textContent=8-r;e.appendChild(ra);let fi=document.createElement("span");fi.className="coord file";fi.textContent=F[c];e.appendChild(fi);e.onclick=()=>tap(r,c);B.appendChild(e)}
 $("status").textContent=thinking?"Computer is thinking…":(s.turn==="w"?"White":"Black")+" to move"+(check(s,s.turn)?" · Check":"");
 $("moves").innerHTML=history.map((m,i)=>`<div class="move"><span>${i%2===0?Math.floor(i/2)+1+".":""}</span><span>${i%2===0?m:""}</span><span>${i%2?m:""}</span></div>`).join("");
 $("wcap").textContent=s.captured.b.map(t=>U.b[t]).join(" ")||"—";$("bcap").textContent=s.captured.w.map(t=>U.w[t]).join(" ")||"—";
 $("whiteCard").classList.toggle("active",s.turn==="w"&&!over);$("blackCard").classList.toggle("active",s.turn==="b"&&!over);
 }
-function tap(r,c){if(over||thinking||s.turn===aiSide)return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));s=apply(s,sel,[r,c]);history.push(san(old,{f:sel,t:[r,c]}));sel=null;legal=[];render();finish();if(!over&&s.turn===aiSide)computer();return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
+function tap(r,c){if(over||thinking||s.turn===aiSide)return;let p=s.b[r][c];if(sel&&legal.some(a=>a[0]===r&&a[1]===c)){let old=clone(s);snapshots.push(clone(s));s=apply(s,sel,[r,c]);history.push(san(old,{f:sel,t:[r,c]}));updateOpening();sel=null;legal=[];render();finish();if(!over&&s.turn===aiSide)computer();return}if(p?.c===s.turn){sel=[r,c];legal=legalFrom(s,r,c)}else{sel=null;legal=[]}render()}
 const val={p:100,n:320,b:330,r:500,q:900,k:20000};
 function score(x,c){let sc=0;for(let r=0;r<8;r++)for(let q=0;q<8;q++){let p=x.b[r][q];if(p)sc+=(p.c===c?1:-1)*val[p.t]}return sc}
-function chooseMove(){
-  let moves=all(s,aiSide);
-  if(!moves.length)return null;
-
-  const rating=+$("level").value;
-  // These are game-AI strength presets, not official Elo ratings.
-  // Higher ratings search more candidate replies and reduce randomness.
-  const candidates =
-    rating<=900 ? 2 :
-    rating<=1100 ? 3 :
-    rating<=1300 ? 4 :
-    rating<=1500 ? 5 :
-    rating<=1700 ? 6 :
-    rating<=1900 ? 8 :
-    rating<=2100 ? 10 :
-    rating<=2300 ? 12 :
-    rating<=2500 ? 15 :
-    rating<=2700 ? 18 : 22;
-
-  const randomness =
-    rating<=900 ? 260 :
-    rating<=1100 ? 180 :
-    rating<=1300 ? 125 :
-    rating<=1500 ? 90 :
-    rating<=1700 ? 62 :
-    rating<=1900 ? 42 :
-    rating<=2100 ? 28 :
-    rating<=2300 ? 18 :
-    rating<=2500 ? 10 :
-    rating<=2700 ? 5 : 2;
-
-  let scored=moves.map(m=>{
-    let n=apply(s,m.f,m.t),v=score(n,aiSide);
-    if(check(n,opp(aiSide)))v+=70;
-    if(s.b[m.t[0]][m.t[1]])v+=val[s.b[m.t[0]][m.t[1]].t]*.55;
-    // Mild positional preference for central control.
-    const center=Math.abs(3.5-m.t[0])+Math.abs(3.5-m.t[1]);
-    v+=(7-center)*3;
-    v+=Math.random()*randomness;
-    return{m,v};
-  }).sort((a,b)=>b.v-a.v);
-
-  if(rating<1600)return scored[0].m;
-
-  // Shallow minimax gets progressively broader at higher settings.
-  const pool=scored.slice(0,Math.min(candidates,scored.length));
-  let best=pool[0].m,bestValue=-Infinity;
-  for(const item of pool){
-    const n=apply(s,item.m.f,item.m.t);
-    const replies=all(n,opp(aiSide));
-    if(!replies.length){
-      if(check(n,opp(aiSide)))return item.m;
-      continue;
-    }
-    let worst=Infinity;
-    const replyLimit=Math.min(replies.length,Math.max(6,Math.floor(candidates*.7)));
-    for(let i=0;i<replyLimit;i++){
-      const rm=replies[i],nn=apply(n,rm.f,rm.t);
-      let v=score(nn,aiSide);
-      if(check(nn,aiSide))v-=90;
-      worst=Math.min(worst,v);
-    }
-    const total=worst+item.v*.12;
-    if(total>bestValue){bestValue=total;best=item.m}
-  }
-  return best;
-}
-function computer(){thinking=true;render();const r=+$("level").value;
-  const delay=r<=1000?250:r<=1600?450:r<=2200?700:950;
-  setTimeout(()=>{if(over){thinking=false;return}let m=chooseMove();if(m){let old=clone(s);s=apply(s,m.f,m.t);history.push(san(old,m))}thinking=false;render();finish()},delay)}
-function finish(){if(!all(s).length){over=true;$("result").textContent=check(s,s.turn)?(s.turn===aiSide?"You":"Computer")+" wins by checkmate.":"Draw by stalemate."}}
-function fmt(v){v=Math.max(0,Math.ceil(v));return String(Math.floor(v/60)).padStart(2,"0")+":"+String(v%60).padStart(2,"0")}
-function reset(){clearArrow();clearInterval(timer);s=initial();history=[];snapshots=[];sel=null;legal=[];over=false;thinking=false;aiSide=$("side").value==="w"?"b":"w";let v=+$("time").value;clock={w:v,b:v};$("wc").textContent=fmt(v);$("bc").textContent=fmt(v);$("result").textContent="";timer=setInterval(()=>{if(!over&&!thinking){clock[s.turn]-=.1;if(clock[s.turn]<=0){clock[s.turn]=0;over=true;$("result").textContent=(s.turn===aiSide?"You":"Computer")+" wins on time"}$("wc").textContent=fmt(clock.w);$("bc").textContent=fmt(clock.b)}},100);$("whiteLabel").textContent=aiSide==="w"?"Computer":"You";$("blackLabel").textContent=aiSide==="b"?"Computer":"You";render();if(s.turn===aiSide)computer()}
-$("new").onclick=reset;$("side").onchange=reset;$("time").onchange=reset;$("flip").onclick=()=>{flip=!flip;render();if(bestEngineMove)drawArrow(bestEngineMove.slice(0,2),bestEngineMove.slice(2,4))};$("resign").onclick=()=>{if(!over&&!thinking){over=true;$("result").textContent=(s.turn===aiSide?"You":"Computer")+" wins by resignation.";render()}};
-$("undo").onclick=()=>{if(!thinking&&snapshots.length){s=snapshots.pop();history.pop();sel=null;legal=[];over=false;$("result").textContent="";render()}};
-$("hint").onclick=()=>{if(!over&&!thinking&&s.turn!==aiSide){let old=aiSide;aiSide=s.turn;let m=chooseMove();aiSide=old;if(m){sel=m.f;legal=[m.t];render();setTimeout(()=>{if(sel){sel=null;legal=[];render()}},1200)}}};
-reset();
-})();
+function eloDepth(){const e=+$("elo").value;return Math.max(10,Math.min(24,Math.round(10+(e-800)/220)))}
+let engineQueue=null;
+function engineSearch(position,callback){if(!engineReady||engineBusy){callback(null);return}engineBusy=true;engineQueue=callback;engine.postMessage("stop");engine.postMessage("setoption name UCI_LimitStrength value true");engine.postMessage("setoption name UCI_Elo value "+(+$("elo").value));engine.postMessage("ucinewgame");engine.postMessage("position fen "+fenFromState(position));engine.postMessage("go depth "+eloDepth())}
+function handleEngine(msg){if(typeof msg!=="string")return;if(msg.includes("uciok")){engineReady=true;$("engineStatus").textContent="Stockfish ready";return}const sm=msg.match(/\\bscore\\s+(cp|mate)\\s+(-?\\d+)/);if(sm){let n=+sm[2];$("evalValue").textContent=sm[1]==="mate"?"Mate "+(n>0?"+":"")+n:(n/100).toFixed(2);lastEval=(sm[1]==="mate"?(n>0?100:-100):n/100);return}if(msg.startsWith("bestmove")){engineBusy=false;const cb=engineQueue;engineQueue=null;const mv=msg.split(/\\s+/)[1];if(cb)cb(mv&&mv!=="(none)"?mv:null)}}
+let lastEval=0;
+function computer(){thinking=true;render();if(!engineReady){$("engineStatus").textContent="Waiting for Stockfish…";setTimeout(computer,500);return}const before=clone(s);engineSearch(s,mv=>{if(over){thinking=false;return}if(mv&&mv.length>=4){const m={f:[8-+mv[1],F.indexOf(mv[0])],t:[8-+mv[3],F.indexOf(mv[2])]};if(legalFrom(s,m.f[0],m.f[1]).some(t=>t[0]===m.t[0]&&t[1]===m.t[1])){s=apply(s,m.f,m.t);history.push(san(before,m));recordEval(lastEval);updateOpening()}}thinking=false;render();finish()})})();
 </script>
 </body>
 </html>
