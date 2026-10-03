@@ -533,6 +533,7 @@ function requestLiveReview(moveJustPlayed,mover,playedUci){
       }
       reviewBaselineWhite=afterWhite;
       reviewGame();
+      if(moveJustPlayed&&!over&&s.turn===aiSide)computer();
     });
   };
   run();
@@ -587,6 +588,7 @@ function handleEngine(msg){
   if(msg.includes("uciok")){
     engineReady=true;
     if($("engineStatus")) $("engineStatus").textContent="Stockfish ready";
+    setTimeout(()=>{if(!history.length&&!over)requestLiveReview();},60);
     return;
   }
   const sm=msg.match(/\bscore\s+(cp|mate)\s+(-?\d+)/);
@@ -685,6 +687,7 @@ function computer(){
     thinking=false;
     render();
     finish();
+    if(history.length)requestLiveReview(history[history.length-1],aiSide,String.fromCharCode(97+bookMove.f[1])+(8-bookMove.f[0])+String.fromCharCode(97+bookMove.t[1])+(8-bookMove.t[0]));
     return;
   }
 
@@ -710,6 +713,7 @@ function computer(){
     thinking=false;
     render();
     finish();
+    if(history.length)requestLiveReview(history[history.length-1],aiSide,null);
   };
 
   // Always guarantee a Black move, even if Stockfish/CDN is unavailable.
@@ -731,6 +735,7 @@ function computer(){
     }
     if(!played){playFallback();return;}
     thinking=false;render();finish();
+    if(history.length)requestLiveReview(history[history.length-1],aiSide,mv);
   });
 }
 
