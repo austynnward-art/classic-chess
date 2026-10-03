@@ -162,12 +162,12 @@ function san(before,m){let p=before.b[m.f[0]][m.f[1]],q=before.b[m.t[0]][m.t[1]]
 
 // Stockfish analysis engine
 let engine=null,engineReady=false,engineBusy=false,analysisToken=0;
-function makeEngine(){try{const src='importScripts("https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js");';const blob=new Blob([src],{type:"application/javascript"});engine=new Worker(URL.createObjectURL(blob),{name:"classic-chess-stockfish"});engine.onmessage=e=>handleEngine(e.data);engine.postMessage("uci")}catch(err){if($("engineStatus"))$("engineStatus").textContent="Engine unavailable";}}
+function makeEngine(){try{const src='importScripts("https://cdn.jsdelivr.net/npm/stockfish@19.0.0/stockfish-19-lite-single.js");';const blob=new Blob([src],{type:"application/javascript"});engine=new Worker(URL.createObjectURL(blob),{name:"classic-chess-stockfish"});engine.onmessage=e=>handleEngine(e.data);engine.postMessage("uci")}catch(err){if($("engineStatus"))$("engineStatus").textContent="Engine unavailable";}}
 function fenFromState(x){const rows=[];for(let r=0;r<8;r++){let row="",empty=0;for(let c=0;c<8;c++){const p=x.b[r][c];if(!p){empty++;continue}if(empty){row+=empty;empty=0}row+=p.c==="w"?p.t.toUpperCase():p.t}if(empty)row+=empty;rows.push(row)}let cast="";if(x.castle.wk)cast+="K";if(x.castle.wq)cast+="Q";if(x.castle.bk)cast+="k";if(x.castle.bq)cast+="q";return rows.join("/")+" "+x.turn+" "+(cast||"-")+" "+(x.ep?F[x.ep[1]]+(8-x.ep[0]):"-")+" 0 "+(Math.floor(history.length/2)+1)}
 let bestEngineMove=null;
 function drawArrow(from,to){const svg=$("arrowLayer");if(!svg)return;const f=F.indexOf(from[0]),fr=8-+from[1],t=F.indexOf(to[0]),tr=8-+to[1];const fc=flip?7-f:f,tc=flip?7-t:t,fy=flip?7-fr:fr,ty=flip?7-tr:tr;svg.innerHTML='<defs><marker id="arrowHead" markerWidth="14" markerHeight="14" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2f8f46"/></marker></defs><line x1="'+(fc*100+50)+'" y1="'+(fy*100+50)+'" x2="'+(tc*100+50)+'" y2="'+(ty*100+50)+'" stroke="#2f8f46" stroke-width="16" stroke-linecap="round" opacity=".8" marker-end="url(#arrowHead)"/>'}
 function clearArrow(){bestEngineMove=null;$("arrowLayer").innerHTML="";$("best-move").textContent="—";$("evalValue").textContent="—"}
-function analyzeWithEngine(){if(!engineReady||engineBusy||over)return;engineBusy=true;analysisToken++;clearArrow();const elo=+$("elo")?.value||+$("level")?.value||1800;if($("engineStatus"))$("engineStatus").textContent="Analyzing…";engine.postMessage("stop");engine.postMessage("setoption name UCI_LimitStrength value true");engine.postMessage("setoption name UCI_Elo value "+elo);engine.postMessage("ucinewgame");engine.postMessage("position fen "+fenFromState(s));engine.postMessage("go depth "+Math.max(10,Math.min(24,Math.round(10+(elo-800)/220))))}
+function analyzeWithEngine(){if(!engineReady||engineBusy||over)return;engineBusy=true;analysisToken++;clearArrow();if($("engineStatus"))$("engineStatus").textContent="Analyzing…";engine.postMessage("stop");engineStrengthCommands();engine.postMessage("ucinewgame");engine.postMessage("position fen "+fenFromState(s));engine.postMessage("go movetime "+Math.round(Math.max(600,engineMoveTime()*1.8)))}
 if($("analyze"))$("analyze").onclick=analyzeWithEngine;if($("clearArrow"))$("clearArrow").onclick=clearArrow;if($("elo")){$("elo").oninput=()=>{$("eloValue").textContent=$("elo").value};if($("eloValue"))$("eloValue").textContent=$("elo").value}makeEngine();
 let evalHistory=[];
 function recordEval(v){evalHistory.push(Number(v)||0);$("movesAnalyzed").textContent=evalHistory.length;drawEvalGraph();updateAccuracy()}
@@ -225,7 +225,32 @@ const val={p:100,n:320,b:330,r:500,q:900,k:20000};
 function score(x,c){let sc=0;for(let r=0;r<8;r++)for(let q=0;q<8;q++){let p=x.b[r][q];if(p)sc+=(p.c===c?1:-1)*val[p.t]}return sc}
 function eloDepth(){const e=+$("elo")?.value||+$("level")?.value||1800;return Math.max(10,Math.min(24,Math.round(10+(e-800)/220)))}
 let engineQueue=null;
-function engineSearch(position,callback){if(!engineReady||engineBusy){callback(null);return}engineBusy=true;engineQueue=callback;engine.postMessage("stop");engine.postMessage("setoption name UCI_LimitStrength value true");engine.postMessage("setoption name UCI_Elo value "+(+$("elo")?.value||+$("level")?.value||1800));engine.postMessage("ucinewgame");engine.postMessage("position fen "+fenFromState(position));engine.postMessage("go depth "+eloDepth())}
+function engineStrengthCommands(){
+  const elo=+$("elo")?.value||+$("level")?.value||1800;
+  if(elo<1320){
+    const skill=Math.max(0,Math.min(20,Math.round((elo-800)/25)));
+    engine.postMessage("setoption name UCI_LimitStrength value false");
+    engine.postMessage("setoption name Skill Level value "+skill);
+  }else{
+    engine.postMessage("setoption name UCI_LimitStrength value true");
+    engine.postMessage("setoption name UCI_Elo value "+Math.max(1320,Math.min(3190,elo)));
+  }
+  engine.postMessage("setoption name Threads value 1");
+  engine.postMessage("setoption name Hash value 32");
+}
+function engineMoveTime(){
+  const elo=+$("elo")?.value||+$("level")?.value||1800;
+  return Math.max(350,Math.min(1800,500+(elo-800)*0.65));
+}
+function engineSearch(position,callback){
+  if(!engineReady||engineBusy){callback(null);return}
+  engineBusy=true;engineQueue=callback;
+  engine.postMessage("stop");
+  engineStrengthCommands();
+  engine.postMessage("ucinewgame");
+  engine.postMessage("position fen "+fenFromState(position));
+  engine.postMessage("go movetime "+Math.round(engineMoveTime()));
+}
 function handleEngine(msg){
   if(typeof msg!=="string") return;
   if(msg.includes("uciok")){
@@ -274,6 +299,41 @@ function fallbackComputerMove(){
   }
   return best;
 }
+const openingBook={
+  "":"e4",
+  "e4":"e5",
+  "e4 e5":"Nf3",
+  "e4 e5 Nf3":"Nc6",
+  "e4 e5 Nf3 Nc6":"Bb5",
+  "e4 e5 Nf3 Nc6 Bb5":"a6",
+  "e4 e5 Nf3 Nc6 Bb5 a6":"Ba4",
+  "e4 e5 Nf3 Nc6 Bb5 a6 Ba4":"Nf6",
+  "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6":"O-O",
+  "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O":"Be7",
+  "d4":"d5",
+  "d4 d5":"c4",
+  "d4 d5 c4":"e6",
+  "d4 d5 c4 e6":"Nc3",
+  "d4 d5 c4 e6 Nc3":"Nf6",
+  "d4 d5 c4 e6 Nc3 Nf6":"Bg5",
+  "d4 d5 c4 e6 Nc3 Nf6 Bg5":"Be7",
+  "d4 d5 c4 e6 Nc3 Nf6 Bg5 Be7":"e3",
+  "d4 d5 c4 e6 Nc3 Nf6 Bg5 Be7 e3":"O-O",
+  "c4":"e5",
+  "c4 e5":"Nc3",
+  "c4 e5 Nc3":"Nf6",
+  "Nf3":"d5",
+  "Nf3 d5":"d4",
+  "Nf3 d5 d4":"Nf6",
+  "Nf3 d5 d4 Nf6":"c4",
+  "Nf3 d5 d4 Nf6 c4":"e6"
+};
+function openingBookMove(){
+  const wanted=openingBook[history.join(" ")];
+  if(!wanted)return null;
+  const moves=all(s,s.turn);
+  return moves.find(m=>san(s,m)===wanted)||null;
+}
 function computer(){
   if(over||!s||s.turn!==aiSide)return;
   if(computerRetryTimer){clearTimeout(computerRetryTimer);computerRetryTimer=null;}
@@ -281,6 +341,20 @@ function computer(){
   const request=++computerRequestToken;
   thinking=true;
   render();
+
+  // Use a small opening book first: instant, principled moves for both colors.
+  const bookMove=openingBookMove();
+  if(bookMove){
+    const before=clone(s);
+    snapshots.push(clone(s));
+    s=apply(s,bookMove.f,bookMove.t);
+    history.push(san(before,bookMove));
+    updateOpening();
+    thinking=false;
+    render();
+    finish();
+    return;
+  }
 
   const playFallback=()=>{
     if(request!==computerRequestToken||over||!s||s.turn!==aiSide)return;
@@ -306,7 +380,7 @@ function computer(){
   };
 
   // Always guarantee a Black move, even if Stockfish/CDN is unavailable.
-  computerMoveTimer=setTimeout(()=>{computerMoveTimer=null;playFallback();},3500);
+  computerMoveTimer=setTimeout(()=>{computerMoveTimer=null;playFallback();},1900);
 
   if(!engineReady||engineBusy)return;
 
