@@ -99,6 +99,24 @@ body{margin:0;background:linear-gradient(#f5ead4,#e9dcc1);color:#3b2918;font-fam
 <label>Time Control: <select class="select" id="time"><option value="600">10 min</option><option value="300">5 min</option><option value="180">3 min</option></select></label>
 </div>
 <div class="status"><span id="status">🟢 &nbsp;White to move</span><span id="result">Classic Wood Style · AI ratings are strength presets</span></div>
+<div class="card analysisCard" id="analysisPanel">
+  <b>Analysis</b>
+  <div class="analysisGrid">
+    <div><span class="small">Evaluation</span><div class="analysisValue" id="evalValue">—</div></div>
+    <div><span class="small">Best move</span><div class="analysisValue" id="best-move">—</div></div>
+    <div><span class="small">Opening</span><div class="opening" id="openingName">Starting position</div></div>
+    <div><span class="small">Accuracy</span><div class="accuracy" id="accuracy">—</div></div>
+  </div>
+  <div class="analyzeRow">
+    <button class="btn" id="analyze" type="button">Analyze position</button>
+    <button class="btn" id="clearArrow" type="button">Clear arrow</button>
+  </div>
+  <div class="engineStatus" id="engineStatus">Starting Stockfish…</div>
+  <label class="small" style="margin-top:8px">Engine strength <span id="eloValue">1800</span></label>
+  <input class="range" id="elo" type="range" min="800" max="3000" step="100" value="1800">
+  <div class="analysisGraph"><canvas id="evalGraph"></canvas></div>
+  <div class="small" style="margin-top:5px">Positions analyzed: <span id="movesAnalyzed">0</span></div>
+</div>
 </main>
 <section class="learnShell">
   <div class="learnHeader"><div><h2>Learn Chess</h2><p>Play through courses, understand the ideas, and practice what you learn.</p></div><span class="learnBadge">COURSES</span></div>
@@ -172,7 +190,23 @@ const openingBook={
 "e2e4 e7e5 g1f3 b8c6 f1b5":"Ruy Lopez"
 };
 function currentMoveUcis(){return ""}
-function updateOpening(){const key=history.length?history.slice(0,10).map((m,i)=>{return ""}).join(" "):"";let found="Starting position";const text=history.join("|");if(history[0]==="e4")found="King's Pawn Game";if(history[0]==="e4"&&history[1]==="c5")found="Sicilian Defense";if(history[0]==="e4"&&history[1]==="e5"&&history[2]==="Nf3")found="King's Knight Opening";if(history[0]==="e4"&&history[1]==="e5"&&history[2]==="Nf3"&&history[3]==="Nc6"&&history[4]==="Bb5")found="Ruy Lopez";if(history[0]==="d4"&&history[1]==="d5")found="Queen's Pawn Game";if(history[0]==="d4"&&history[1]==="Nf6")found="Indian Game";if(history[0]==="c4")found="English Opening";$("openingName").textContent=found}
+function updateOpening(){
+  let found="Starting position";
+  if(history[0]==="e4") found="King's Pawn Game";
+  if(history[0]==="e4"&&history[1]==="c5") found="Sicilian Defense";
+  if(history[0]==="e4"&&history[1]==="e5") found="Open Game";
+  if(history[0]==="e4"&&history[1]==="e6") found="French Defense";
+  if(history[0]==="e4"&&history[1]==="c6") found="Caro-Kann Defense";
+  if(history[0]==="e4"&&history[1]==="d5") found="Scandinavian Defense";
+  if(history[0]==="e4"&&history[1]==="Nf6") found="Alekhine Defense";
+  if(history[0]==="d4"&&history[1]==="d5") found="Queen's Pawn Game";
+  if(history[0]==="d4"&&history[1]==="Nf6") found="Indian Game";
+  if(history[0]==="c4") found="English Opening";
+  if(history[0]==="Nf3") found="Zukertort Opening";
+  if(history[0]==="e4"&&history[1]==="e5"&&history[2]==="Nf3") found="King's Knight Opening";
+  if(history[0]==="e4"&&history[1]==="e5"&&history[2]==="Nf3"&&history[3]==="Nc6"&&history[4]==="Bb5") found="Ruy Lopez";
+  $("openingName").textContent=found;
+}
 function updateAccuracy(){if(!evalHistory.length){$("accuracy").textContent="—";return}let total=0;for(let i=1;i<evalHistory.length;i++){const loss=Math.max(0,Math.abs(evalHistory[i-1]-evalHistory[i]));total+=Math.min(100,loss*18)}$("accuracy").textContent=Math.max(0,Math.round(100-total/Math.max(1,evalHistory.length-1)))+"%"}
 function render(){
 const B=$("board");
@@ -198,7 +232,7 @@ function handleEngine(msg){
     if($("engineStatus")) $("engineStatus").textContent="Stockfish ready";
     return;
   }
-  const sm=msg.match(/\\bscore\\s+(cp|mate)\\s+(-?\\d+)/);
+  const sm=msg.match(/\bscore\s+(cp|mate)\s+(-?\d+)/);
   if(sm){
     let n=+sm[2];
     lastEval=sm[1]==="mate"?(n>0?100:-100):n/100;
@@ -208,7 +242,7 @@ function handleEngine(msg){
   if(msg.startsWith("bestmove")){
     engineBusy=false;
     const cb=engineQueue; engineQueue=null;
-    const mv=msg.split(/\\s+/)[1];
+    const mv=msg.split(/\s+/)[1];
     if(cb) cb(mv&&mv!=="(none)"?mv:null);
   }
 }
