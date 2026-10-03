@@ -13,6 +13,7 @@ jobs:
           node-version: '24'
       - name: Extract JavaScript
         run: |
-          node -e 'const fs=require("fs"); const s=fs.readFileSync("index.html","utf8"); const m=s.match(/<script>([\\s\\S]*?)<\\/script>/); if(!m) throw new Error("No inline script found"); fs.writeFileSync("/tmp/app.js",m[1]); console.log("Extracted",m[1].length,"characters");'
+          sed -n '/<script>/,/<\\/script>/p' index.html | sed '1d;$d' > /tmp/app.js
+          wc -c /tmp/app.js
       - name: Check JavaScript syntax
         run: node --check /tmp/app.js
