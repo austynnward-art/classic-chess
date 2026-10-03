@@ -844,6 +844,13 @@ body.contentPage .courseCatalog{margin-top:14px;background:#fff;border-radius:15
 </div>
 </div>
 <div class="winOverlay" id="winOverlay" aria-live="polite"><div class="winCard"><div class="winIcon">♛</div><h2 id="winTitle">Game over</h2><p id="winText">The game has ended.</p></div></div>
+<section id="legacyRuntime" aria-hidden="true" style="position:absolute;left:-100000px;top:0;width:1px;height:1px;overflow:hidden;pointer-events:none">
+  <div id="trainerTitle">Learn Chess</div>
+  <div id="trainerStatus">Choose a lesson to begin.</div>
+  <div id="trainerMoves"></div>
+  <div id="learningBoard"></div>
+  <div id="courseBoard"></div>
+</section>
 <script>
 (()=> {
 const U={w:{k:"♔",q:"♕",r:"♖",b:"♗",n:"♘",p:"♙"},b:{k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"}},F="abcdefgh".split("");
