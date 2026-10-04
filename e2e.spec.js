@@ -161,6 +161,28 @@ test("reset cancels an active engine search before a new game", async ({ page })
 });
 
 
+test("normal trainer puzzle requires the Stockfish best move", async ({ page }) => {
+  await openApp(page);
+  await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
+  await page.getByRole("button", { name: "Trainer" }).click();
+  await expect(page.locator("#trainerBoard")).toHaveAttribute("data-stockfish-target", /^[a-h][1-8][a-h][1-8][qrbn]?$/, { timeout: 20000 });
+  const target = await page.locator("#trainerBoard").getAttribute("data-stockfish-target");
+  const from = target.slice(0, 2), to = target.slice(2, 4);
+  await square(page, "trainerBoard", from).click();
+  const alternate = await page.locator("#trainerBoard .sq.legal").evaluateAll((nodes, targetTo) => {
+    const candidate = nodes.find(n => n.dataset.square !== targetTo);
+    return candidate ? candidate.dataset.square : null;
+  }, to);
+  if (alternate) {
+    await square(page, "trainerBoard", alternate).click();
+    await expect(page.locator("#trainerStatus")).toContainText("Stockfish's best move is different");
+    await expect(square(page, "trainerBoard", from).locator(".piece")).toHaveCount(1);
+  }
+  await square(page, "trainerBoard", from).click();
+  await square(page, "trainerBoard", to).click();
+  await expect(page.locator("#trainerStatus")).toContainText("correct. Stockfish confirms the best move");
+}
+
 test("game review training analyzes the exact position and retries wrong moves", async ({ page }) => {
   await openApp(page);
   await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
