@@ -208,6 +208,7 @@ let engineQueue = [];
 let ignoringBestmove = false;
 let engineStopping = false;
 let engineStopTimer = null;
+let engineGeneration = 0;
 let activeLesson = "fork";
 let trainingTarget = null;
 let trainerTarget = null;
@@ -301,7 +302,8 @@ function finishEngineJob(job,uci){
  return true;
 }
 function startEngineJob(job){
- if(!engine||!engineReady||engineBusy)return false;
+ if(!engine||!engineReady||engineBusy||engineStopping)return false;
+ job.engineGeneration=engineGeneration;
  activeEngineJob=job;
  engineBusy=true;
  engine.postMessage("position fen "+job.fen);
@@ -411,8 +413,10 @@ function initEngine(){
    return;
  }
  try{
+   const workerGeneration=++engineGeneration;
    engine=new Worker("https://cdn.jsdelivr.net/gh/nmrugg/stockfish.js@v19.0.0/src/stockfish-19-lite-single.js");
    engine.onmessage=e=>{
+     if(workerGeneration!==engineGeneration||!engine)return;
      const line=typeof e.data==="string"?e.data.trim():"";
      if(line==="uciok"){
        engine.postMessage("setoption name Threads value 1");
@@ -424,7 +428,7 @@ function initEngine(){
        engineStopping=false;
        ignoringBestmove=false;
        setEngineStatus("Stockfish 19 Lite ready");
-       if(engineQueue.length){
+       if(engineQueue.length&&!engineBusy&&!activeEngineJob&&!engineStopping){
          const queued=engineQueue.shift();
          startEngineJob(queued);
        }else if(activeLesson!=="training" && trainerGame && !lessonTarget){
@@ -450,12 +454,12 @@ function initEngine(){
          ignoringBestmove=false;
          engineBusy=false;
          setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
-         if(engineQueue.length&&engineReady)startEngineJob(engineQueue.shift());
+         if(engineQueue.length&&engineReady&&!engineBusy&&!activeEngineJob&&!engineStopping)startEngineJob(engineQueue.shift());
          return;
        }
        if(ignoringBestmove){ignoringBestmove=false;return}
        const job=activeEngineJob;
-       if(!job)return;
+       if(!job||job.engineGeneration!==engineGeneration)return;
        const uci=line.split(/\s+/)[1];
        if(job.purpose==="gameAnalysis"){
          finishEngineJob(job,uci);
@@ -513,6 +517,7 @@ function initEngine(){
        engine=null;
        engineReady=false;
        engineStopping=false;
+       engineGeneration++;
        ignoringBestmove=false;
        clearTimeout(engineStopTimer);
        engineStopTimer=null;
@@ -522,7 +527,7 @@ function initEngine(){
    };
    engine.onerror=()=>{
    if(engine)try{engine.terminate()}catch{}
-   engine=null;engineReady=false;engineBusy=false;activeEngineJob=null;engineQueue=[];ignoringBestmove=false;engineStopping=false;clearTimeout(engineStopTimer);engineStopTimer=null;
+   engine=null;engineReady=false;engineBusy=false;activeEngineJob=null;engineQueue=[];ignoringBestmove=false;engineStopping=false;engineGeneration++;clearTimeout(engineStopTimer);engineStopTimer=null;
    setEngineStatus("Stockfish failed — restarting…"); renderRebelLab();
    clearTimeout(engineRecoveryTimer);
    engineRecoveryTimer=setTimeout(()=>{engineRecoveryTimer=null;initEngine()},500);
