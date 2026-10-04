@@ -183,6 +183,16 @@ test("normal trainer puzzle requires the Stockfish best move", async ({ page }) 
   await expect(page.locator("#trainerStatus")).toContainText("correct. Stockfish confirms the best move");
 }
 
+test("cancelling a trainer search preserves the replacement analysis", async ({ page }) => {
+  await openApp(page);
+  await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
+  await page.getByRole("button", { name: "Analyze with Stockfish" }).click();
+  await page.getByRole("button", { name: "Mate in 1" }).click();
+  await expect(page.locator("#lessonTitle")).toHaveText("Mate in 1");
+  await expect(page.locator("#trainerBoard")).toHaveAttribute("data-stockfish-target", /^[a-h][1-8][a-h][1-8][qrbn]?$/, { timeout: 30000 });
+  await expect(page.locator("#trainerStatus")).toContainText("validated");
+});
+
 test("switching trainer lessons refreshes the Stockfish target for the new position", async ({ page }) => {
   await openApp(page);
   await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
