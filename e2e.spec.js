@@ -183,6 +183,19 @@ test("normal trainer puzzle requires the Stockfish best move", async ({ page }) 
   await expect(page.locator("#trainerStatus")).toContainText("correct. Stockfish confirms the best move");
 }
 
+test("switching trainer lessons refreshes the Stockfish target for the new position", async ({ page }) => {
+  await openApp(page);
+  await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
+  await page.getByRole("button", { name: "Trainer" }).click();
+  await expect(page.locator("#trainerBoard")).toHaveAttribute("data-stockfish-target", /^[a-h][1-8][a-h][1-8][qrbn]?$/, { timeout: 20000 });
+  const forkTarget = await page.locator("#trainerBoard").getAttribute("data-stockfish-target");
+  await page.getByRole("button", { name: "Mate in 1" }).click();
+  await expect(page.locator("#trainerBoard")).toHaveAttribute("data-stockfish-target", /^[a-h][1-8][a-h][1-8][qrbn]?$/, { timeout: 20000 });
+  const mateTarget = await page.locator("#trainerBoard").getAttribute("data-stockfish-target");
+  expect(mateTarget).not.toBe(forkTarget);
+  await expect(page.locator("#lessonTitle")).toHaveText("Mate in 1");
+});
+
 test("game review training analyzes the exact position and retries wrong moves", async ({ page }) => {
   await openApp(page);
   await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
