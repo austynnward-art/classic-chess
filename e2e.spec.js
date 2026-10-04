@@ -116,7 +116,7 @@ test("Stockfish loads as the single engine and course analysis does not mutate t
   await page.getByRole("button", { name: "Analyze lesson" }).click();
   await expect(page.locator("#courseStatus")).toContainText(/Stockfish recommends|No engine move/, { timeout: 20000 });
   await page.getByRole("button", { name: "Board" }).click();
-  await expect(square(page, "board", "e4 .piece")).toHaveText("♙");
+  await expect(square(page, "board", "e4").locator(".piece")).toHaveText("♙");
   await expect(page.locator("#moves")).toContainText("e4");
 });
 
