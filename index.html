@@ -400,11 +400,11 @@ function initEngine(){
          requestEngine("lesson",trainerGame);
        }
      }else if(line.startsWith("info ")){
-       const depthMatch=line.match(/\\bdepth (\\d+)/);
-       const scoreMatch=line.match(/\\bscore (cp|mate) (-?\\d+)/);
-       const pvMatch=line.match(/\\bpv (.+)$/);
-       const nodesMatch=line.match(/\\bnodes (\\d+)/);
-       const timeMatch=line.match(/\\btime (\\d+)/);
+       const depthMatch=line.match(/\bdepth (\d+)/);
+       const scoreMatch=line.match(/\bscore (cp|mate) (-?\d+)/);
+       const pvMatch=line.match(/\bpv (.+)$/);
+       const nodesMatch=line.match(/\bnodes (\d+)/);
+       const timeMatch=line.match(/\btime (\d+)/);
        if(depthMatch)lastEngineInfo.depth=Number(depthMatch[1]);
        if(scoreMatch)lastEngineInfo.score=scoreMatch[1]==="mate"?"M"+scoreMatch[2]:(Number(scoreMatch[2])/100).toFixed(2);
        if(pvMatch)lastEngineInfo.pv=pvMatch[1];
@@ -424,7 +424,7 @@ function initEngine(){
        }
        if(ignoringBestmove){ignoringBestmove=false;return}
        const job=activeEngineJob;
-       if(!job)return;
+       if(!job||job.generation!==engineRequest)return;
        const uci=line.split(/\s+/)[1];
        if(job.purpose==="play"){
          finishEngineJob(job,uci);
