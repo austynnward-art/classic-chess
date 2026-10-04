@@ -3,8 +3,10 @@ on:
   push:
     paths:
       - index.html
-      - tests/app.spec.js
-      - tests/demo.spec.js
+      - e2e.spec.js
+      - playwright.config.js
+      - package.json
+      - test-server.js
       - .github/workflows/walkthrough-video.yml
   workflow_dispatch:
 permissions:
@@ -20,7 +22,7 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npx playwright install --with-deps chromium
-      - run: npx playwright test tests/app.spec.js tests/demo.spec.js
+      - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
         with:
