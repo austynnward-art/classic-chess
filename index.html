@@ -348,6 +348,7 @@ function handleTrainerClick(square,dragFrom=null){
  if(trainerGame.isGameOver())return;
  const source=dragFrom||trainerSelected;
  if(source){
+   const sourceFen=trainerGame.fen();
    try{
      const move=trainerGame.move({from:source,to:square,promotion:"q"});
      if(move){
@@ -369,10 +370,10 @@ function handleTrainerClick(square,dragFrom=null){
          }
        }else if(lessonTarget){
          const played=move.from+move.to+(move.promotion||"");
-         if(lessonTarget.fen===move.before&&played===lessonTarget.uci){
+         if(lessonTarget.fen===sourceFen&&played===lessonTarget.uci){
            $("#trainerStatus").textContent=move.san+" — correct. Stockfish confirms the best move.";
            $("#lessonProgress").style.width="100%";
-         }else if(lessonTarget.fen===move.before){
+         }else if(lessonTarget.fen===sourceFen){
            trainerGame.undo();
            trainerSelected=null;
            renderAll();
