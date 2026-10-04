@@ -20,12 +20,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Validate application JavaScript
-        run: node -e "const fs=require('fs');const c=fs.readFileSync('index.html','utf8');const m=c.match(/<script[^>]*type=[\\"']module[\\"'][^>]*>([\\s\\S]*?)<\\/script>/);if(!m)throw new Error('No module application script found');const js=m[1].replace(/^\\s*import[\\s\\S]*?;\\s*/,'');new Function(js);if(/\\\\n/.test(js))throw new Error('Literal \\n escape found in application source');console.log('Application JavaScript syntax OK')"
+        run: |
+          node <<'NODE'
+          const fs = require("fs");
+          const c = fs.readFileSync("index.html", "utf8");
+          const m = c.match(/<script[^>]*type=["']module["'][^>]*>([\s\S]*?)<\/script>/);
+          if (!m) throw new Error("No module application script found");
+          const js = m[1].replace(/^\s*import\s+\{[\s\S]*?\}\s+from\s+["'][^"']+["'];\s*/, "");
+          new Function(js);
+          if (js.includes("\\nlet ")) throw new Error("Literal \\n escape found before a JavaScript declaration");
+          console.log("Application JavaScript syntax OK");
+          NODE
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
