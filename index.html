@@ -234,34 +234,72 @@ function startEngineJob(job){
  },limit.time+1500);
  return true;
 }
+function beginEngineStop(){
+ if(!engine){
+   engineStopping=false;
+   engineBusy=false;
+   return;
+ }
+ engineStopping=true;
+ ignoringBestmove=true;
+ clearTimeout(engineStopTimer);
+ engineStopTimer=setTimeout(()=>{
+   engineStopTimer=null;
+   if(!engineStopping)return;
+   try{engine.terminate()}catch{}
+   engine=null;
+   engineReady=false;
+   engineBusy=false;
+   activeEngineJob=null;
+   engineStopping=false;
+   ignoringBestmove=false;
+   setEngineStatus("Stockfish restarting…");
+   clearTimeout(engineRecoveryTimer);
+   engineRecoveryTimer=setTimeout(()=>{
+     engineRecoveryTimer=null;
+     initEngine();
+   },250);
+ },2500);
+ try{engine.postMessage("stop")}catch{}
+}
 function requestEngine(purpose,chessPosition=game,callback=null){
  if(!engineReady||!engine||chessPosition.isGameOver())return false;
- if(engineBusy){setEngineStatus("Stockfish busy — wait for current search");return false}
- return startEngineJob({id:++engineRequest,purpose,fen:chessPosition.fen(),callback});
+ const job={id:++engineRequest,purpose,fen:chessPosition.fen(),callback};
+ if(engineStopping){
+   engineQueue=[job];
+   setEngineStatus("Stockfish finishing previous search…");
+   return true;
+ }
+ if(engineBusy){
+   setEngineStatus("Stockfish busy — wait for current search");
+   return false;
+ }
+ return startEngineJob(job);
 }
 function cancelEngine(){
  engineRequest++;
  engineQueue=[];
  if(activeEngineJob){
-   ignoringBestmove=true;
    clearTimeout(activeEngineJob.timeout);
-   engine.postMessage("stop");
- }else if(engine)engine.postMessage("stop");
- activeEngineJob=null;
+   activeEngineJob=null;
+ }
  engineBusy=false;
- setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
+ if(engine)beginEngineStop();
+ else{
+   engineStopping=false;
+   ignoringBestmove=false;
+   setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
+ }
 }
 function cancelAnalysisIf(purpose){
+ engineQueue=engineQueue.filter(q=>q.purpose!==purpose);
  if(activeEngineJob&&activeEngineJob.purpose===purpose){
-   if(engine)engine.postMessage("stop");
    clearTimeout(activeEngineJob.timeout);
    activeEngineJob=null;
    engineBusy=false;
-   ignoringBestmove=true;
-   engineQueue=engineQueue.filter(q=>q.purpose!==purpose);
+   beginEngineStop();
+ }else if(!activeEngineJob){
    setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
- }else{
-   engineQueue=engineQueue.filter(q=>q.purpose!==purpose);
  }
 }
 function applyEngineMove(uci,job){
@@ -292,8 +330,15 @@ function initEngine(){
      }else if(line==="readyok"){
        engineReady=true;
        engineBusy=false;
+       engineStopping=false;
+       ignoringBestmove=false;
        setEngineStatus("Stockfish 19 Lite ready");
-       if(activeLesson!=="training" && trainerGame && !lessonTarget) requestEngine("lesson",trainerGame);
+       if(engineQueue.length){
+         const queued=engineQueue.shift();
+         startEngineJob(queued);
+       }else if(activeLesson!=="training" && trainerGame && !lessonTarget){
+         requestEngine("lesson",trainerGame);
+       }
      }else if(line.startsWith("bestmove")){
        if(engineStopping){
          clearTimeout(engineStopTimer);
