@@ -159,3 +159,38 @@ test("reset cancels an active engine search before a new game", async ({ page })
   await expect(page.locator("#moves")).toHaveText("No moves yet.");
   await expect(square(page, "board", "e2").locator(".piece")).toHaveText("♙");
 });
+
+
+test("game review training analyzes the exact position and retries wrong moves", async ({ page }) => {
+  await openApp(page);
+  await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
+  await square(page, "board", "e2").click();
+  await square(page, "board", "e4").click();
+
+  await page.getByRole("button", { name: "Train this position" }).click();
+  await expect(page.locator("#trainingLoopStatus")).toContainText(/Position analyzed|Analyzing position/, { timeout: 20000 });
+  await expect(page.locator("#trainingLoopStatus")).toContainText("Position analyzed", { timeout: 20000 });
+
+  await page.getByRole("button", { name: "Trainer" }).click();
+  await expect(page.locator("#lessonTitle")).toHaveText("Game Review Drill");
+  await expect(page.locator("#trainerBoard")).toHaveAttribute("data-training-target", /^[a-h][1-8][a-h][1-8][qrbn]?$/);
+
+  const target = await page.locator("#trainerBoard").getAttribute("data-training-target");
+  const from = target.slice(0, 2);
+  const to = target.slice(2, 4);
+  await square(page, "trainerBoard", from).click();
+  const alternate = await page.locator("#trainerBoard .sq.legal").evaluateAll((nodes, targetTo) => {
+    const candidate = nodes.find(n => n.dataset.square !== targetTo);
+    return candidate ? candidate.dataset.square : null;
+  }, to);
+  expect(alternate).not.toBeNull();
+
+  await square(page, "trainerBoard", alternate).click();
+  await expect(square(page, "trainerBoard", from).locator(".piece")).toHaveCount(1);
+  await expect(page.locator("#trainerStatus")).toContainText("not the engine target");
+
+  await square(page, "trainerBoard", from).click();
+  await square(page, "trainerBoard", to).click();
+  await expect(page.locator("#lessonProgress")).toHaveCSS("width", /.+/);
+  await expect(page.locator("#trainerStatus")).toContainText("correct. You found Stockfish's move");
+});
