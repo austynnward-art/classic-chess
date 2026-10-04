@@ -289,7 +289,7 @@ function startEngineJob(job){
      setEngineStatus("Stockfish search timed out — stopping");
      if(job.purpose==="lesson")$("#trainerStatus").textContent="Stockfish timed out. Try again.";
      if(job.purpose==="course")$("#courseStatus").textContent="Stockfish timed out. Try again.";
-     if(job.purpose==="training")$("#trainingLoopStatus").textContent="Analysis timed out — try again.";
+     if(job.purpose==="training")$("#trainingLoopStatus").textContent="Analysis timed out — try again.";\n     if(job.purpose==="rebel")$("#engineReadout").textContent="Search timed out — engine is stopping safely.";
    }
  },limit.time+1500);
  return true;
@@ -324,7 +324,7 @@ function beginEngineStop(){
 }
 function requestEngine(purpose,chessPosition=game,callback=null){
  if(!engineReady||!engine||chessPosition.isGameOver())return false;
- const job={id:++engineRequest,purpose,fen:chessPosition.fen(),callback};
+ const job={id:++engineRequest,purpose,fen:chessPosition.fen(),callback,generation:engineRequest};
  if(engineStopping){
    engineQueue=[job];
    setEngineStatus("Stockfish finishing previous search…");
@@ -470,8 +470,20 @@ function initEngine(){
        }else finishEngineJob(job,uci);
      }else if(line.includes("CRITICAL ERROR")){
        const job=activeEngineJob;
-       if(job){clearTimeout(job.timeout);activeEngineJob=null;engineBusy=false;}
-       setEngineStatus("Stockfish rejected the position");
+       if(job)clearTimeout(job.timeout);
+       activeEngineJob=null;
+       engineBusy=false;
+       engineQueue=[];
+       setEngineStatus("Stockfish rejected the position — restarting");
+       try{engine.terminate()}catch{}
+       engine=null;
+       engineReady=false;
+       engineStopping=false;
+       ignoringBestmove=false;
+       clearTimeout(engineStopTimer);
+       engineStopTimer=null;
+       clearTimeout(engineRecoveryTimer);
+       engineRecoveryTimer=setTimeout(()=>{engineRecoveryTimer=null;initEngine()},500);
      }
    };
    engine.onerror=()=>{
@@ -722,7 +734,7 @@ function openingBookFor(hist){
 $("#saveGameBtn").onclick=saveCurrentGame;
 $("#analyzeMainBtn").onclick=()=>{
  if(!engineReady){$("#engineReadout").textContent="Stockfish is still loading…";return}
- const ok=requestEngine("rebel",game,(uci)=>{if(uci&&uci!=="0000"){recordLearning(game.fen(),uci);lastEngineInfo.pv=uci;renderRebelLab();}});
+ const ok=requestEngine("rebel",game);
  if(!ok)$("#engineReadout").textContent="Stockfish is busy or the position is finished.";
 };
 $("#applyMultiPv").onclick=()=>{
