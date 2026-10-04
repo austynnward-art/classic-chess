@@ -455,7 +455,7 @@ function initEngine(){
        }
        if(ignoringBestmove){ignoringBestmove=false;return}
        const job=activeEngineJob;
-       if(!job||job.generation!==engineRequest)return;
+       if(!job)return;
        const uci=line.split(/\s+/)[1];
        if(job.purpose==="gameAnalysis"){
          finishEngineJob(job,uci);
@@ -753,7 +753,7 @@ function startGameAnalysis(){
  cancelEngine();
  const snapshots=buildGameSnapshots();
  const jobs=[];
- const generation=++engineRequest;
+ const generation=Date.now();
  gameAnalysis={running:true,done:0,total:snapshots.length*2,results:[],generation,snapshots};
  snapshots.forEach((s,i)=>{
    jobs.push({id:++engineRequest,purpose:"gameAnalysis",phase:"before",snapshot:s,fen:s.beforeFen,callback:null,generation});
