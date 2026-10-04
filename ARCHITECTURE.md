@@ -1,69 +1,36 @@
 # Rebel Classic Chess — v2 Architecture
 
 ## Source of truth
-The `classic-chess` repository is the canonical source. v2 is a structural rebuild, not a second redesign layered onto the existing page.
+`classic-chess` is the canonical repository. v2 replaces the monolithic runtime rather than layering another redesign on top of it.
 
-## Principles
-- One authoritative chess state per active workflow.
-- UI components never own chess rules.
-- Stockfish is accessed through one serialized engine service.
-- Persistence is behind a storage repository.
-- Courses, chapters, lessons, drills, and review reports are data models.
-- Existing Playwright tests remain regression gates during migration.
-- No Chessly proprietary source, assets, branding, or private implementation is copied; only publicly observable product patterns are used as inspiration.
-
-## Target tree
+## Target runtime
 ```
-src/
-  app/
-    router.js
-    bootstrap.js
-  chess/
-    game-state.js
-    board-controller.js
-    notation.js
-  engine/
-    stockfish-service.js
-  content/
-    courses.js
-    drills.js
-  training/
-    drill-session.js
-    review-session.js
-  persistence/
-    storage.js
-  ui/
-    board-view.js
-    shell-view.js
-    course-view.js
-    drill-view.js
-    analysis-view.js
+AppShell
+ ├─ Router
+ ├─ GameState / BoardView
+ ├─ CourseSession
+ ├─ DrillSession
+ ├─ ReviewSession
+ ├─ AnalysisView
+ ├─ StorageRepository
+ └─ StockfishService
 ```
 
-## Runtime flow
-Play -> GameState -> ReviewSession -> StockfishService -> ReviewReport -> DrillSession -> Progress
+## Rules
+- One authoritative GameState per workflow.
+- No feature may mutate another feature's board.
+- All engine requests pass through StockfishService.
+- Engine generations invalidate stale results after reset, lesson changes, or cancellation.
+- Content is data, not DOM.
+- Persistence is accessed through StorageRepository.
+- Existing Playwright tests remain regression gates.
 
-Course -> CourseView -> GameState -> StockfishService
-
-All workflows use the same chess-state and engine abstractions, but each workflow owns its own session object. This prevents course/trainer boards from mutating the live game.
-
-## Migration order
-1. Extract engine and persistence services.
-2. Extract board/game state.
-3. Extract content data.
-4. Extract course/drill/review sessions.
-5. Replace DOM wiring with feature views/router.
-6. Move the visual shell into a dedicated layout.
-7. Expand regression coverage.
-8. Remove legacy inline implementation only after tests pass.
-
-## Regression requirements
-- 64-square board.
-- Correct initial position.
-- Click movement and drag movement.
-- Flip.
-- Independent course/trainer boards.
-- Course progress persistence.
-- Saved games.
-- Stockfish cancellation/race safety.
-- Review results tied to the correct position.
+## Cutover phases
+1. Service extraction — complete on v2 branch.
+2. Feature data/session extraction — complete on v2 branch.
+3. App shell adapter — next.
+4. Move board/course/trainer/analysis UI onto the services.
+5. Add regression tests for the new module boundaries.
+6. Run the complete browser suite.
+7. Remove legacy inline runtime.
+8. Merge v2 only after green regression coverage.
