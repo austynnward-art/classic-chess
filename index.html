@@ -174,7 +174,8 @@ function handleGameClick(square,dragFrom=null){
  const from=dragFrom||selected;
  if(from){
   try{
-   const promotion=promotionFor(game,from,square);\n   const move=game.move({from,to:square,promotion:promotion||"q"});
+   const promotion=promotionFor(game,from,square);
+   const move=game.move({from,to:square,promotion:promotion||"q"});
    if(move){
     selected=null;renderAll();
     if(mode==="computer"&&game.turn()==="b"&&!game.isGameOver())requestEngine("play",game,applyEngineMove);
@@ -357,7 +358,8 @@ function handleTrainerClick(square,dragFrom=null){
  if(source){
    const sourceFen=trainerGame.fen();
    try{
-     const promotion=promotionFor(trainerGame,source,square);\n     const move=trainerGame.move({from:source,to:square,promotion:promotion||"q"});
+     const promotion=promotionFor(trainerGame,source,square);
+     const move=trainerGame.move({from:source,to:square,promotion:promotion||"q"});
      if(move){
        trainerSelected=null;
        renderAll();
@@ -414,7 +416,8 @@ function handleCourseClick(square,dragFrom=null){
  const source=dragFrom||courseSelected;
  if(source){
    try{
-     const promotion=promotionFor(courseGame,source,square);\n     const move=courseGame.move({from:source,to:square,promotion:promotion||"q"});
+     const promotion=promotionFor(courseGame,source,square);
+     const move=courseGame.move({from:source,to:square,promotion:promotion||"q"});
      if(move){
        courseSelected=null;
        renderAll();
