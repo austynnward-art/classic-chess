@@ -447,7 +447,7 @@ $("#analyzeLesson").onclick=()=>{
  requestEngine("lesson",trainerGame);
  $("#lessonProgress").style.width="50%";
 };
-$("#resetLesson").onclick=()=>loadLesson(activeLesson);$("#analyzeCourse").onclick=()=>{
+$("#resetLesson").onclick=()=>activeLesson==="training"?loadTrainingPosition(trainingTarget.fen,trainingTarget.uci):loadLesson(activeLesson);$("#analyzeCourse").onclick=()=>{
  if(!engineReady){$("#courseStatus").textContent="Stockfish is still loading…";return}
  requestEngine("course",courseGame);
  $("#courseProgress").style.width="60%";
