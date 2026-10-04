@@ -3,7 +3,7 @@ const { test, expect } = require("@playwright/test");
 test("Rebel v2 shell boots and navigates", async ({ page }) => {
   const errors = [];
   page.on("pageerror", e => errors.push(e));
-  await page.goto("/v2.html");
+  await page.goto("/");
   await expect(page.locator(".rebel-shell")).toBeVisible();
   await expect(page.locator(".rebel-sidebar")).toBeVisible();
   await expect(page.locator("#pageTitle")).toHaveText("Home");
