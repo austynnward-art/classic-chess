@@ -141,6 +141,24 @@ el.ondragover=e=>e.preventDefault();el.ondrop=e=>{e.preventDefault();const from=
 if(targetId==="board"&&flipped)cells.reverse();cells.forEach(e=>b.appendChild(e))}
 function gameLabel(){if(game.isCheckmate())return"Checkmate — "+(game.turn()==="w"?"Black":"White")+" wins";if(game.isStalemate())return"Draw — stalemate";if(game.isDraw())return"Draw";return(game.turn()==="w"?"White":"Black")+" to move"+(game.inCheck()?" — check":"")}
 function renderAll(){renderBoard("board",game,selected);renderBoard("trainerBoard",trainerGame,trainerSelected);renderBoard("courseBoard",courseGame,courseSelected);$("#status").textContent=gameLabel();$("#modeTag").textContent=mode==="computer"?"COMPUTER":"2 PLAYER";$("#moves").textContent=game.history().length?game.history().map((m,i)=>(i%2===0?((i/2)+1)+". ":"")+(i%2?" "+m:m)).join("\n"):"No moves yet."}
+function handleGameClick(square,dragFrom=null){
+ if(game.isGameOver()||engineBusy)return;
+ const from=dragFrom||selected;
+ if(from){
+  try{
+   const move=game.move({from,to:square,promotion:"q"});
+   if(move){
+    selected=null;renderAll();
+    if(mode==="computer"&&game.turn()==="b"&&!game.isGameOver())requestEngine("play",game,applyEngineMove);
+    return;
+   }
+  }catch{}
+  selected=null;
+ }
+ const p=game.get(square);
+ if(p&&p.color===game.turn())selected=square;
+ renderAll();
+}
 function engineLimit(){
  const level=Number($("#level").value);
  if(level<=1200)return {depth:7,time:180};
