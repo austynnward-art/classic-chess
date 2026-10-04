@@ -119,6 +119,7 @@ let engineBusy = false;
 let engineRequest = 0;
 let activeEngineJob = null;
 let engineQueue = [];
+let ignoringBestmove = false;
 let activeLesson = "fork";
 let coursePositions = {
  foundations:{title:"Chess Fundamentals",text:"Practice a legal starting position and use the engine only after you form your own idea.",fen:"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"},
@@ -179,10 +180,9 @@ function finishEngineJob(job,uci){
  return true;
 }
 function startEngineJob(job){
- if(!engine||!engineReady)return false;
+ if(!engine||!engineReady||engineBusy)return false;
  activeEngineJob=job;
  engineBusy=true;
- engine.postMessage("stop");
  engine.postMessage("position fen "+job.fen);
  const limit=engineLimit();
  engine.postMessage("go depth "+limit.depth+" movetime "+limit.time);
@@ -196,20 +196,17 @@ function startEngineJob(job){
 }
 function requestEngine(purpose,chessPosition=game,callback=null){
  if(!engineReady||!engine||chessPosition.isGameOver())return false;
- const job={id:++engineRequest,purpose,fen:chessPosition.fen(),callback};
- if(engineBusy){
-   engineQueue=engineQueue.filter(q=>q.purpose!=="lesson"&&q.purpose!=="course");
-   engineQueue.push(job);
-   setEngineStatus("Stockfish busy — request queued");
-   return true;
- }
- return startEngineJob(job);
+ if(engineBusy){setEngineStatus("Stockfish busy — wait for current search");return false}
+ return startEngineJob({id:++engineRequest,purpose,fen:chessPosition.fen(),callback});
 }
 function cancelEngine(){
  engineRequest++;
  engineQueue=[];
- if(engine)engine.postMessage("stop");
- if(activeEngineJob)clearTimeout(activeEngineJob.timeout);
+ if(activeEngineJob){
+   ignoringBestmove=true;
+   clearTimeout(activeEngineJob.timeout);
+   engine.postMessage("stop");
+ }else if(engine)engine.postMessage("stop");
  activeEngineJob=null;
  engineBusy=false;
  setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
@@ -256,6 +253,7 @@ function initEngine(){
        engineBusy=false;
        setEngineStatus("Stockfish 19 Lite ready");
      }else if(line.startsWith("bestmove")){
+       if(ignoringBestmove){ignoringBestmove=false;return}
        const job=activeEngineJob;
        if(!job)return;
        const uci=line.split(/\s+/)[1];
