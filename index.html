@@ -184,7 +184,7 @@ function applyEngineMove(uci){
 function initEngine(){
  if(engine||typeof Worker==="undefined"){if(typeof Worker==="undefined")$("#engineStatus").textContent="Worker unavailable";return}
  try{
-   engine=new Worker("https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js");
+   engine=new Worker("https://cdn.jsdelivr.net/gh/nmrugg/stockfish.js@v19.0.0/src/stockfish-19-lite-single.js");
    engine.onmessage=e=>{
      const line=typeof e.data==="string"?e.data:"";
      if(line==="uciok"){engine.postMessage("setoption name Threads value 1");engine.postMessage("setoption name MultiPV value 1");engine.postMessage("isready")}
