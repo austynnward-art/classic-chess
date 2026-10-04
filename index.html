@@ -24,6 +24,7 @@
    <div class="controls">
     <button class="btn primary" id="newGame">New game</button><button class="btn" id="computerBtn">Play computer</button><button class="btn" id="localBtn">2 players</button><button class="btn" id="undoBtn">Undo</button><button class="btn" id="flipBtn">Flip board</button>
    </div>
+   <div class="card" style="margin-top:14px"><strong>TRAINING LOOP</strong><div id="trainingLoopStatus" class="status">Play a game to build a training plan.</div><p id="trainingLoopText" class="muted">Play → analyze → drill → retest.</p><div class="progress"><i id="trainingLoopProgress"></i></div><div class="controls"><button class="btn" id="startTrainingFromGame">Train this position</button></div></div>
    <div class="controls"><span class="tag">STOCKFISH 19 LITE</span><select id="level" class="select" style="max-width:180px" aria-label="Stockfish level"><option value="1200">Easy</option><option value="1600">Medium</option><option value="2000">Hard</option><option value="2400">Strong</option><option value="2800">Max</option></select><button class="btn" id="applyLevel">Apply level</button><span id="engineStatus" class="muted">Loading engine…</span></div>
   </section>
   <aside class="sideCards">
@@ -140,8 +141,17 @@ el.onclick=()=>targetId==="board"?handleGameClick(sq):targetId==="trainerBoard"?
 el.ondragstart=e=>{if(!p||p.color!==chess.turn())return e.preventDefault();e.dataTransfer.setData("text/plain",sq);if(targetId==="board")selected=sq;else if(targetId==="trainerBoard")trainerSelected=sq;else courseSelected=sq;renderAll()};
 el.ondragover=e=>e.preventDefault();el.ondrop=e=>{e.preventDefault();const from=e.dataTransfer.getData("text/plain");if(from)(targetId==="board"?handleGameClick(sq,from):targetId==="trainerBoard"?handleTrainerClick(sq,from):handleCourseClick(sq,from))};cells.push(el)}
 if(targetId==="board"&&flipped)cells.reverse();cells.forEach(e=>b.appendChild(e))}
+function updateTrainingLoop(){
+ const status=$("#trainingLoopStatus"),text=$("#trainingLoopText"),bar=$("#trainingLoopProgress");
+ if(!status)return;
+ const moves=game.history();
+ if(!moves.length){status.textContent="Play a game to build a training plan.";text.textContent="Play → analyze → drill → retest.";bar.style.width="0%";return}
+ status.textContent="Training position ready";
+ text.textContent="Position captured after "+moves[moves.length-1]+". Take it to Trainer and practice the idea.";
+ bar.style.width="35%";
+}
 function gameLabel(){if(game.isCheckmate())return"Checkmate — "+(game.turn()==="w"?"Black":"White")+" wins";if(game.isStalemate())return"Draw — stalemate";if(game.isDraw())return"Draw";return(game.turn()==="w"?"White":"Black")+" to move"+(game.inCheck()?" — check":"")}
-function renderAll(){renderBoard("board",game,selected);renderBoard("trainerBoard",trainerGame,trainerSelected);renderBoard("courseBoard",courseGame,courseSelected);$("#status").textContent=gameLabel();$("#modeTag").textContent=mode==="computer"?"COMPUTER":"2 PLAYER";$("#moves").textContent=game.history().length?game.history().map((m,i)=>(i%2===0?((i/2)+1)+". ":"")+(i%2?" "+m:m)).join("\n"):"No moves yet."}
+function renderAll(){renderBoard("board",game,selected);renderBoard("trainerBoard",trainerGame,trainerSelected);renderBoard("courseBoard",courseGame,courseSelected);$("#status").textContent=gameLabel();$("#modeTag").textContent=mode==="computer"?"COMPUTER":"2 PLAYER";$("#moves").textContent=game.history().length?game.history().map((m,i)=>(i%2===0?((i/2)+1)+". ":"")+(i%2?" "+m:m)).join("\n"):"No moves yet.";updateTrainingLoop()}
 function handleGameClick(square,dragFrom=null){
  if(game.isGameOver()||engineBusy)return;
  const from=dragFrom||selected;
@@ -357,7 +367,7 @@ function loadLesson(id){
  $("#lessonProgress").style.width="0%";
  renderAll();
 }
-$("#newGame").onclick=()=>{game=new Chess();selected=null;cancelEngine();renderAll();$("#coach").textContent="New game. Start with checks, captures, and threats."};
+$("#startTrainingFromGame").onclick=()=>{loadLesson("opening");$(".page").forEach(p=>p.classList.remove("active"));$("#trainerPage").classList.add("active");$("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page==="trainerPage"));};$("#newGame").onclick=()=>{game=new Chess();selected=null;cancelEngine();renderAll();$("#coach").textContent="New game. Start with checks, captures, and threats."};
 $("#localBtn").onclick=()=>{mode="local";cancelEngine();renderAll();$("#engineStatus").textContent=engineReady?"Stockfish ready":"Loading engine…"};
 $("#computerBtn").onclick=()=>{mode="computer";game=new Chess();selected=null;cancelEngine();renderAll();$("#engineStatus").textContent=engineReady?"Your move — White":"Loading Stockfish…"};
 $("#undoBtn").onclick=()=>{if(engineBusy)return;game.undo();if(mode==="computer"&&game.history().length)game.undo();selected=null;renderAll()};
