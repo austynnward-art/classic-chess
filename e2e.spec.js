@@ -181,7 +181,7 @@ test("normal trainer puzzle requires the Stockfish best move", async ({ page }) 
   await square(page, "trainerBoard", from).click();
   await square(page, "trainerBoard", to).click();
   await expect(page.locator("#trainerStatus")).toContainText("correct. Stockfish confirms the best move");
-}
+});
 
 test("cancelling a trainer search preserves the replacement analysis", async ({ page }) => {
   await openApp(page);
