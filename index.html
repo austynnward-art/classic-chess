@@ -45,13 +45,14 @@ textarea.fenInput{width:100%;min-height:74px;resize:vertical;background:#080d11;
 .archItem small{color:var(--muted)}.archProgress{height:8px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:8px}.archProgress i{display:block;height:100%;background:var(--lime);width:0}
 .archPill{display:inline-block;padding:5px 8px;border-radius:999px;background:#1597ff18;color:var(--lime);font-size:9px;font-weight:900;letter-spacing:1px}
 @media(max-width:900px){.archGrid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.archGrid{grid-template-columns:1fr}.archHero h1{font-size:31px}}
+.chesslyGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.chesslyCard{padding:18px;min-height:190px}.chesslyCard h3{margin:8px 0}.chesslyCard .btn{margin-top:12px}.lessonRows{display:grid;gap:9px;margin-top:14px}.lessonRow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:12px;background:#ffffff05}.lessonNum{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#1597ff18;color:var(--lime);font-weight:900}.lessonRow small{display:block;color:var(--muted);margin-top:3px}.filterBar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.filterBar .btn.active{background:var(--lime);border-color:var(--lime);color:#fff}.quizOption{display:block;width:100%;text-align:left;margin:8px 0}.quizOption.correct{border-color:#2fbf71;background:#2fbf7118}.quizOption.wrong{border-color:#d73535;background:#d7353518}.xpBadge{font-size:28px;font-weight:950}.modelBoard{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}.modelMoves{max-height:420px;overflow:auto}.modelMove{padding:10px;border-top:1px solid var(--line);cursor:pointer}.modelMove:hover{background:#ffffff08}.shuffleHero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}.streak{font-size:40px;font-weight:950}@media(max-width:900px){.chesslyGrid{grid-template-columns:1fr 1fr}.modelBoard{grid-template-columns:1fr}}@media(max-width:600px){.chesslyGrid{grid-template-columns:1fr}.shuffleHero{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sideNav">
  <div class="brand"><div class="logo">♞</div><div><b>Rebel Classic Chess</b><small>REBEL CHESS LAB</small></div></div>
- <nav class="nav" aria-label="Primary"><button class="active" aria-current="page" data-page="homePage">Home</button><button data-page="coursePage">Learn</button><button data-page="boardPage">Play</button><button data-page="trainerPage">Train</button><button data-page="rebelPage">Lab</button><button data-page="progressPage">Progress</button><button data-page="videoPage">Videos</button><button data-page="rulesPage">Rules</button></nav>
+ <nav class="nav" aria-label="Primary"><button class="active" aria-current="page" data-page="homePage">Home</button><button data-page="coursePage">Courses</button><button data-page="studyPage">Study</button><button data-page="trainerPage">Drills</button><button data-page="quizPage">Quizzes</button><button data-page="strategyPage">Strategy</button><button data-page="shufflePage">Shuffle</button><button data-page="modelsPage">Model Games</button><button data-page="boardPage">Play</button><button data-page="rebelPage">Lab</button><button data-page="progressPage">Progress</button><button data-page="videoPage">Videos</button><button data-page="rulesPage">Rules</button></nav>
 </aside>
 <main class="main">
 
@@ -200,6 +201,31 @@ textarea.fenInput{width:100%;min-height:74px;resize:vertical;background:#080d11;
  </div>
 </section>
 
+<section id="studyPage" class="page">
+ <div class="hero"><span class="eyebrow">Study library</span><h1>Rebel Studies</h1><p class="muted">Organize opening ideas, tactical themes, endgames, and your own analyzed positions into study paths.</p></div>
+ <div class="filterBar"><button class="btn active" data-study-filter="all">All</button><button class="btn" data-study-filter="opening">Openings</button><button class="btn" data-study-filter="tactics">Tactics</button><button class="btn" data-study-filter="endgame">Endgames</button></div>
+ <div id="studyGrid" class="chesslyGrid"></div>
+</section>
+<section id="quizPage" class="page">
+ <div class="hero"><span class="eyebrow">Quiz room</span><h1>Rebel Quizzes</h1><p class="muted">Quick knowledge checks after a lesson. Your score and XP are saved locally.</p></div>
+ <div class="panel card"><span class="tag">CURRENT QUIZ</span><h2 id="quizTitle">Chess Fundamentals</h2><p id="quizQuestion" class="muted"></p><div id="quizOptions"></div><div id="quizFeedback" class="notice">Choose an answer.</div><div class="controls"><button class="btn" id="nextQuiz">Next question</button><span class="xpBadge" id="quizScore">0 XP</span></div></div>
+</section>
+<section id="strategyPage" class="page">
+ <div class="hero"><span class="eyebrow">Strategy tests</span><h1>Think like a player, not an engine.</h1><p class="muted">Choose the strategic plan that best fits the position before checking the engine.</p></div>
+ <div class="panel card"><h2 id="strategyTitle">Find the best plan</h2><p id="strategyQuestion" class="muted"></p><div id="strategyOptions"></div><div id="strategyFeedback" class="notice">Pick a plan.</div><div class="controls"><button class="btn" id="nextStrategy">Next test</button><span class="xpBadge" id="strategyScore">0 XP</span></div></div>
+</section>
+<section id="shufflePage" class="page">
+ <div class="hero shuffleHero"><div><span class="eyebrow">Drill shuffle</span><h1>Weakness Queue</h1><p class="muted">Shuffle through tactics, openings, calculation, and review positions. The queue prioritizes items you miss.</p></div><div><div class="streak" id="shuffleStreak">0</div><small class="muted">streak</small></div></div>
+ <div class="chesslyGrid">
+  <div class="panel chesslyCard"><span class="tag">TACTICS</span><h3>Forks & threats</h3><p class="muted">Rapid tactical pattern recognition.</p><button class="btn primary" data-lesson="fork">Start drill</button></div>
+  <div class="panel chesslyCard"><span class="tag">OPENING</span><h3>Opening recall</h3><p class="muted">Replay key moves from your course path.</p><button class="btn" data-course="opening">Start drill</button></div>
+  <div class="panel chesslyCard"><span class="tag">GAME REVIEW</span><h3>Fix a mistake</h3><p class="muted">Turn your latest analyzed position into a repeat attempt.</p><button class="btn" data-page="rebelPage">Review mistakes</button></div>
+ </div>
+</section>
+<section id="modelsPage" class="page">
+ <div class="hero"><span class="eyebrow">Model games</span><h1>Study complete games</h1><p class="muted">Follow annotated model-game move lists and jump to the Play board to explore the position yourself.</p></div>
+ <div class="modelBoard"><section class="panel card"><span class="tag">MODEL GAME</span><h2 id="modelTitle">Classical Development Model</h2><p id="modelText" class="muted">A short teaching game focused on development and king safety.</p><div id="modelMoves" class="modelMoves"></div></section><aside class="panel card"><h3>How to study</h3><div class="lessonRows"><div class="lessonRow"><div class="lessonNum">1</div><div><b>Guess</b><small>Pause before each move.</small></div></div><div class="lessonRow"><div class="lessonNum">2</div><div><b>Explain</b><small>Name the idea behind the move.</small></div></div><div class="lessonRow"><div class="lessonNum">3</div><div><b>Replay</b><small>Test the position on the board.</small></div></div></div><button class="btn primary" data-page="boardPage">Open board</button></aside></div>
+</section>
 <section id="rulesPage" class="page">
  <div class="hero"><span class="eyebrow">Chess rules library</span><h1>Rules & Handbooks</h1><p class="muted">Use official rule sources as references for the learning platform. The current FIDE Laws took effect January 1, 2023.</p></div>
  <div class="resourceGrid">
@@ -934,7 +960,42 @@ $("#loadFenBtn").onclick=()=>{
  try{const next=new Chess(fen);game=next;selected=null;trainingTarget=null;cancelEngine();renderAll();$("#fenStatus").textContent="Position loaded successfully.";renderRebelLab();showPage("boardPage")}catch{$("#fenStatus").textContent="Invalid FEN. Check the six FEN fields and try again."}
 };
 $("#copyFenBtn").onclick=()=>{$("#fenInput").value=game.fen();$("#fenStatus").textContent="Current board FEN copied into the editor."};
-function wireNavigation(){ $( "[data-page]" ).forEach(b=>b.onclick=()=>showPage(b.dataset.page)); }
+
+// Chessly-style learning layer: courses, studies, quizzes, strategy tests, model games, shuffle and local progress.
+const rebelLearning={studies:[
+ {type:"opening",title:"Opening Arsenal",text:"Center control, development and king safety.",action:"course",id:"opening"},
+ {type:"tactics",title:"Tactical Patterns",text:"Forks, pins, skewers and forcing moves.",action:"lesson",id:"fork"},
+ {type:"endgame",title:"Endgame Essentials",text:"King activity, promotion races and basic technique.",action:"lesson",id:"mate"},
+ {type:"opening",title:"Caro-Kann Study",text:"Build a reliable response to 1.e4.",action:"course",id:"opening"},
+ {type:"tactics",title:"Calculation Lab",text:"Compare candidate moves with Stockfish.",action:"page",id:"rebelPage"},
+ {type:"endgame",title:"Checkmate Practice",text:"Convert a winning position accurately.",action:"lesson",id:"mate"}
+],quiz:[
+ {q:"What should you usually prioritize first when looking for a tactical move?",a:["Forcing moves: checks, captures and threats","Moving a random pawn","Trading queens immediately","Ignoring the opponent"],ok:0},
+ {q:"Why develop pieces early?",a:["To activate them and prepare king safety","To lose tempi","To keep them on their starting squares","To avoid controlling the center"],ok:0},
+ {q:"What is a fork?",a:["One move attacking two or more targets","A type of checkmate only","A pawn ending","A castling rule"],ok:0},
+ {q:"What is the purpose of castling?",a:["Improve king safety and connect the rook","Promote a pawn","Win a queen automatically","Skip the opponent's turn"],ok:0}
+],strategy:[
+ {q:"Your opponent has an undeveloped king and you can safely develop with tempo. What is the practical plan?",a:["Develop actively and increase pressure","Move the same piece repeatedly for no reason","Trade every pawn","Stop calculating"],ok:0},
+ {q:"You are ahead in material in a simplified position. What is often useful?",a:["Trade toward a favorable endgame while avoiding counterplay","Create unnecessary complications","Give back material","Ignore king activity"],ok:0},
+ {q:"The center is closed. What should you examine next?",a:["Pawn breaks, piece routes and play on the wings","Only immediate captures","Random checks","The clock only"],ok:0}
+],models:[
+ {title:"Development Model",text:"A teaching line built around center control and rapid development.",moves:["1. e4 e5","2. Nf3 Nc6","3. Bc4 Bc5","4. O-O Nf6","5. Re1 d6","6. c3 O-O"]},
+ {title:"Tactical Model",text:"A compact pattern study: develop, create threats, then calculate forcing moves.",moves:["1. e4 e5","2. Nf3 Nc6","3. Bb5 a6","4. Ba4 Nf6","5. O-O Be7","6. Re1 b5"]}
+]};
+let quizIndex=0,quizXP=Number(localStorage.getItem("rebelQuizXP")||0),strategyIndex=0,strategyXP=Number(localStorage.getItem("rebelStrategyXP")||0),shuffleStreak=Number(localStorage.getItem("rebelShuffleStreak")||0);
+function renderStudies(filter="all"){const el=$("#studyGrid");if(!el)return;el.innerHTML=rebelLearning.studies.filter(x=>filter==="all"||x.type===filter).map((x,i)=>'<article class="panel chesslyCard"><span class="tag">'+x.type.toUpperCase()+'</span><h3>'+x.title+'</h3><p class="muted">'+x.text+'</p><button class="btn primary" data-study-action="'+x.action+'" data-study-id="'+x.id+'">Open</button></article>').join("");}
+function renderQuiz(){const x=rebelLearning.quiz[quizIndex%rebelLearning.quiz.length];$("#quizQuestion").textContent=x.q;$("#quizOptions").innerHTML=x.a.map((a,i)=>'<button class="btn quizOption" data-quiz-answer="'+i+'">'+a+'</button>').join("");$("#quizFeedback").textContent="Choose an answer.";$("#quizScore").textContent=quizXP+" XP";}
+function renderStrategy(){const x=rebelLearning.strategy[strategyIndex%rebelLearning.strategy.length];$("#strategyQuestion").textContent=x.q;$("#strategyOptions").innerHTML=x.a.map((a,i)=>'<button class="btn quizOption" data-strategy-answer="'+i+'">'+a+'</button>').join("");$("#strategyFeedback").textContent="Pick a plan.";$("#strategyScore").textContent=strategyXP+" XP";}
+function renderModels(){const x=rebelLearning.models[0];$("#modelTitle").textContent=x.title;$("#modelText").textContent=x.text;$("#modelMoves").innerHTML=x.moves.map((m,i)=>'<div class="modelMove" data-model-move="'+i+'"><b>'+m+'</b><small class="muted"> Click to replay this idea on the board.</small></div>').join("");}
+function saveLearningXP(){localStorage.setItem("rebelQuizXP",quizXP);localStorage.setItem("rebelStrategyXP",strategyXP);localStorage.setItem("rebelShuffleStreak",shuffleStreak);}
+document.addEventListener("click",e=>{
+ const qa=e.target.closest("[data-quiz-answer]");if(qa){const x=rebelLearning.quiz[quizIndex%rebelLearning.quiz.length],i=Number(qa.dataset.quizAnswer);if(i===x.ok){quizXP+=10;qa.classList.add("correct");$("#quizFeedback").textContent="Correct. +10 XP";}else{qa.classList.add("wrong");$("#quizFeedback").textContent="Not quite. Review the idea and try the next one."}saveLearningXP();$("#quizScore").textContent=quizXP+" XP";}
+ const sa=e.target.closest("[data-strategy-answer]");if(sa){const x=rebelLearning.strategy[strategyIndex%rebelLearning.strategy.length],i=Number(sa.dataset.strategyAnswer);if(i===x.ok){strategyXP+=15;sa.classList.add("correct");$("#strategyFeedback").textContent="Strong plan. +15 XP";}else{sa.classList.add("wrong");$("#strategyFeedback").textContent="Review the strategic goal, then continue."}saveLearningXP();$("#strategyScore").textContent=strategyXP+" XP";}
+ const st=e.target.closest("[data-study-action]");if(st){const a=st.dataset.studyAction,id=st.dataset.studyId;if(a==="course")loadCourse(id);if(a==="lesson")loadLesson(id);if(a==="page")showPage(id);}
+});
+$("#nextQuiz").onclick=()=>{quizIndex++;renderQuiz()};$("#nextStrategy").onclick=()=>{strategyIndex++;renderStrategy()};
+$("[data-study-filter]").forEach(b=>b.onclick=()=>{$("[data-study-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderStudies(b.dataset.studyFilter)});
+\nfunction wireNavigation(){ $( "[data-page]" ).forEach(b=>b.onclick=()=>showPage(b.dataset.page)); }
 wireNavigation(); renderRebelLab();
 
 loadLesson("fork");
@@ -963,7 +1024,7 @@ initEngine();
    const b=e.target.closest("[data-page]");
    if(b && b.dataset.page){e.preventDefault();if(typeof window.showPage==="function")window.showPage(b.dataset.page);refreshArchitecture();}
  });
- setTimeout(refreshArchitecture,100);
+ setTimeout(()=>{refreshArchitecture();renderStudies();renderQuiz();renderStrategy();renderModels();},100);
 })();
 </script>
 </body>
