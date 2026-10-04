@@ -17,11 +17,24 @@
 .gameRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px;border-top:1px solid var(--line)}
 .gameRow:first-child{border-top:0}
 .gameRow small{display:block;color:var(--muted);margin-top:3px}
+.analysisGrid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}
+.analysisSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.analysisBadge{padding:14px;border:1px solid var(--line);border-radius:12px;background:#ffffff06}
+.analysisBadge b{display:block;font-size:24px;margin-top:4px}
+.analysisMove{display:grid;grid-template-columns:52px 72px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.analysisMove.good{border-left:3px solid #1597ff;padding-left:9px}
+.analysisMove.inaccuracy{border-left:3px solid #d7b400;padding-left:9px}
+.analysisMove.mistake{border-left:3px solid #d77900;padding-left:9px}
+.analysisMove.blunder{border-left:3px solid #d73535;padding-left:9px}
+.analysisMove small{color:var(--muted)}
+.analysisLines{font:11px/1.6 ui-monospace,monospace;color:#cbd3d8}
+.analysisProgress{height:7px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:10px}
+.analysisProgress i{display:block;height:100%;background:var(--lime);width:0}
 .engineReadout{font:11px/1.7 ui-monospace,monospace;white-space:pre-wrap;background:#080d11;border:1px solid var(--line);border-radius:10px;padding:12px;min-height:120px}
 .bookMove{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line);font:12px ui-monospace,monospace}
 .bookMove:first-child{border-top:0}
 textarea.fenInput{width:100%;min-height:74px;resize:vertical;background:#080d11;color:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;font:12px ui-monospace,monospace}
-@media(max-width:1050px){.rebelGrid{grid-template-columns:1fr}.rebelCards{grid-template-columns:1fr 1fr}}
+@media(max-width:1050px){.rebelGrid,.analysisGrid{grid-template-columns:1fr}.rebelCards,.analysisSummary{grid-template-columns:1fr 1fr}}
 @media(max-width:680px){.rebelCards{grid-template-columns:1fr}}@media(max-width:1050px){.courseGrid{grid-template-columns:1fr 1fr}.courseBoard{grid-template-columns:1fr}.nav button{font-size:12px}.nav button.active:before{margin-right:6px}}@media(max-width:1050px){.app{grid-template-columns:72px 1fr}.sideNav{padding:20px 8px}.brand{justify-content:center}.brand>div:not(.logo){display:none}.nav button{font-size:0;text-align:center}.nav button.active:before{margin:0}.layout,.trainer{grid-template-columns:1fr}.sideCards{display:grid;grid-template-columns:1fr 1fr}.coach{grid-column:1/-1}.grid3,.resourceGrid{grid-template-columns:1fr 1fr}}@media(max-width:680px){.app{display:block}.sideNav{height:62px;position:sticky;z-index:10;display:flex;align-items:center;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.brand{margin:0}.nav{display:flex;gap:4px;margin-left:auto}.nav button{font-size:12px;padding:9px}.nav button.active:before{display:none}.main{padding:16px 10px 40px}.boardPanel{padding:13px}.head h1{font-size:24px}.sideCards{display:block}.card{margin-top:10px}.videoGrid,.grid3,.resourceGrid,.lessonList,.courseGrid{grid-template-columns:1fr}.hero{padding:24px}.hero h1{font-size:36px}}
 </style>
 </head>
@@ -119,6 +132,22 @@ textarea.fenInput{width:100%;min-height:74px;resize:vertical;background:#080d11;
   </aside>
  </div>
  <div class="panel card" style="margin-top:16px">
+  <div class="head"><div><span class="eyebrow">Game analysis</span><h2>Rebel-style Game Review</h2><p class="muted">Review every move with Stockfish. The report compares the move played with the engine's best line and alternative candidates.</p></div><span id="analysisState" class="tag">READY</span></div>
+  <div class="controls"><button class="btn primary" id="analyzeGameBtn">Analyze full game</button><button class="btn" id="stopAnalysisBtn">Stop analysis</button><button class="btn" id="clearAnalysisBtn">Clear report</button></div>
+  <div class="analysisProgress"><i id="analysisProgressBar"></i></div>
+  <div id="analysisProgressText" class="muted" style="margin-top:7px">No analysis running.</div>
+  <div class="analysisSummary" style="margin-top:14px">
+   <div class="analysisBadge"><small class="muted">INACCURACIES</small><b id="analysisInaccuracies">0</b></div>
+   <div class="analysisBadge"><small class="muted">MISTAKES</small><b id="analysisMistakes">0</b></div>
+   <div class="analysisBadge"><small class="muted">BLUNDERS</small><b id="analysisBlunders">0</b></div>
+   <div class="analysisBadge"><small class="muted">GOOD MOVES</small><b id="analysisGood">0</b></div>
+  </div>
+  <div class="analysisGrid" style="margin-top:16px">
+   <div><h3>Move-by-move report</h3><div id="analysisReport" class="tableWrap"><div class="notice">Analyze a completed or in-progress game to generate the report.</div></div></div>
+   <aside><h3>Game report</h3><div id="analysisNarrative" class="notice">Your report will summarize the critical moments here.</div><h3 style="margin-top:16px">Current move</h3><div id="analysisCurrent" class="engineReadout">Waiting.</div></aside>
+  </div>
+ </div>
+ <div class="panel card" style="margin-top:16px">
   <span class="eyebrow">REBLEARN</span><h2>Automatic learning</h2>
   <p class="muted">Every saved or analyzed position contributes to a local learning record. Use it to revisit positions where the engine found a different idea.</p>
   <div id="learningList"></div>
@@ -188,6 +217,8 @@ let savedGames = JSON.parse(localStorage.getItem("rebelClassicGames") || "[]");
 let learningBook = JSON.parse(localStorage.getItem("rebelClassicLearning") || "{}");
 let lastEngineInfo = {depth:0,score:"—",pv:"",nodes:"—",time:"—"};
 let multiPv = 1;
+let gameStartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+let gameAnalysis = null;
 let coursePositions = {
  foundations:{title:"Chess Fundamentals",text:"Practice a legal starting position and use the engine only after you form your own idea.",fen:"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"},
  opening:{title:"Opening Basics",text:"Develop a piece toward the center and compare your choice with Stockfish.",fen:"rnbqkbnr/pppppppp/8/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 1"},
@@ -405,9 +436,9 @@ function initEngine(){
        const pvMatch=line.match(/\bpv (.+)$/);
        const nodesMatch=line.match(/\bnodes (\d+)/);
        const timeMatch=line.match(/\btime (\d+)/);
-       if(depthMatch)lastEngineInfo.depth=Number(depthMatch[1]);
-       if(scoreMatch)lastEngineInfo.score=scoreMatch[1]==="mate"?"M"+scoreMatch[2]:(Number(scoreMatch[2])/100).toFixed(2);
-       if(pvMatch)lastEngineInfo.pv=pvMatch[1];
+       if(depthMatch){lastEngineInfo.depth=Number(depthMatch[1]);if(activeEngineJob)activeEngineJob.lastDepth=Number(depthMatch[1]);}
+       if(scoreMatch){lastEngineInfo.score=scoreMatch[1]==="mate"?"M"+scoreMatch[2]:(Number(scoreMatch[2])/100).toFixed(2);if(activeEngineJob){activeEngineJob.finalScoreCp=scoreToCp(scoreMatch[1],scoreMatch[2]);}}
+       if(pvMatch){lastEngineInfo.pv=pvMatch[1];if(activeEngineJob){const mm=line.match(/\bmultipv (\d+)/);const rank=mm?Number(mm[1]):1;activeEngineJob.lines=activeEngineJob.lines||{};activeEngineJob.lines[rank]={rank,uci:pvMatch[1].split(/\s+/)[0],scoreCp:activeEngineJob.finalScoreCp||0,pv:pvMatch[1]};}}
        if(nodesMatch)lastEngineInfo.nodes=nodesMatch[1];
        if(timeMatch)lastEngineInfo.time=timeMatch[1]+" ms";
        renderRebelLab();
@@ -426,7 +457,10 @@ function initEngine(){
        const job=activeEngineJob;
        if(!job||job.generation!==engineRequest)return;
        const uci=line.split(/\s+/)[1];
-       if(job.purpose==="play"){
+       if(job.purpose==="gameAnalysis"){
+         finishEngineJob(job,uci);
+         handleGameAnalysisJob(job,uci);
+       }else if(job.purpose==="play"){
          finishEngineJob(job,uci);
        }else if(job.purpose==="lesson"){
          finishEngineJob(job,uci);
@@ -635,9 +669,9 @@ $("#startTrainingFromGame").onclick=()=>{
  loadTrainingPosition(trainingTarget.fen,trainingTarget.uci);
  $(".page").forEach(p=>p.classList.remove("active"));$("#trainerPage").classList.add("active");
  $("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page==="trainerPage"));
-};$("#newGame").onclick=()=>{game=new Chess();selected=null;trainingTarget=null;cancelEngine();renderAll();renderRebelLab();$("#coach").textContent="New game. Start with checks, captures, and threats."};
-$("#localBtn").onclick=()=>{mode="local";trainingTarget=null;cancelEngine();renderAll();renderRebelLab();$("#engineStatus").textContent=engineReady?"Stockfish ready":"Loading engine…"};
-$("#computerBtn").onclick=()=>{mode="computer";game=new Chess();selected=null;trainingTarget=null;cancelEngine();renderAll();renderRebelLab();$("#engineStatus").textContent=engineReady?"Your move — White":"Loading Stockfish…"};
+};$("#newGame").onclick=()=>{gameStartFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";game=new Chess();selected=null;trainingTarget=null;cancelEngine();gameAnalysis=null;renderAll();renderRebelLab();$("#coach").textContent="New game. Start with checks, captures, and threats."};
+$("#localBtn").onclick=()=>{gameStartFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";mode="local";trainingTarget=null;cancelEngine();renderAll();renderRebelLab();$("#engineStatus").textContent=engineReady?"Stockfish ready":"Loading engine…"};
+$("#computerBtn").onclick=()=>{gameStartFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";mode="computer";game=new Chess();selected=null;trainingTarget=null;cancelEngine();renderAll();renderRebelLab();$("#engineStatus").textContent=engineReady?"Your move — White":"Loading Stockfish…"};
 $("#undoBtn").onclick=()=>{if(engineBusy)return;game.undo();if(mode==="computer"&&game.history().length)game.undo();selected=null;renderAll()};
 $("#flipBtn").onclick=()=>{flipped=!flipped;renderAll()};
 $("#applyLevel").onclick=()=>{$("#engineStatus").textContent="Level set — "+$("#level").value+" — applies to the next Stockfish search.";};
@@ -666,6 +700,103 @@ $("[data-page]").forEach(b=>b.onclick=()=>{
  $("[data-page]").forEach(x=>{x.classList.toggle("active",x===b);x.setAttribute("aria-current",x===b?"page":"false")});
 });
 
+function scoreToCp(scoreType,scoreValue){
+ const n=Number(scoreValue);
+ if(scoreType==="mate")return n>0?100000-Math.min(Math.abs(n),99)*1000:-100000+Math.min(Math.abs(n),99)*1000;
+ return n;
+}
+function classifyLoss(loss){
+ if(loss<=50)return "good";
+ if(loss<=100)return "inaccuracy";
+ if(loss<=250)return "mistake";
+ return "blunder";
+}
+function formatScore(cp){if(cp>=90000)return "+M";if(cp<=-90000)return "-M";return (cp/100).toFixed(2);}
+function buildGameSnapshots(){
+ const replay=new Chess(gameStartFen);
+ const out=[];
+ const verbose=game.history({verbose:true});
+ verbose.forEach((move,index)=>{
+   const before=replay.fen();
+   const side=move.color;
+   const san=move.san;
+   replay.move(move);
+   out.push({ply:index+1,moveNumber:Math.floor(index/2)+1,side,san,uci:move.from+move.to+(move.promotion||""),beforeFen:before,afterFen:replay.fen()});
+ });
+ return out;
+}
+function renderAnalysis(){
+ const a=gameAnalysis;if(!a)return;
+ const counts={good:0,inaccuracy:0,mistake:0,blunder:0};
+ a.results.forEach(r=>counts[r.classification]++);
+ $("#analysisInaccuracies").textContent=counts.inaccuracy;
+ $("#analysisMistakes").textContent=counts.mistake;
+ $("#analysisBlunders").textContent=counts.blunder;
+ $("#analysisGood").textContent=counts.good;
+ $("#analysisState").textContent=a.running?"ANALYZING":"COMPLETE";
+ $("#analysisProgressBar").style.width=(a.total?Math.round(a.done/a.total*100):0)+"%";
+ $("#analysisProgressText").textContent=a.running?"Analyzing "+a.done+" / "+a.total+" engine passes…":a.results.length+" moves analyzed."; if(a.results.length){const r=a.results[a.results.length-1];$("#analysisCurrent").textContent="Move "+r.moveNumber+(r.side==="b"?"…":".")+" "+r.san+"\nBest: "+r.bestMove+"\nPlayed eval: "+formatScore(r.playedScoreCp)+"\nLoss: "+(r.lossCp/100).toFixed(2);}
+ const report=$("#analysisReport");
+ report.innerHTML=a.results.length?a.results.map(r=>{
+   const cls=r.classification;
+   const label=cls==="good"?"GOOD":cls.toUpperCase();
+   const lines=(r.alternatives||[]).map((x,i)=>(i+1)+". "+x).join("\n");
+   return '<div class="analysisMove '+cls+'"><b>'+(r.moveNumber+(r.side==="b"?"...":"."))+'</b><b>'+r.san+'</b><div><strong>'+label+'</strong><small> '+(r.lossCp/100).toFixed(2)+' eval loss · best '+r.bestMove+'</small><div class="analysisLines">'+lines+'</div></div><span>'+formatScore(r.playedScoreCp)+'</span></div>';
+ }).join(""):'<div class="notice">No analyzed moves yet.</div>';
+ if(!a.running&&a.results.length){
+   const critical=a.results.filter(r=>r.classification==="blunder"||r.classification==="mistake").sort((x,y)=>y.lossCp-x.lossCp).slice(0,5);
+   $("#analysisNarrative").innerHTML='<b>Game summary</b><p>'+a.results.length+' moves reviewed. '+counts.blunder+' blunder(s), '+counts.mistake+' mistake(s), '+counts.inaccuracy+' inaccuracy(ies), and '+counts.good+' good move(s).</p>'+(critical.length?'<b>Critical moments</b><ul>'+critical.map(r=>'<li>Move '+r.moveNumber+(r.side==="b"?"…":".")+' '+r.san+' — best was <b>'+r.bestMove+'</b> ('+(r.lossCp/100).toFixed(2)+' eval loss).</li>').join("")+'</ul>':'<p>No large evaluation swings were detected at this analysis setting.</p>');
+ }
+}
+function startGameAnalysis(){
+ if(!game.history().length){$("#analysisState").textContent="NO MOVES";$("#analysisProgressText").textContent="Play at least one move first.";return;}
+ cancelEngine();
+ const snapshots=buildGameSnapshots();
+ const jobs=[];
+ const generation=++engineRequest;
+ gameAnalysis={running:true,done:0,total:snapshots.length*2,results:[],generation,snapshots};
+ snapshots.forEach((s,i)=>{
+   jobs.push({id:++engineRequest,purpose:"gameAnalysis",phase:"before",snapshot:s,fen:s.beforeFen,callback:null,generation});
+   jobs.push({id:++engineRequest,purpose:"gameAnalysis",phase:"after",snapshot:s,fen:s.afterFen,callback:null,generation});
+ });
+ // The engine's request-generation mechanism is shared with cancellation; keep this batch isolated.
+ engineQueue=jobs;
+ renderAnalysis();
+ if(engineReady&&!engineStopping&&!engineBusy)startEngineJob(engineQueue.shift());
+ else $("#analysisProgressText").textContent="Waiting for Stockfish to finish its current shutdown…";
+}
+function stopGameAnalysis(){
+ if(!gameAnalysis)return;
+ gameAnalysis.running=false;
+ cancelEngine();
+ gameAnalysis=null;
+ $("#analysisState").textContent="STOPPED";
+ $("#analysisProgressBar").style.width="0%";
+ $("#analysisProgressText").textContent="Analysis stopped safely.";
+}
+function handleGameAnalysisJob(job,uci){
+ const a=gameAnalysis;if(!a||!a.running||job.generation!==a.generation)return;
+ const key=job.snapshot.ply;
+ let r=a.results.find(x=>x.ply===key);
+ if(!r){r={ply:key,moveNumber:job.snapshot.moveNumber,side:job.snapshot.side,san:job.snapshot.san,uci:job.snapshot.uci,alternatives:[],bestMove:"—",bestScoreCp:0,playedScoreCp:0,lossCp:0,classification:"good"};a.results.push(r);}
+ if(job.phase==="before"){
+   const lines=Object.values(job.lines||{}).sort((x,y)=>x.rank-y.rank);
+   r.alternatives=lines.map(x=>x.uci+" ("+formatScore(x.scoreCp)+")");
+   if(lines.length){r.bestMove=lines[0].uci;r.bestScoreCp=lines[0].scoreCp;}
+   r.beforeReady=true;
+ }else{
+   r.playedScoreCp=-(job.finalScoreCp??0);
+   r.afterReady=true;
+ }
+ a.done++;
+ if(r.beforeReady&&r.afterReady){
+   r.lossCp=Math.max(0,r.bestScoreCp-r.playedScoreCp);
+   r.classification=classifyLoss(r.lossCp);
+   recordLearning(r.fen||job.snapshot.beforeFen,r.bestMove);
+ }
+ renderAnalysis();
+ if(a.done>=a.total){a.running=false;renderAnalysis();}
+}
 function persistRebelData(){
  localStorage.setItem("rebelClassicGames",JSON.stringify(savedGames));
  localStorage.setItem("rebelClassicLearning",JSON.stringify(learningBook));
@@ -683,7 +814,7 @@ function saveCurrentGame(){
 }
 function loadSavedGame(id){
  const item=savedGames.find(g=>g.id===id);if(!item)return;
- try{game=new Chess(item.fen);selected=null;trainingTarget=null;cancelEngine();renderAll();$("#fenStatus").textContent="Loaded saved position from "+item.date;showPage("boardPage")}catch{$("#fenStatus").textContent="Could not load that position."}
+ try{game=new Chess(item.fen);gameStartFen=item.fen;selected=null;trainingTarget=null;cancelEngine();renderAll();$("#fenStatus").textContent="Loaded saved position from "+item.date;showPage("boardPage")}catch{$("#fenStatus").textContent="Could not load that position."}
 }
 function deleteSavedGame(id){
  savedGames=savedGames.filter(g=>g.id!==id);persistRebelData();renderRebelLab();
@@ -732,6 +863,10 @@ function openingBookFor(hist){
  return (openingBook[key]||"").split("|").filter(Boolean).map(s=>{const [move,note]=s.split(" — ");return {move,note}});
 }
 $("#saveGameBtn").onclick=saveCurrentGame;
+$("#analyzeGameBtn").onclick=startGameAnalysis;
+$("#stopAnalysisBtn").onclick=stopGameAnalysis;
+$("#clearAnalysisBtn").onclick=()=>{gameAnalysis=null;$("#analysisReport").innerHTML='<div class="notice">Report cleared.</div>';$("#analysisNarrative").textContent="Your report will summarize the critical moments here.";$("#analysisCurrent").textContent="Waiting.";$("#analysisProgressBar").style.width="0%";$("#analysisProgressText").textContent="No analysis running.";$("#analysisState").textContent="READY";};
+
 $("#analyzeMainBtn").onclick=()=>{
  if(!engineReady){$("#engineReadout").textContent="Stockfish is still loading…";return}
  const ok=requestEngine("rebel",game);
