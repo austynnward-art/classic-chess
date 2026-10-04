@@ -110,7 +110,9 @@ let flipped = false;
 let mode = "local";
 let selected = null;
 let trainerSelected = null;
-let courseGame = new Chess();\nlet courseSelected = null;\nlet activeCourse = "foundations";
+let courseGame = new Chess();
+let courseSelected = null;
+let activeCourse = "foundations";
 let engine = null;
 let engineReady = false;
 let engineBusy = false;
@@ -134,13 +136,14 @@ function engineLimit(){
 }
 function setEngineStatus(message){$("#engineStatus").textContent=message}
 function finishEngineJob(job,uci){
- if(!activeEngineJob||activeEngineJob.id!==job.id)return;
+ if(!activeEngineJob||activeEngineJob.id!==job.id)return false;
  clearTimeout(job.timeout);
  activeEngineJob=null;
  engineBusy=false;
  if(job.callback)job.callback(uci,job);
  if(engineQueue.length)startEngineJob(engineQueue.shift());
  else setEngineStatus("Stockfish 19 Lite ready");
+ return true;
 }
 function startEngineJob(job){
  if(!engine||!engineReady)return false;
@@ -179,7 +182,6 @@ function cancelEngine(){
  setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
 }
 function applyEngineMove(uci,job){
- if(!activeEngineJob&&job)return;
  if(!uci||uci==="0000"){setEngineStatus("No engine move");return}
  const from=uci.slice(0,2),to=uci.slice(2,4),promotion=uci[4]||"q";
  try{
@@ -310,13 +312,11 @@ $("#flipBtn").onclick=()=>{flipped=!flipped;renderAll()};
 $("#applyLevel").onclick=()=>{$("#engineStatus").textContent="Level set — "+$("#level").value;};
 $("#analyzeLesson").onclick=()=>{
  if(!engineReady){$("#trainerStatus").textContent="Stockfish is still loading…";return}
- if(engineBusy){$("#trainerStatus").textContent="Stockfish is already thinking…";return}
  requestEngine("lesson",trainerGame);
  $("#lessonProgress").style.width="50%";
 };
 $("#resetLesson").onclick=()=>loadLesson(activeLesson);$("#analyzeCourse").onclick=()=>{
  if(!engineReady){$("#courseStatus").textContent="Stockfish is still loading…";return}
- if(engineBusy){$("#courseStatus").textContent="Stockfish is already analyzing another position…";return}
  requestEngine("course",courseGame);
  $("#courseProgress").style.width="60%";
 };
