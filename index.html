@@ -358,7 +358,7 @@ $("#resetLesson").onclick=()=>loadLesson(activeLesson);$("#analyzeCourse").oncli
  $("#courseProgress").style.width="60%";
 };
 $("#resetCourse").onclick=()=>loadCourse(activeCourse);
-$("[data-course]").forEach(b=>b.onclick=()=>loadCourse(b.dataset.course));
+$$("[data-course]").forEach(b=>b.onclick=()=>loadCourse(b.dataset.course));
 
 $$("[data-lesson]").forEach(b=>b.onclick=()=>loadLesson(b.dataset.lesson));
 $("[data-page]").forEach(b=>b.onclick=()=>{
