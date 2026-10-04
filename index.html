@@ -181,6 +181,18 @@ function cancelEngine(){
  engineBusy=false;
  setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
 }
+function cancelAnalysisIf(purpose){
+ if(activeEngineJob&&activeEngineJob.purpose===purpose){
+   if(engine)engine.postMessage("stop");
+   clearTimeout(activeEngineJob.timeout);
+   activeEngineJob=null;
+   engineBusy=false;
+   engineQueue=engineQueue.filter(q=>q.purpose!==purpose);
+   setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
+ }else{
+   engineQueue=engineQueue.filter(q=>q.purpose!==purpose);
+ }
+}
 function applyEngineMove(uci,job){
  if(!uci||uci==="0000"){setEngineStatus("No engine move");return}
  const from=uci.slice(0,2),to=uci.slice(2,4),promotion=uci[4]||"q";
@@ -281,6 +293,7 @@ function handleCourseClick(square,dragFrom=null){
  renderAll();
 }
 function loadCourse(id){
+ cancelAnalysisIf("course");
  activeCourse=id;
  const d=coursePositions[id];
  courseGame=new Chess(d.fen);
@@ -293,6 +306,7 @@ function loadCourse(id){
  renderAll();
 }
 function loadLesson(id){
+ cancelAnalysisIf("lesson");
  activeLesson=id;
  const d=lessonPositions[id];
  trainerGame=new Chess(d.fen);
