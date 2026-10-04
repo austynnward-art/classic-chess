@@ -122,6 +122,7 @@ let activeEngineJob = null;
 let engineQueue = [];
 let ignoringBestmove = false;
 let activeLesson = "fork";
+let trainingTarget = null;
 let coursePositions = {
  foundations:{title:"Chess Fundamentals",text:"Practice a legal starting position and use the engine only after you form your own idea.",fen:"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"},
  opening:{title:"Opening Basics",text:"Develop a piece toward the center and compare your choice with Stockfish.",fen:"rnbqkbnr/pppppppp/8/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 1"},
@@ -146,9 +147,15 @@ function updateTrainingLoop(){
  if(!status)return;
  const moves=game.history();
  if(!moves.length){status.textContent="Play a game to build a training plan.";text.textContent="Play → analyze → drill → retest.";bar.style.width="0%";return}
- status.textContent="Training position ready";
- text.textContent="Position captured after "+moves[moves.length-1]+". Take it to Trainer and practice the idea.";
- bar.style.width="35%";
+ if(trainingTarget&&trainingTarget.fen===game.fen()){
+   status.textContent="Training position analyzed";
+   text.textContent="Stockfish found "+trainingTarget.uci.slice(0,2)+" → "+trainingTarget.uci.slice(2,4)+". Train the exact position.";
+   bar.style.width="55%";
+   return;
+ }
+ status.textContent="Game position ready to analyze";
+ text.textContent="Last move: "+moves[moves.length-1]+". Analyze it, then drill the exact position.";
+ bar.style.width="25%";
 }
 function gameLabel(){if(game.isCheckmate())return"Checkmate — "+(game.turn()==="w"?"Black":"White")+" wins";if(game.isStalemate())return"Draw — stalemate";if(game.isDraw())return"Draw";return(game.turn()==="w"?"White":"Black")+" to move"+(game.inCheck()?" — check":"")}
 function renderAll(){renderBoard("board",game,selected);renderBoard("trainerBoard",trainerGame,trainerSelected);renderBoard("courseBoard",courseGame,courseSelected);$("#status").textContent=gameLabel();$("#modeTag").textContent=mode==="computer"?"COMPUTER":"2 PLAYER";$("#moves").textContent=game.history().length?game.history().map((m,i)=>(i%2===0?((i/2)+1)+". ":"")+(i%2?" "+m:m)).join("\n"):"No moves yet.";updateTrainingLoop()}
@@ -200,8 +207,17 @@ function startEngineJob(job){
  if(job.purpose==="lesson")$("#trainerStatus").textContent="Stockfish is analyzing the lesson position…";
  if(job.purpose==="course")$("#courseStatus").textContent="Stockfish is analyzing the course position…";
  job.timeout=setTimeout(()=>{
-   if(activeEngineJob&&activeEngineJob.id===job.id)engine.postMessage("stop");
- },limit.time+900);
+   if(activeEngineJob&&activeEngineJob.id===job.id){
+     ignoringBestmove=true;
+     engine.postMessage("stop");
+     activeEngineJob=null;
+     engineBusy=false;
+     setEngineStatus("Stockfish search timed out — ready");
+     if(job.purpose==="lesson")$("#trainerStatus").textContent="Stockfish timed out. Try again.";
+     if(job.purpose==="course")$("#courseStatus").textContent="Stockfish timed out. Try again.";
+     if(job.purpose==="training")$("#trainingLoopStatus").textContent="Analysis timed out — try again.";
+   }
+ },limit.time+1500);
  return true;
 }
 function requestEngine(purpose,chessPosition=game,callback=null){
@@ -227,6 +243,7 @@ function cancelAnalysisIf(purpose){
    clearTimeout(activeEngineJob.timeout);
    activeEngineJob=null;
    engineBusy=false;
+   ignoringBestmove=true;
    engineQueue=engineQueue.filter(q=>q.purpose!==purpose);
    setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
  }else{
@@ -269,7 +286,6 @@ function initEngine(){
        const uci=line.split(/\s+/)[1];
        if(job.purpose==="play"){
          finishEngineJob(job,uci);
-         if(job.fen===game.fen())applyEngineMove(uci,job);
        }else if(job.purpose==="lesson"){
          finishEngineJob(job,uci);
          if(job.fen!==trainerGame.fen()){
@@ -280,6 +296,20 @@ function initEngine(){
            $("#trainerStatus").textContent="Stockfish recommends "+uci.slice(0,2)+" → "+uci.slice(2,4)+". Now try it on the board.";
            $("#lessonProgress").style.width="75%";
          }else $("#trainerStatus").textContent="No engine move available for this position.";
+       }else if(job.purpose==="training"){
+         finishEngineJob(job,uci);
+         if(job.fen!==game.fen()){
+           $("#trainingLoopStatus").textContent="Analysis discarded — game position changed.";
+           return;
+         }
+         if(uci&&uci!=="0000"){
+           trainingTarget={fen:job.fen,uci,sourceMove:game.history().slice(-1)[0]||""};
+           $("#trainingLoopStatus").textContent="Position analyzed — training target found";
+           $("#trainingLoopText").textContent="Stockfish recommends "+uci.slice(0,2)+" → "+uci.slice(2,4)+". Open Trainer to practice it.";
+           $("#trainingLoopProgress").style.width="55%";
+           return;
+         }
+         $("#trainingLoopStatus").textContent="No engine move available — try another position.";
        }else if(job.purpose==="course"){
          finishEngineJob(job,uci);
          if(job.fen!==courseGame.fen()){
@@ -297,7 +327,7 @@ function initEngine(){
        setEngineStatus("Stockfish rejected the position");
      }
    };
-   engine.onerror=()=>{engineReady=false;engineBusy=false;activeEngineJob=null;engineQueue=[];setEngineStatus("Stockfish failed to load")};
+   engine.onerror=()=>{engineReady=false;engineBusy=false;activeEngineJob=null;engineQueue=[];engine=null;setEngineStatus("Stockfish failed to load")};
    engine.postMessage("uci");
  }catch{engineReady=false;engineBusy=false;setEngineStatus("Stockfish failed to start")}
 }
@@ -311,7 +341,20 @@ function handleTrainerClick(square,dragFrom=null){
        trainerSelected=null;
        renderAll();
        $("#trainerStatus").textContent=move.san+" played. Now compare with the lesson idea.";
-       $("#lessonProgress").style.width="100%";
+       if(activeLesson==="training"&&trainerGame._trainingTarget){
+         const target=trainerGame._trainingTarget;
+         const played=move.from+move.to+(move.promotion||"");
+         if(played===target){
+           $("#trainerStatus").textContent=move.san+" — correct. You found Stockfish's move.";
+           $("#lessonProgress").style.width="100%";
+         }else{
+           $("#trainerStatus").textContent=move.san+" played. That is legal, but it is not the engine target.";
+           $("#lessonProgress").style.width="25%";
+         }
+       }else{
+         $("#trainerStatus").textContent=move.san+" played. Now compare with the lesson idea.";
+         $("#lessonProgress").style.width="100%";
+       }
        return;
      }
    }catch{}
@@ -354,6 +397,19 @@ function loadCourse(id){
  $("#courseProgress").style.width="0%";
  renderAll();
 }
+function loadTrainingPosition(fen,uci){
+ cancelAnalysisIf("lesson");
+ activeLesson="training";
+ trainerGame=new Chess(fen);
+ trainerSelected=null;
+ $("#lessonTitle").textContent="Game Review Drill";
+ $("#lessonText").textContent="Re-play Stockfish's best continuation from the exact position you just played.";
+ $("#trainerStatus").textContent="Find the engine move yourself first.";
+ $(".lesson").forEach(x=>x.classList.remove("active"));
+ $("#lessonProgress").style.width="0%";
+ trainerGame._trainingTarget=uci;
+ renderAll();
+}
 function loadLesson(id){
  cancelAnalysisIf("lesson");
  activeLesson=id;
@@ -367,7 +423,20 @@ function loadLesson(id){
  $("#lessonProgress").style.width="0%";
  renderAll();
 }
-$("#startTrainingFromGame").onclick=()=>{loadLesson("opening");$(".page").forEach(p=>p.classList.remove("active"));$("#trainerPage").classList.add("active");$("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page==="trainerPage"));};$("#newGame").onclick=()=>{game=new Chess();selected=null;cancelEngine();renderAll();$("#coach").textContent="New game. Start with checks, captures, and threats."};
+$("#startTrainingFromGame").onclick=()=>{
+ if(!game.history().length){$("#trainingLoopStatus").textContent="Play at least one move first.";return}
+ if(!trainingTarget||trainingTarget.fen!==game.fen()){
+   if(!engineReady){$("#trainingLoopStatus").textContent="Stockfish is still loading…";return}
+   $("#trainingLoopStatus").textContent="Analyzing position…";
+   $("#trainingLoopText").textContent="Stockfish is finding the best continuation.";
+   $("#trainingLoopProgress").style.width="40%";
+   requestEngine("training",game);
+   return;
+ }
+ loadTrainingPosition(trainingTarget.fen,trainingTarget.uci);
+ $(".page").forEach(p=>p.classList.remove("active"));$("#trainerPage").classList.add("active");
+ $("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page==="trainerPage"));
+};$("#newGame").onclick=()=>{game=new Chess();selected=null;cancelEngine();renderAll();$("#coach").textContent="New game. Start with checks, captures, and threats."};
 $("#localBtn").onclick=()=>{mode="local";cancelEngine();renderAll();$("#engineStatus").textContent=engineReady?"Stockfish ready":"Loading engine…"};
 $("#computerBtn").onclick=()=>{mode="computer";game=new Chess();selected=null;cancelEngine();renderAll();$("#engineStatus").textContent=engineReady?"Your move — White":"Loading Stockfish…"};
 $("#undoBtn").onclick=()=>{if(engineBusy)return;game.undo();if(mode==="computer"&&game.history().length)game.undo();selected=null;renderAll()};
