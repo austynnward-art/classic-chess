@@ -879,14 +879,14 @@ function currentResult(chess){
  return "*";
 }
 function saveCurrentGame(){
- const item={id:Date.now(),date:new Date().toLocaleString(),fen:game.fen(),pgn:game.pgn(),moves:game.history(),result:currentResult(game)};
+ const item={id:Date.now(),date:new Date().toLocaleString(),fen:game.fen(),startFen:gameStartFen,pgn:game.pgn(),moves:game.history(),result:currentResult(game)};
  savedGames=[item,...savedGames].slice(0,100);
  persistRebelData(); renderRebelLab();
  $("#fenStatus").textContent="Game saved to the local Rebel database.";
 }
 function loadSavedGame(id){
  const item=savedGames.find(g=>g.id===id);if(!item)return;
- try{game=new Chess(item.fen);gameStartFen=item.fen;selected=null;trainingTarget=null;cancelEngine();renderAll();$("#fenStatus").textContent="Loaded saved position from "+item.date;showPage("boardPage")}catch{$("#fenStatus").textContent="Could not load that position."}
+ try{game=new Chess(item.startFen||item.fen);gameStartFen=item.startFen||item.fen;if(item.moves&&item.moves.length){for(const san of item.moves){game.move(san)}}selected=null;trainingTarget=null;cancelEngine();renderAll();$("#fenStatus").textContent="Loaded saved game from "+item.date;showPage("boardPage")}catch{$("#fenStatus").textContent="Could not load that position."}
 }
 function deleteSavedGame(id){
  savedGames=savedGames.filter(g=>g.id!==id);persistRebelData();renderRebelLab();
@@ -1085,7 +1085,7 @@ document.addEventListener("click",e=>{
 });
 $("#nextQuiz").onclick=()=>{quizIndex++;renderQuiz()};$("#nextStrategy").onclick=()=>{strategyIndex++;renderStrategy()};
 $("[data-study-filter]").forEach(b=>b.onclick=()=>{$("[data-study-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderStudies(b.dataset.studyFilter)});
-\nfunction wireNavigation(){ $( "[data-page]" ).forEach(b=>b.onclick=()=>showPage(b.dataset.page)); }
+function wireNavigation(){ $( "[data-page]" ).forEach(b=>b.onclick=()=>showPage(b.dataset.page)); }
 wireNavigation(); renderRebelLab();
 
 loadLesson("fork");
@@ -1101,7 +1101,7 @@ initEngine();
    let games=[];try{games=JSON.parse(localStorage.getItem("rebelClassicGames")||"[]")}catch{}
    const xp=hits*10+games.length*25;
    const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
-   set("homeLearningCount",hits);set("homeGameCount",games);
+   set("homeLearningCount",hits);set("homeGameCount",games.length);
    set("progressXp",xp);set("progressGames",games.length);set("progressEngine",document.getElementById("engineStatus")?.textContent?.includes("ready")?"READY":"LOADING");
    const lane=(hits||games)?Math.min(100,20+hits*5):0;
    set("skillTactics",lane?lane+"%":"Building");
