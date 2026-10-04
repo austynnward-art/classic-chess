@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rebuild Chess</title>
+<title>Rebuild Chess — Play · Train · Watch</title>
 <style>
 :root{--bg:#07090b;--panel:#0d1217;--panel2:#11181e;--line:#25303a;--text:#f4f6f7;--muted:#8d98a2;--lime:#1597ff;--light:#eee;--dark:#b7c5d6;--blue:#4d8cff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}.app{min-height:100vh;display:grid;grid-template-columns:220px 1fr}.sideNav{border-right:1px solid var(--line);background:#080b0e;padding:24px 14px;position:sticky;top:0;height:100vh}.brand{display:flex;align-items:center;gap:10px;margin:4px 8px 30px}.logo{width:42px;height:42px;border-radius:12px;background:var(--lime);color:#091007;display:grid;place-items:center;font-size:25px;font-weight:900}.brand b{font-size:16px}.brand small{display:block;color:#69747e;margin-top:3px}.nav button{display:block;width:100%;border:0;background:transparent;color:#87919a;text-align:left;border-radius:10px;padding:13px 12px;margin:5px 0;font-weight:800;cursor:pointer}.nav button.active,.nav button:hover{background:#151c22;color:#fff}.nav button.active:before{content:"";display:inline-block;width:4px;height:16px;border-radius:5px;background:var(--lime);vertical-align:-3px;margin-right:10px}.main{padding:28px 34px 60px}.page{display:none;max-width:1400px;margin:auto}.page.active{display:block}.layout{display:grid;grid-template-columns:minmax(480px,760px) 330px;gap:20px;justify-content:center}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px #0005}.boardPanel{padding:22px}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--lime);font-weight:950}.head{display:flex;justify-content:space-between;gap:15px;margin-bottom:17px}.head h1{margin:6px 0 3px;font-size:30px}.muted{color:var(--muted);line-height:1.5}.tag{display:inline-block;padding:6px 9px;border-radius:999px;background:#1597ff18;color:var(--lime);font-size:9px;font-weight:900;letter-spacing:1px}.boardFrame{width:min(700px,100%);margin:auto;background:#454548;padding:9px 10px 23px;border:2px solid #292a2d;box-shadow:0 8px 24px #0008}.board{width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);border:2px solid #68686b}.sq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(31px,7vw,68px);line-height:1;user-select:none}.light{background:var(--light)}.dark{background:var(--dark)}.sq.selected{box-shadow:inset 0 0 0 4px var(--lime)}.sq.legal:after{content:"";width:15%;height:15%;border-radius:50%;background:#27303699}.sq.capture:after{content:"";position:absolute;inset:8%;border:4px solid #273036aa;border-radius:50%}.piece{font-family:"DejaVu Sans",serif;transform:translateY(-1px);text-shadow:0 2px 2px #0006}.piece.w{color:#fff}.piece.b{color:var(--blue)}.coord{position:absolute;font:800 9px ui-monospace,monospace;opacity:.7}.rank{left:3px;top:3px}.file{right:3px;bottom:3px}.light .coord{color:#555}.dark .coord{color:#eee}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.btn{border:1px solid var(--line);background:#151c22;color:#e8edf0;border-radius:10px;padding:10px 14px;font-weight:850;cursor:pointer}.btn:hover{border-color:#53606a}.btn.primary{background:var(--lime);border-color:var(--lime);color:#fff}.sideCards{display:flex;flex-direction:column;gap:10px}.card{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:15px}.card strong{display:block;color:#68737d;font-size:9px;letter-spacing:1.5px;margin-bottom:7px}.status{font-size:17px;font-weight:900}.moves{max-height:330px;overflow:auto;white-space:pre-line;font:12px/1.8 ui-monospace,monospace}.coach{background:linear-gradient(145deg,#092a48,#0b131a);border-color:#1597ff30}.select{width:100%;margin-top:8px;background:#0b1014;color:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}.hero{padding:32px;border-radius:20px;background:radial-gradient(circle at 80% 20%,#082e57,#08131e 65%);border:1px solid #29362c;margin-bottom:18px}.hero h1{font-size:46px;color:#fff;letter-spacing:-2px;margin:9px 0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.tile{padding:20px;min-height:150px}.tile h3{margin:12px 0 7px}.videoGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}.video{overflow:hidden}.video iframe{width:100%;aspect-ratio:16/9;border:0;display:block;background:#020304}.videoBody{padding:14px}.videoBody h3{margin:0 0 5px;font-size:15px}.videoBody p{margin:0 0 12px;color:var(--muted);font-size:12px}.link{color:var(--lime);text-decoration:none;font-weight:800}.resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.resource{padding:16px;text-decoration:none;color:inherit}.resource:hover{border-color:#1597ff55}.trainer{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px}.lessonList{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0}.lesson{padding:14px;cursor:pointer}.lesson.active{border-color:var(--lime);box-shadow:0 0 0 1px #1597ff22}.lesson b{display:block;margin-bottom:6px}.lesson small{color:var(--muted)}.trainerBoard{padding:18px}.notice{padding:12px;border-radius:10px;background:#ffffff08;color:#cbd3d8;font-size:12px;margin-top:10px}.hidden{display:none!important}.videoNote{margin-top:15px;padding:14px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px}.progress{height:7px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--lime);width:0}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.flipInfo{font-size:11px;color:var(--muted)}@media(max-width:1050px){.app{grid-template-columns:72px 1fr}.sideNav{padding:20px 8px}.brand{justify-content:center}.brand>div:not(.logo){display:none}.nav button{font-size:0;text-align:center}.nav button.active:before{margin:0}.layout,.trainer{grid-template-columns:1fr}.sideCards{display:grid;grid-template-columns:1fr 1fr}.coach{grid-column:1/-1}.grid3,.resourceGrid{grid-template-columns:1fr 1fr}}@media(max-width:680px){.app{display:block}.sideNav{height:62px;position:sticky;z-index:10;display:flex;align-items:center;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.brand{margin:0}.nav{display:flex;gap:4px;margin-left:auto}.nav button{font-size:12px;padding:9px}.nav button.active:before{display:none}.main{padding:16px 10px 40px}.boardPanel{padding:13px}.head h1{font-size:24px}.sideCards{display:block}.card{margin-top:10px}.videoGrid,.grid3,.resourceGrid,.lessonList{grid-template-columns:1fr}.hero{padding:24px}.hero h1{font-size:36px}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}.app{min-height:100vh;display:grid;grid-template-columns:220px 1fr}.sideNav{border-right:1px solid var(--line);background:#080b0e;padding:24px 14px;position:sticky;top:0;height:100vh}.brand{display:flex;align-items:center;gap:10px;margin:4px 8px 30px}.logo{width:42px;height:42px;border-radius:12px;background:var(--lime);color:#091007;display:grid;place-items:center;font-size:25px;font-weight:900}.brand b{font-size:16px}.brand small{display:block;color:#69747e;margin-top:3px}.nav button{display:block;width:100%;border:0;background:transparent;color:#87919a;text-align:left;border-radius:10px;padding:13px 12px;margin:5px 0;font-weight:800;cursor:pointer}.nav button.active,.nav button:hover{background:#151c22;color:#fff}.nav button.active:before{content:"";display:inline-block;width:4px;height:16px;border-radius:5px;background:var(--lime);vertical-align:-3px;margin-right:10px}.main{padding:28px 34px 60px}.page{display:none;max-width:1400px;margin:auto}.page.active{display:block}.layout{display:grid;grid-template-columns:minmax(480px,760px) 330px;gap:20px;justify-content:center}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px #0005}.boardPanel{padding:22px}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--lime);font-weight:950}.head{display:flex;justify-content:space-between;gap:15px;margin-bottom:17px}.head h1{margin:6px 0 3px;font-size:30px}.muted{color:var(--muted);line-height:1.5}.tag{display:inline-block;padding:6px 9px;border-radius:999px;background:#1597ff18;color:var(--lime);font-size:9px;font-weight:900;letter-spacing:1px}.boardFrame{width:min(700px,100%);margin:auto;background:#454548;padding:9px 10px 23px;border:2px solid #292a2d;box-shadow:0 8px 24px #0008}.board{width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);border:2px solid #68686b}.sq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(31px,7vw,68px);line-height:1;user-select:none}.light{background:var(--light)}.dark{background:var(--dark)}.sq.selected{box-shadow:inset 0 0 0 4px var(--lime)}.sq.drag-over{box-shadow:inset 0 0 0 5px #fff8}.sq[draggable="true"]{cursor:grab}.sq:active{cursor:grabbing}.sq.legal:after{content:"";width:15%;height:15%;border-radius:50%;background:#27303699}.sq.capture:after{content:"";position:absolute;inset:8%;border:4px solid #273036aa;border-radius:50%}.piece{font-family:"DejaVu Sans",serif;transform:translateY(-1px);text-shadow:0 2px 2px #0006}.piece.w{color:#fff}.piece.b{color:var(--blue)}.coord{position:absolute;font:800 9px ui-monospace,monospace;opacity:.7}.rank{left:3px;top:3px}.file{right:3px;bottom:3px}.light .coord{color:#555}.dark .coord{color:#eee}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.btn{border:1px solid var(--line);background:#151c22;color:#e8edf0;border-radius:10px;padding:10px 14px;font-weight:850;cursor:pointer}.btn:hover{border-color:#53606a}.btn.primary{background:var(--lime);border-color:var(--lime);color:#fff}.sideCards{display:flex;flex-direction:column;gap:10px}.card{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:15px}.card strong{display:block;color:#68737d;font-size:9px;letter-spacing:1.5px;margin-bottom:7px}.status{font-size:17px;font-weight:900}.moves{max-height:330px;overflow:auto;white-space:pre-line;font:12px/1.8 ui-monospace,monospace}.coach{background:linear-gradient(145deg,#092a48,#0b131a);border-color:#1597ff30}.select{width:100%;margin-top:8px;background:#0b1014;color:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}.hero{padding:32px;border-radius:20px;background:radial-gradient(circle at 80% 20%,#082e57,#08131e 65%);border:1px solid #29362c;margin-bottom:18px}.hero h1{font-size:46px;color:#fff;letter-spacing:-2px;margin:9px 0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.tile{padding:20px;min-height:150px}.tile h3{margin:12px 0 7px}.videoGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}.video{overflow:hidden}.video iframe{width:100%;aspect-ratio:16/9;border:0;display:block;background:#020304}.videoBody{padding:14px}.videoBody h3{margin:0 0 5px;font-size:15px}.videoBody p{margin:0 0 12px;color:var(--muted);font-size:12px}.link{color:var(--lime);text-decoration:none;font-weight:800}.resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.resource{padding:16px;text-decoration:none;color:inherit}.resource:hover{border-color:#1597ff55}.trainer{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px}.lessonList{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0}.lesson{padding:14px;cursor:pointer}.lesson.active{border-color:var(--lime);box-shadow:0 0 0 1px #1597ff22}.lesson b{display:block;margin-bottom:6px}.lesson small{color:var(--muted)}.trainerBoard{padding:18px}.notice{padding:12px;border-radius:10px;background:#ffffff08;color:#cbd3d8;font-size:12px;margin-top:10px}.hidden{display:none!important}.videoNote{margin-top:15px;padding:14px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px}.progress{height:7px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--lime);width:0}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.flipInfo{font-size:11px;color:var(--muted)}@media(max-width:1050px){.app{grid-template-columns:72px 1fr}.sideNav{padding:20px 8px}.brand{justify-content:center}.brand>div:not(.logo){display:none}.nav button{font-size:0;text-align:center}.nav button.active:before{margin:0}.layout,.trainer{grid-template-columns:1fr}.sideCards{display:grid;grid-template-columns:1fr 1fr}.coach{grid-column:1/-1}.grid3,.resourceGrid{grid-template-columns:1fr 1fr}}@media(max-width:680px){.app{display:block}.sideNav{height:62px;position:sticky;z-index:10;display:flex;align-items:center;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.brand{margin:0}.nav{display:flex;gap:4px;margin-left:auto}.nav button{font-size:12px;padding:9px}.nav button.active:before{display:none}.main{padding:16px 10px 40px}.boardPanel{padding:13px}.head h1{font-size:24px}.sideCards{display:block}.card{margin-top:10px}.videoGrid,.grid3,.resourceGrid,.lessonList{grid-template-columns:1fr}.hero{padding:24px}.hero h1{font-size:36px}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sideNav">
- <div class="brand"><div class="logo">♞</div><div><b>Rebuild Chess</b><small>Play · Train · Watch</small></div></div>
+ <div class="brand"><div class="logo">♞</div><div><b>Rebuild Chess</b><small>BLUE CHESS LAB</small></div></div>
  <nav class="nav"><button class="active" data-page="boardPage">Board</button><button data-page="trainerPage">Trainer</button><button data-page="videoPage">Videos</button></nav>
 </aside>
 <main class="main">
@@ -24,7 +24,7 @@
    <div class="controls">
     <button class="btn primary" id="newGame">New game</button><button class="btn" id="computerBtn">Play computer</button><button class="btn" id="localBtn">2 players</button><button class="btn" id="undoBtn">Undo</button><button class="btn" id="flipBtn">Flip board</button>
    </div>
-   <div class="controls"><span class="tag">STOCKFISH 19 LITE</span><select id="level" class="select" style="max-width:180px"><option value="1200">Easy</option><option value="1600">Medium</option><option value="2000">Hard</option><option value="2400">Strong</option><option value="2800">Max</option></select><button class="btn" id="applyLevel">Apply level</button><span id="engineStatus" class="muted">Loading engine…</span></div>
+   <div class="controls"><span class="tag">STOCKFISH 19 LITE</span><select id="level" class="select" style="max-width:180px" aria-label="Stockfish level"><option value="1200">Easy</option><option value="1600">Medium</option><option value="2000">Hard</option><option value="2400">Strong</option><option value="2800">Max</option></select><button class="btn" id="applyLevel">Apply level</button><span id="engineStatus" class="muted">Loading engine…</span></div>
   </section>
   <aside class="sideCards">
    <div class="card"><strong>TURN</strong><div id="status" class="status">White to move</div></div>
@@ -121,7 +121,22 @@ function render(chess,root,selection,clickHandler){
    if(m)sq.classList.add(m.captured?"capture":"legal");
    if(h===0){const rank=document.createElement("span");rank.className="coord rank";rank.textContent=String(8-cell.r);sq.append(rank)}
    if(v===7){const file=document.createElement("span");file.className="coord file";file.textContent=String.fromCharCode(97+cell.c);sq.append(file)}
-   if(cell.p){const span=document.createElement("span");span.className="piece "+cell.p.color;span.textContent=glyph[cell.p.color][cell.p.type];sq.append(span)}
+   if(cell.p){
+     const span=document.createElement("span");
+     span.className="piece "+cell.p.color;
+     span.textContent=glyph[cell.p.color][cell.p.type];
+     sq.append(span);
+     sq.draggable=true;
+     sq.ondragstart=e=>{e.dataTransfer.setData("text/plain",cell.sq);e.dataTransfer.effectAllowed="move";clickHandler(cell.sq)};
+     sq.ondragend=()=>{$$(".drag-over").forEach(x=>x.classList.remove("drag-over"))};
+   }
+   sq.ondragover=e=>{if(selection){e.preventDefault();sq.classList.add("drag-over")}};
+   sq.ondragleave=()=>sq.classList.remove("drag-over");
+   sq.ondrop=e=>{
+     e.preventDefault();sq.classList.remove("drag-over");
+     const from=e.dataTransfer.getData("text/plain");
+     if(from)clickHandler(cell.sq,from);
+   };
    sq.onclick=()=>clickHandler(cell.sq);
    el.append(sq);
  }
@@ -138,16 +153,17 @@ function updateMainInfo(){
  $("#moves").textContent=sans.length?sans.map((m,i)=>((i%2===0?((i/2|0)+1)+". ":"")+" "+m)).join("\n"):"No moves yet.";
  $("#modeTag").textContent=mode==="computer"?"VS STOCKFISH":"2 PLAYER";
 }
-function handleMainClick(square){
+function handleMainClick(square,dragFrom=null){
  if(engineBusy)return;
- const piece=game.get(square);
- if(selected){
+ const source=dragFrom||selected;
+ if(source){
    try{
-     const move=game.move({from:selected,to:square,promotion:"q"});
+     const move=game.move({from:source,to:square,promotion:"q"});
      if(move){selected=null;renderAll();afterHumanMove();return}
    }catch{}
    selected=null;
  }
+ const piece=game.get(square);
  if(piece && piece.color===game.turn())selected=square;
  renderAll();
 }
@@ -155,60 +171,97 @@ function afterHumanMove(){
  if(game.isGameOver()){engineBusy=false;return}
  if(mode==="computer" && game.turn()==="b")requestEngine("play");
 }
-function requestEngine(purpose){
- if(!engineReady||engineBusy||game.isGameOver())return;
+function requestEngine(purpose,chessPosition=game){
+ if(!engineReady||engineBusy||chessPosition.isGameOver())return false;
  const request=++engineRequest;
  engineBusy=true;enginePurpose=purpose;
  const level=Number($("#level").value);
- const depth=level<=1200?6:level<=1600?8:level<=2000?10:level<=2400?12:14;
- const time=level<=1200?120:level<=1600?250:level<=2000?450:level<=2400?700:1000;
+ const depth=level<=1200?7:level<=1600?9:level<=2000?11:level<=2400?13:15;
+ const time=level<=1200?150:level<=1600?300:level<=2000?500:level<=2400?800:1200;
  engine.postMessage("stop");
- engine.postMessage("position fen "+game.fen());
+ engine.postMessage("position fen "+chessPosition.fen());
  engine.postMessage("go depth "+depth+" movetime "+time);
  $("#engineStatus").textContent="Stockfish thinking…";
- setTimeout(()=>{if(engineBusy&&request===engineRequest){engine.postMessage("stop")}},time+500);
+ if(purpose==="lesson")$("#trainerStatus").textContent="Stockfish is analyzing the lesson position…";
+ setTimeout(()=>{if(engineBusy&&request===engineRequest)engine.postMessage("stop")},time+700);
+ return true;
 }
 function applyEngineMove(uci){
  if(!uci||uci==="0000"){engineBusy=false;$("#engineStatus").textContent="No engine move";return}
  const from=uci.slice(0,2),to=uci.slice(2,4),promotion=uci[4]||"q";
  try{
    const legal=game.moves({verbose:true}).some(m=>m.from===from&&m.to===to&&(!m.promotion||m.promotion===promotion));
-   if(!legal){engineBusy=false;$("#engineStatus").textContent="Engine move rejected as illegal";return}
+   if(!legal){engineBusy=false;$("#engineStatus").textContent="Engine returned an illegal move";return}
    game.move({from,to,promotion});
    selected=null;
    engineBusy=false;
-   $("#engineStatus").textContent="Stockfish ready";
+   $("#engineStatus").textContent="Stockfish 19 Lite ready";
    renderAll();
  }catch(e){engineBusy=false;$("#engineStatus").textContent="Engine move error"}
 }
 function initEngine(){
- if(engine||typeof Worker==="undefined"){if(typeof Worker==="undefined")$("#engineStatus").textContent="Worker unavailable";return}
+ if(engine||typeof Worker==="undefined"){
+   if(typeof Worker==="undefined")$("#engineStatus").textContent="Web Workers unavailable";
+   return;
+ }
  try{
    engine=new Worker("https://cdn.jsdelivr.net/gh/nmrugg/stockfish.js@v19.0.0/src/stockfish-19-lite-single.js");
    engine.onmessage=e=>{
-     const line=typeof e.data==="string"?e.data:"";
-     if(line==="uciok"){engine.postMessage("setoption name Threads value 1");engine.postMessage("setoption name MultiPV value 1");engine.postMessage("isready")}
-     else if(line==="readyok"){engineReady=true;$("#engineStatus").textContent="Stockfish 19 Lite ready"}
-     else if(line.startsWith("bestmove")){
-       const uci=line.split(/\s+/)[1];
-       if(enginePurpose==="play" && !game.isGameOver())applyEngineMove(uci);
-       else if(enginePurpose==="lesson"){engineBusy=false;$("#trainerStatus").textContent="Stockfish recommendation ready.";$("#engineStatus").textContent="Stockfish ready"}
+     const line=typeof e.data==="string"?e.data.trim():"";
+     if(line==="uciok"){
+       engine.postMessage("setoption name Threads value 1");
+       engine.postMessage("setoption name MultiPV value 1");
+       engine.postMessage("isready");
+     }else if(line==="readyok"){
+       engineReady=true;
+       engineBusy=false;
+       $("#engineStatus").textContent="Stockfish 19 Lite ready";
+     }else if(line.startsWith("bestmove")){
+       const uci=line.split(/\\s+/)[1];
+       if(enginePurpose==="play"){
+         if(!game.isGameOver())applyEngineMove(uci);
+         else {engineBusy=false;renderAll()}
+       }else if(enginePurpose==="lesson"){
+         engineBusy=false;
+         $("#engineStatus").textContent="Stockfish 19 Lite ready";
+         if(uci&&uci!=="0000"){
+           $("#trainerStatus").textContent="Stockfish recommends "+uci.slice(0,2)+" → "+uci.slice(2,4)+". Now try it on the board.";
+           $("#lessonProgress").style.width="75%";
+         }else{
+           $("#trainerStatus").textContent="No engine move available for this position.";
+         }
+       }else{
+         engineBusy=false;
+       }
      }
    };
-   engine.onerror=()=>{$("#engineStatus").textContent="Stockfish failed to load";engineReady=false;engineBusy=false};
+   engine.onerror=()=>{
+     engineReady=false;engineBusy=false;
+     $("#engineStatus").textContent="Stockfish failed to load";
+   };
    engine.postMessage("uci");
- }catch(e){$("#engineStatus").textContent="Stockfish failed to start"}
+ }catch(e){
+   engineReady=false;engineBusy=false;
+   $("#engineStatus").textContent="Stockfish failed to start";
+ }
 }
-function handleTrainerClick(square){
+function handleTrainerClick(square,dragFrom=null){
  if(trainerGame.isGameOver())return;
- const piece=trainerGame.get(square);
- if(trainerSelected){
+ const source=dragFrom||trainerSelected;
+ if(source){
    try{
-     const move=trainerGame.move({from:trainerSelected,to:square,promotion:"q"});
-     if(move){trainerSelected=null;renderAll();$("#trainerStatus").textContent=move.san+" played. Now compare with the lesson idea.";return}
+     const move=trainerGame.move({from:source,to:square,promotion:"q"});
+     if(move){
+       trainerSelected=null;
+       renderAll();
+       $("#trainerStatus").textContent=move.san+" played. Now compare with the lesson idea.";
+       $("#lessonProgress").style.width="100%";
+       return;
+     }
    }catch{}
    trainerSelected=null;
  }
+ const piece=trainerGame.get(square);
  if(piece&&piece.color===trainerGame.turn())trainerSelected=square;
  renderAll();
 }
@@ -224,21 +277,21 @@ function loadLesson(id){
  $("#lessonProgress").style.width="0%";
  renderAll();
 }
-$("#newGame").onclick=()=>{game=new Chess();selected=null;engineBusy=false;engineRequest++;renderAll();$("#coach").textContent="New game. Start with checks, captures, and threats."};
+$("#newGame").onclick=()=>{game=new Chess();selected=null;engineBusy=false;engineRequest++;enginePurpose="";if(engine)engine.postMessage("stop");renderAll();$("#coach").textContent="New game. Start with checks, captures, and threats."};
 $("#localBtn").onclick=()=>{mode="local";engineBusy=false;engineRequest++;renderAll();$("#engineStatus").textContent=engineReady?"Stockfish ready":"Loading engine…"};
 $("#computerBtn").onclick=()=>{mode="computer";game=new Chess();selected=null;engineBusy=false;engineRequest++;renderAll();$("#engineStatus").textContent=engineReady?"Your move — White":"Loading Stockfish…"};
-$("#undoBtn").onclick=()=>{if(engineBusy)return;game.undo();if(mode==="computer"&&game.turn()==="b")game.undo();selected=null;renderAll()};
+$("#undoBtn").onclick=()=>{if(engineBusy)return;game.undo();if(mode==="computer"&&game.history().length)game.undo();selected=null;renderAll()};
 $("#flipBtn").onclick=()=>{flipped=!flipped;renderAll()};
 $("#applyLevel").onclick=()=>{$("#engineStatus").textContent="Level set — "+$("#level").value;};
 $("#analyzeLesson").onclick=()=>{
  if(!engineReady){$("#trainerStatus").textContent="Stockfish is still loading…";return}
- const temp=game;game=trainerGame;enginePurpose="lesson";requestEngine("lesson");game=trainerGame;
- $("#trainerStatus").textContent="Stockfish is analyzing the lesson position…";
+ if(engineBusy){$("#trainerStatus").textContent="Stockfish is already thinking…";return}
+ requestEngine("lesson",trainerGame);
  $("#lessonProgress").style.width="50%";
 };
 $("#resetLesson").onclick=()=>loadLesson(activeLesson);
 $$("[data-lesson]").forEach(b=>b.onclick=()=>loadLesson(b.dataset.lesson));
-$$("[data-page]").forEach(b=>b.onclick=()=>{
+$("[data-page]").forEach(b=>b.onclick=()=>{
  $$(".page").forEach(p=>p.classList.remove("active"));$("#"+b.dataset.page).classList.add("active");
  $$("[data-page]").forEach(x=>x.classList.toggle("active",x===b));
 });
