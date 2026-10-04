@@ -102,3 +102,28 @@ test("queued searches are serialized and each result belongs to its own generati
   expect(result.secondStarted).toBe(true);
   expect(result.workerCount).toBe(1);
 });
+
+
+test("timeout invalidates the old worker before the next search", async ({ page }) => {
+  await page.addInitScript({content: FAKE_WORKER});
+  await page.goto("/");
+  const result = await page.evaluate(async () => {
+    const { StockfishService } = await import("/src/engine/stockfish-service.js?timeout=1");
+    const service = new StockfishService("/fake-stockfish.js");
+    await service.start();
+    const oldWorker = globalThis.__fakeWorkers[0];
+    const first = service.search("one", {depth:8, time:1});
+    await first.catch(() => {});
+    const replacement = service.search("two", {depth:8, time:100});
+    await new Promise(r => setTimeout(r, 0));
+    const newWorker = globalThis.__fakeWorkers[1];
+    oldWorker.emit("bestmove a2a3");
+    const stale = await Promise.race([replacement.then(() => "resolved"), new Promise(r => setTimeout(() => r("pending"), 20))]);
+    newWorker.emit("bestmove b2b3");
+    return { stale, move: await replacement, oldTerminated: oldWorker.terminated, workers: globalThis.__fakeWorkers.length };
+  });
+  expect(result.stale).toBe("pending");
+  expect(result.move).toBe("b2b3");
+  expect(result.oldTerminated).toBe(true);
+  expect(result.workers).toBe(2);
+});
