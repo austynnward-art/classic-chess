@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rebel Classic Chess — v2</title>
+<style>
+:root{font-family:Inter,system-ui,sans-serif;background:#0b0d10;color:#f5f6f7;--panel:#14171c;--muted:#9aa1ab;--line:#262b33}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#222831 0,#0b0d10 42%);min-height:100vh}
+.rebel-shell{display:grid;grid-template-columns:280px 1fr;min-height:100vh}.rebel-sidebar{border-right:1px solid var(--line);background:#101318;padding:24px 16px;display:flex;flex-direction:column;gap:28px}.rebel-brand{display:flex;flex-direction:column;letter-spacing:.08em}.rebel-brand strong{font-size:26px}.rebel-brand span,.eyebrow{font-size:11px;color:#aeb5bf;letter-spacing:.16em}.rebel-nav{display:grid;gap:6px}.rebel-nav-item{border:0;background:transparent;color:#aeb5bf;padding:13px 14px;border-radius:10px;text-align:left;display:flex;gap:12px;align-items:center;font-size:15px;cursor:pointer}.rebel-nav-item:hover{background:#1b2027;color:#fff}.rebel-sidebar-card,.course-card,.hero-card,.empty-state,.metric-grid>div{background:var(--panel);border:1px solid var(--line);border-radius:14px}.rebel-sidebar-card{margin-top:auto;padding:15px;display:grid;gap:5px}.rebel-sidebar-card span,.course-card p,.hero-card p,.empty-state p,.metric-grid span{color:var(--muted)}.rebel-main{padding:30px 42px;max-width:1500px;width:100%;margin:auto}.rebel-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:28px}.rebel-header h1{margin:5px 0 0;font-size:32px}.rebel-status{font-size:12px;color:#aeb5bf;padding:9px 12px;border:1px solid var(--line);border-radius:9px}.hero-card{padding:42px;max-width:900px}.hero-card h2{font-size:42px;line-height:1.05;max-width:760px;margin:12px 0}.hero-card p{font-size:17px;max-width:650px;line-height:1.6}.primary,.secondary{border:0;border-radius:9px;padding:11px 16px;cursor:pointer;font-weight:700}.primary{background:#f4f5f6;color:#101318}.secondary{background:#252b34;color:#fff}.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.metric-grid>div{padding:20px;display:grid;gap:7px}.metric-grid b{font-size:28px}.section-heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.section-heading h2{margin:5px 0;font-size:32px}.course-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.course-card{padding:22px}.course-card h3{font-size:23px;margin:12px 0 8px}.course-tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#aeb5bf}.empty-state{padding:40px}.empty-state h2{font-size:32px}@media(max-width:800px){.rebel-shell{grid-template-columns:1fr}.rebel-sidebar{position:static}.rebel-main{padding:22px}.metric-grid{grid-template-columns:repeat(2,1fr)}.hero-card h2{font-size:32px}}
+</style>
+</head>
+<body>
+<script type="module">
+import { bootRebelApp } from "./src/app/bootstrap.js";
+import { AppShell } from "./src/app/app-shell.js";
+const app = await bootRebelApp({root:document});
+const shell = new AppShell(app, document.body);
+shell.mount();
+document.querySelector("#rebel-page")?.addEventListener("click", e => {
+  const page=e.target.closest("[data-page]")?.dataset.page;
+  if(page) app.router.go(page);
+});
+</script>
+</body>
+</html>
