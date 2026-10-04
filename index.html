@@ -302,6 +302,7 @@ function initEngine(){
          ignoringBestmove=false;
          engineBusy=false;
          setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
+         if(engineQueue.length&&engineReady)startEngineJob(engineQueue.shift());
          return;
        }
        if(ignoringBestmove){ignoringBestmove=false;return}
