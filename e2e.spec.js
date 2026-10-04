@@ -1,42 +1,132 @@
-const {test,expect}=require("@playwright/test");
-const sq=(page,file,rank)=>page.locator('#board .sq[data-file="'+file+'"][data-rank="'+rank+'"]');
-async function board(page){await page.goto("/");await expect(page.locator("#board .sq")).toHaveCount(64);}
-test("loads the 8x8 board",async({page})=>{await board(page);await expect(page.locator("#board .pieceImg")).toHaveCount(32);await expect(page.locator("#status")).toContainText("White to move");});
-test("click movement stays synchronized",async({page})=>{await board(page);await sq(page,"e",2).click();await expect(sq(page,"e",4)).toHaveClass(/legal/);await sq(page,"e",4).click();await expect(page.locator("#moves")).toContainText("e2-e4");await expect(sq(page,"e",4).locator("img")).toHaveCount(1);await expect(page.locator("#status")).toContainText("Black to move");});
-test("drag movement uses the legal move path",async({page})=>{await board(page);await sq(page,"g",1).dragTo(sq(page,"f",3));await expect(page.locator("#moves")).toContainText("g1-f3");await expect(sq(page,"f",3).locator("img")).toHaveCount(1);await expect(sq(page,"g",1).locator("img")).toHaveCount(0);});
-test("illegal drag leaves state unchanged",async({page})=>{await board(page);await sq(page,"e",2).dragTo(sq(page,"e",5));await expect(page.locator("#moves")).toHaveText("No moves yet");await expect(sq(page,"e",2).locator("img")).toHaveCount(1);await expect(sq(page,"e",5).locator("img")).toHaveCount(0);});
-test("computer mode accepts a player move and returns control",async({page})=>{await board(page);await expect(page.locator("#engineState")).toContainText("Stockfish ready",{timeout:20000});await page.locator('[data-mode="computer"]').click();await sq(page,"e",2).dragTo(sq(page,"e",4));await expect(page.locator("#moves")).toContainText("e2-e4");await expect(page.locator("#status")).toContainText("Black to move");await expect.poll(()=>page.locator("#moves").innerText(),{timeout:20000}).not.toBe("e2-e4");await expect(page.locator("#status")).toContainText(/White to move|Game over/);});
-test("trainer lesson selection and quiz flow works",async({page})=>{
+const { test, expect } = require("@playwright/test");
+
+async function openApp(page) {
+  const pageErrors = [];
+  page.on("pageerror", error => pageErrors.push(error));
   await page.goto("/");
-  await page.locator('[data-page="learn"]').first().click();
-  await expect(page.locator("#learn")).toHaveClass(/active/);
-  await page.locator('.lesson[data-lesson="opening"]').click();
-  await expect(page.locator("#lessonProgress")).toContainText("Opening plan");
-  await page.locator("#learnQuiz").click();
-  await expect(page.locator("#lessonQuizPanel")).toBeVisible();
-  await expect(page.locator("#quizQuestions .quizQ")).toHaveCount(3);
-  for(let i=0;i<3;i++) await page.locator('input[name="q'+i+'"][value="0"]').check();
-  await page.locator("#quizSubmit").click();
-  await expect(page.locator("#quizResult")).toContainText("Score 3/3");
-  await expect(page.locator("#lessonProgress")).toContainText("3 quiz points");
-});
-test("academy course cards open the matching trainer lesson",async({page})=>{
-  await page.goto("/");
-  await page.locator('[data-page="courses"]').first().click();
-  await expect(page.locator("#courses")).toHaveClass(/active/);
-  await page.locator('[data-course="tactics"]').click();
-  await expect(page.locator("#learn")).toHaveClass(/active/);
-  await expect(page.locator("#lessonProgress")).toContainText("Forcing moves");
+  await expect(page.locator("#board .sq")).toHaveCount(64);
+  return pageErrors;
+}
+
+const square = (page, id, name) => page.locator("#" + id + ' .sq[data-square="' + name + '"]');
+
+test("loads a clean 8x8 starting board", async ({ page }) => {
+  const errors = await openApp(page);
+  await expect(page.locator("#board .piece")).toHaveCount(32);
+  await expect(page.locator("#status")).toHaveText("White to move");
+  await expect(square(page, "board", "a1").locator(".piece")).toHaveText("♖");
+  await expect(square(page, "board", "a2").locator(".piece")).toHaveText("♙");
+  await expect(square(page, "board", "a7").locator(".piece")).toHaveText("♟");
+  await expect(square(page, "board", "a7 .piece")).toHaveClass(/b/);
+  expect(errors.map(e => e.message)).toEqual([]);
 });
 
-test("trainer board uses the same click and drag move state",async({page})=>{
-  await page.goto("/");
-  await page.locator('[data-page="learn"]').first().click();
-  await page.locator('.lesson[data-lesson="opening"]').click();
-  const cell=(file,rank)=>page.locator('#learnBoard .sq[data-file="'+file+'"][data-rank="'+rank+'"]');
-  await cell("e",2).click();
-  await expect(cell("e",4)).toHaveClass(/legal/);
-  await cell("e",4).click();
-  await expect(cell("e",4).locator("img")).toHaveCount(1);
-  await expect(cell("e",2).locator("img")).toHaveCount(0);
+test("all board squares have equal dimensions and pieces are centered", async ({ page }) => {
+  await openApp(page);
+  const boxes = await page.locator("#board .sq").evaluateAll(nodes =>
+    nodes.slice(0, 8).map(n => {
+      const r = n.getBoundingClientRect();
+      return { width: r.width, height: r.height };
+    })
+  );
+  for (const box of boxes) {
+    expect(Math.abs(box.width - box.height)).toBeLessThan(0.5);
+  }
+  for (const box of boxes) {
+    expect(Math.abs(box.width - boxes[0].width)).toBeLessThan(0.5);
+  }
+  const pieceBox = await square(page, "board", "e2").locator(".piece").boundingBox();
+  const squareBox = await square(page, "board", "e2").boundingBox();
+  expect(pieceBox).not.toBeNull();
+  expect(squareBox).not.toBeNull();
+  expect(Math.abs((pieceBox.x + pieceBox.width / 2) - (squareBox.x + squareBox.width / 2))).toBeLessThan(1);
+  expect(Math.abs((pieceBox.y + pieceBox.height / 2) - (squareBox.y + squareBox.height / 2))).toBeLessThan(1);
+});
+
+test("click movement keeps legal state and move history synchronized", async ({ page }) => {
+  await openApp(page);
+  await square(page, "board", "e2").click();
+  await expect(square(page, "board", "e4")).toHaveClass(/legal/);
+  await square(page, "board", "e4").click();
+  await expect(square(page, "board", "e4").locator(".piece")).toHaveText("♙");
+  await expect(square(page, "board", "e2").locator(".piece")).toHaveCount(0);
+  await expect(page.locator("#moves")).toContainText("e4");
+  await expect(page.locator("#status")).toHaveText("Black to move");
+});
+
+test("drag movement follows the same legal state", async ({ page }) => {
+  await openApp(page);
+  await square(page, "board", "g1").dragTo(square(page, "board", "f3"));
+  await expect(square(page, "board", "f3").locator(".piece")).toHaveText("♘");
+  await expect(square(page, "board", "g1").locator(".piece")).toHaveCount(0);
+  await expect(page.locator("#moves")).toContainText("Nf3");
+});
+
+test("flip board reverses the visual square order", async ({ page }) => {
+  await openApp(page);
+  await expect(page.locator("#board .sq").first()).toHaveAttribute("data-square", "a8");
+  await page.getByRole("button", { name: "Flip board" }).click();
+  await expect(page.locator("#board .sq").first()).toHaveAttribute("data-square", "h1");
+  await expect(page.locator("#board .sq").last()).toHaveAttribute("data-square", "a8");
+});
+
+test("trainer has an isolated board and can move pieces", async ({ page }) => {
+  await openApp(page);
+  await page.getByRole("button", { name: "Trainer" }).click();
+  await expect(page.locator("#trainerBoard .sq")).toHaveCount(64);
+  await page.getByRole("button", { name: "Opening Basics" }).click();
+  await square(page, "trainerBoard", "e7").click();
+  await square(page, "trainerBoard", "e5").click();
+  await expect(square(page, "trainerBoard", "e5 .piece")).toHaveText("♟");
+  await expect(page.locator("#moves")).toHaveText("No moves yet.");
+});
+
+test("courses switch positions without touching the main game", async ({ page }) => {
+  await openApp(page);
+  await square(page, "board", "e2").click();
+  await square(page, "board", "e4").click();
+  await page.getByRole("button", { name: "Courses" }).click();
+  await page.getByRole("button", { name: "Opening Basics" }).last().click();
+  await expect(page.locator("#courseBoard .sq")).toHaveCount(64);
+  await square(page, "courseBoard", "e7").click();
+  await square(page, "courseBoard", "e5").click();
+  await expect(square(page, "courseBoard", "e5 .piece")).toHaveText("♟");
+  await page.getByRole("button", { name: "Board" }).click();
+  await expect(square(page, "board", "e4 .piece")).toHaveText("♙");
+  await expect(page.locator("#moves")).toContainText("e4");
+});
+
+test("videos and rules pages expose their separate resources", async ({ page }) => {
+  await openApp(page);
+  await page.getByRole("button", { name: "Videos" }).click();
+  await expect(page.locator("#videoPage iframe")).toHaveCount(2);
+  await expect(page.locator('#videoPage a[href="https://chessly.com/"]')).toBeVisible();
+  await page.getByRole("button", { name: "Rules" }).click();
+  await expect(page.locator("#rulesPage a")).toHaveCount(3);
+  await expect(page.locator('#rulesPage a[href*="Laws-of-Chess_final.pdf"]')).toBeVisible();
+});
+
+test("Stockfish loads as the single engine and course analysis does not mutate the main game", async ({ page }) => {
+  await openApp(page);
+  await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
+  await square(page, "board", "e2").click();
+  await square(page, "board", "e4").click();
+  await page.getByRole("button", { name: "Courses" }).click();
+  await page.getByRole("button", { name: "Stockfish Course" }).click();
+  await page.getByRole("button", { name: "Analyze lesson" }).click();
+  await expect(page.locator("#courseStatus")).toContainText(/Stockfish recommends|No engine move/, { timeout: 20000 });
+  await page.getByRole("button", { name: "Board" }).click();
+  await expect(square(page, "board", "e4 .piece")).toHaveText("♙");
+  await expect(page.locator("#moves")).toContainText("e4");
+});
+
+test("computer mode returns a legal engine reply without replacing the human position", async ({ page }) => {
+  await openApp(page);
+  await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
+  await page.getByRole("button", { name: "Play computer" }).click();
+  await square(page, "board", "e2").click();
+  await square(page, "board", "e4").click();
+  await expect(page.locator("#moves")).toContainText("e4");
+  await expect.poll(() => page.locator("#moves").innerText(), { timeout: 20000 }).not.toBe("1.  e4");
+  await expect(page.locator("#status")).toContainText(/White to move|Checkmate|Draw/);
 });
