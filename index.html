@@ -48,7 +48,7 @@
    <div class="controls"><button class="btn primary" id="analyzeLesson">Analyze with Stockfish</button><button class="btn" id="resetLesson">Reset position</button><span id="trainerStatus" class="muted">Find the move yourself first.</span></div>
    <div class="progress"><i id="lessonProgress"></i></div>
   </section>
-  <aside class="card"><span class="tag">LESSON</span><h2 id="lessonTitle">Knight Fork</h2><p id="lessonText" class="muted">Find a knight move that attacks two valuable targets.</p><div class="notice">The answer is checked with chess.js first. Stockfish is used for analysis, not for bypassing the exercise.</div></aside>
+  <aside class="card"><span class="tag">LESSON</span><h2 id="lessonTitle">Knight Fork</h2><p id="lessonText" class="muted">Find a knight move that attacks two valuable targets.</p><div class="notice">Stockfish validates the puzzle target. Legal moves that are not the engine target are rejected and reset.</div></aside>
  </div>
 </section>
 
@@ -123,6 +123,7 @@ let engineQueue = [];
 let ignoringBestmove = false;
 let activeLesson = "fork";
 let trainingTarget = null;
+let lessonTarget = null;
 let coursePositions = {
  foundations:{title:"Chess Fundamentals",text:"Practice a legal starting position and use the engine only after you form your own idea.",fen:"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"},
  opening:{title:"Opening Basics",text:"Develop a piece toward the center and compare your choice with Stockfish.",fen:"rnbqkbnr/pppppppp/8/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 1"},
@@ -279,6 +280,7 @@ function initEngine(){
        engineReady=true;
        engineBusy=false;
        setEngineStatus("Stockfish 19 Lite ready");
+       if(activeLesson!=="training" && trainerGame && !lessonTarget) requestEngine("lesson",trainerGame);
      }else if(line.startsWith("bestmove")){
        if(ignoringBestmove){ignoringBestmove=false;return}
        const job=activeEngineJob;
@@ -293,8 +295,10 @@ function initEngine(){
            return;
          }
          if(uci&&uci!=="0000"){
-           $("#trainerStatus").textContent="Stockfish recommends "+uci.slice(0,2)+" → "+uci.slice(2,4)+". Now try it on the board.";
-           $("#lessonProgress").style.width="75%";
+           lessonTarget={fen:job.fen,uci};
+           $("#trainerBoard").dataset.stockfishTarget=uci;
+           $("#trainerStatus").textContent="Stockfish has validated this puzzle position. Find the best move yourself.";
+           $("#lessonProgress").style.width="25%";
          }else $("#trainerStatus").textContent="No engine move available for this position.";
        }else if(job.purpose==="training"){
          finishEngineJob(job,uci);
@@ -354,9 +358,24 @@ function handleTrainerClick(square,dragFrom=null){
            $("#trainerStatus").textContent=move.san+" is legal, but not the engine target. Try again from the same position.";
            $("#lessonProgress").style.width="10%";
          }
+       }else if(lessonTarget&&lessonTarget.fen===trainerGame.fen()){
+         const played=move.from+move.to+(move.promotion||"");
+         if(played===lessonTarget.uci){
+           $("#trainerStatus").textContent=move.san+" — correct. Stockfish confirms the best move.";
+           $("#lessonProgress").style.width="100%";
+         }else{
+           trainerGame.undo();
+           trainerSelected=null;
+           renderAll();
+           $("#trainerStatus").textContent=move.san+" is legal, but Stockfish's best move is different. Try again.";
+           $("#lessonProgress").style.width="10%";
+         }
        }else{
-         $("#trainerStatus").textContent=move.san+" played. Now compare with the lesson idea.";
-         $("#lessonProgress").style.width="100%";
+         trainerGame.undo();
+         trainerSelected=null;
+         renderAll();
+         $("#trainerStatus").textContent="Stockfish is still validating this puzzle. Try again in a moment.";
+         $("#lessonProgress").style.width="0%";
        }
        return;
      }
@@ -417,6 +436,7 @@ function loadTrainingPosition(fen,uci){
 function loadLesson(id){
  cancelAnalysisIf("lesson");
  activeLesson=id;
+ lessonTarget=null;
  $("#trainerBoard").dataset.trainingTarget="";
 
  const d=lessonPositions[id];
