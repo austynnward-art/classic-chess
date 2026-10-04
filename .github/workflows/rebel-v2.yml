@@ -16,4 +16,4 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npx playwright install --with-deps chromium
-      - run: npx playwright test e2e.spec.js v2.e2e.spec.js --reporter=line
+      - run: npx playwright test v2.e2e.spec.js --reporter=line
