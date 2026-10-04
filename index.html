@@ -45,7 +45,7 @@ textarea.fenInput{width:100%;min-height:74px;resize:vertical;background:#080d11;
 .archItem small{color:var(--muted)}.archProgress{height:8px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:8px}.archProgress i{display:block;height:100%;background:var(--lime);width:0}
 .archPill{display:inline-block;padding:5px 8px;border-radius:999px;background:#1597ff18;color:var(--lime);font-size:9px;font-weight:900;letter-spacing:1px}
 @media(max-width:900px){.archGrid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.archGrid{grid-template-columns:1fr}.archHero h1{font-size:31px}}
-.chesslyGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.chesslyCard{padding:18px;min-height:190px}.chesslyCard h3{margin:8px 0}.chesslyCard .btn{margin-top:12px}.lessonRows{display:grid;gap:9px;margin-top:14px}.lessonRow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:12px;background:#ffffff05}.lessonNum{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#1597ff18;color:var(--lime);font-weight:900}.lessonRow small{display:block;color:var(--muted);margin-top:3px}.filterBar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.filterBar .btn.active{background:var(--lime);border-color:var(--lime);color:#fff}.quizOption{display:block;width:100%;text-align:left;margin:8px 0}.quizOption.correct{border-color:#2fbf71;background:#2fbf7118}.quizOption.wrong{border-color:#d73535;background:#d7353518}.xpBadge{font-size:28px;font-weight:950}.modelBoard{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}.modelMoves{max-height:420px;overflow:auto}.modelMove{padding:10px;border-top:1px solid var(--line);cursor:pointer}.modelMove:hover{background:#ffffff08}.shuffleHero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}.streak{font-size:40px;font-weight:950}@media(max-width:900px){.chesslyGrid{grid-template-columns:1fr 1fr}.modelBoard{grid-template-columns:1fr}}@media(max-width:600px){.chesslyGrid{grid-template-columns:1fr}.shuffleHero{grid-template-columns:1fr}}
+.chesslyGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.chesslyCard{padding:18px;min-height:190px}.chesslyCard h3{margin:8px 0}.chesslyCard .btn{margin-top:12px}.lessonRows{display:grid;gap:9px;margin-top:14px}.courseChapter{margin-top:18px}.courseChapter h3{margin:0 0 8px}.courseChapterBar{display:flex;justify-content:space-between;gap:10px;align-items:center}.lessonRow.done{border-color:#1597ff55;background:#1597ff0d}.lessonRow.current{border-color:var(--lime);box-shadow:0 0 0 1px #1597ff22}.lessonRow.locked{opacity:.48}.completionTag{font-size:9px;font-weight:900;letter-spacing:1px;color:var(--lime)}.lessonRow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:12px;background:#ffffff05}.lessonNum{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#1597ff18;color:var(--lime);font-weight:900}.lessonRow small{display:block;color:var(--muted);margin-top:3px}.filterBar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.filterBar .btn.active{background:var(--lime);border-color:var(--lime);color:#fff}.quizOption{display:block;width:100%;text-align:left;margin:8px 0}.quizOption.correct{border-color:#2fbf71;background:#2fbf7118}.quizOption.wrong{border-color:#d73535;background:#d7353518}.xpBadge{font-size:28px;font-weight:950}.modelBoard{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}.modelMoves{max-height:420px;overflow:auto}.modelMove{padding:10px;border-top:1px solid var(--line);cursor:pointer}.modelMove:hover{background:#ffffff08}.shuffleHero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}.streak{font-size:40px;font-weight:950}@media(max-width:900px){.chesslyGrid{grid-template-columns:1fr 1fr}.modelBoard{grid-template-columns:1fr}}@media(max-width:600px){.chesslyGrid{grid-template-columns:1fr}.shuffleHero{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -141,7 +141,7 @@ textarea.fenInput{width:100%;min-height:74px;resize:vertical;background:#080d11;
    <div class="boardFrame"><div id="courseBoard" class="board" role="grid" aria-label="Course chess board"></div></div>
    <div class="controls"><button class="btn primary" id="analyzeCourse">Analyze lesson</button><button class="btn" id="resetCourse">Reset lesson</button><span id="courseStatus" class="muted" aria-live="polite">Stockfish ready state will appear here.</span></div>
   </section>
-  <aside class="card"><span class="tag">COURSE PATH</span><h3 id="courseStep">Lesson 1</h3><p class="muted">1. Watch the lesson video<br>2. Play the position<br>3. Analyze with Stockfish<br>4. Review the idea</p><div class="progress"><i id="courseProgress"></i></div><div class="notice">The course board has its own Chess position object. Stockfish never replaces or mutates the main game.</div></aside>
+  <aside class="card"><span class="tag">COURSE PATH</span><h3 id="courseStep">Lesson 1</h3><div id="coursePathMeta" class="muted">0% complete</div><div class="progress"><i id="courseProgress"></i></div><div id="courseLessonList" class="lessonRows"></div><div class="controls"><button class="btn primary" id="completeCourseLesson">Mark lesson complete</button><button class="btn" id="nextCourseLesson">Next lesson</button></div><div class="notice">Progress is saved in this browser. Complete lessons in order, then resume exactly where you left off.</div></aside>
  </div>
 </section>
 
@@ -691,15 +691,9 @@ function handleCourseClick(square,dragFrom=null){
 function loadCourse(id){
  cancelAnalysisIf("course");
  activeCourse=id;
- const d=coursePositions[id];
- courseGame=new Chess(d.fen);
- courseSelected=null;
- $("#courseTitle").textContent=d.title;
- $("#courseText").textContent=d.text;
- $("#courseStep").textContent="Lesson 1 · "+d.title;
- $("#courseStatus").textContent=engineReady?"Stockfish ready — make your move first.":"Waiting for Stockfish…";
- $("#courseProgress").style.width="0%";
- renderAll();
+ const resume=JSON.parse(localStorage.getItem("rebelCourseLast")||"null");
+ const saved=resume&&resume.course===id?resume:findNextCourseLesson(id);
+ openCourseLesson(id,saved.chapter,saved.lesson);
 }
 function loadTrainingPosition(fen,uci){
  cancelAnalysisIf("lesson");
@@ -988,6 +982,91 @@ function renderQuiz(){const x=rebelLearning.quiz[quizIndex%rebelLearning.quiz.le
 function renderStrategy(){const x=rebelLearning.strategy[strategyIndex%rebelLearning.strategy.length];$("#strategyQuestion").textContent=x.q;$("#strategyOptions").innerHTML=x.a.map((a,i)=>'<button class="btn quizOption" data-strategy-answer="'+i+'">'+a+'</button>').join("");$("#strategyFeedback").textContent="Pick a plan.";$("#strategyScore").textContent=strategyXP+" XP";}
 function renderModels(){const x=rebelLearning.models[0];$("#modelTitle").textContent=x.title;$("#modelText").textContent=x.text;$("#modelMoves").innerHTML=x.moves.map((m,i)=>'<div class="modelMove" data-model-move="'+i+'"><b>'+m+'</b><small class="muted"> Click to replay this idea on the board.</small></div>').join("");}
 function saveLearningXP(){localStorage.setItem("rebelQuizXP",quizXP);localStorage.setItem("rebelStrategyXP",strategyXP);localStorage.setItem("rebelShuffleStreak",shuffleStreak);}
+// Full course/chapter/lesson progression with resume + completion tracking.
+const courseCatalog={
+ foundations:{title:"Chess Fundamentals",chapters:[
+  {title:"Chapter 1 · Board & Moves",lessons:[
+   {title:"The Board",text:"Understand files, ranks, colors and starting setup.",fen:coursePositions.foundations.fen},
+   {title:"Piece Movement",text:"Practice legal piece movement before calculating.",fen:lessonPositions.opening.fen},
+   {title:"Checks & Captures",text:"Identify forcing moves and legal captures.",fen:lessonPositions.fork.fen}
+  ]},
+  {title:"Chapter 2 · Core Tactics",lessons:[
+   {title:"Knight Forks",text:"Spot a double attack with a knight.",fen:lessonPositions.fork.fen},
+   {title:"Checks First",text:"Scan forcing checks before quiet moves.",fen:lessonPositions.mate.fen},
+   {title:"Candidate Moves",text:"Compare forcing candidates before choosing.",fen:coursePositions.stockfish.fen}
+  ]},
+  {title:"Chapter 3 · Game Review",lessons:[
+   {title:"Find the Mistake",text:"Compare your idea with Stockfish.",fen:coursePositions.stockfish.fen},
+   {title:"Best Move",text:"Play the engine's strongest continuation.",fen:lessonPositions.fork.fen}
+  ]}
+ ]},
+ opening:{title:"Opening Basics",chapters:[
+  {title:"Chapter 1 · Principles",lessons:[
+   {title:"Control the Center",text:"Build a strong central presence.",fen:coursePositions.opening.fen},
+   {title:"Develop Pieces",text:"Bring pieces toward useful squares.",fen:lessonPositions.opening.fen},
+   {title:"King Safety",text:"Prepare to castle and connect your pieces.",fen:coursePositions.opening.fen}
+  ]},
+  {title:"Chapter 2 · Repertoire",lessons:[
+   {title:"1.e4 Responses",text:"Recognize major replies to 1.e4.",fen:lessonPositions.opening.fen},
+   {title:"Caro-Kann Setup",text:"Practice the basic Caro-Kann structure.",fen:coursePositions.opening.fen},
+   {title:"Opening Review",text:"Check your plan against Stockfish.",fen:coursePositions.stockfish.fen}
+  ]}
+ ]},
+ stockfish:{title:"Stockfish Course",chapters:[
+  {title:"Chapter 1 · Engine Basics",lessons:[
+   {title:"Evaluation",text:"Understand what an engine score means.",fen:coursePositions.stockfish.fen},
+   {title:"Candidate Moves",text:"Generate your own candidates before checking.",fen:coursePositions.stockfish.fen},
+   {title:"Best Line",text:"Compare the principal variation with your plan.",fen:coursePositions.stockfish.fen}
+  ]},
+  {title:"Chapter 2 · Game Analysis",lessons:[
+   {title:"Inaccuracies",text:"Learn to recognize smaller evaluation losses.",fen:coursePositions.stockfish.fen},
+   {title:"Mistakes",text:"Find moves that change the evaluation significantly.",fen:coursePositions.stockfish.fen},
+   {title:"Blunders",text:"Identify critical tactical errors.",fen:lessonPositions.fork.fen}
+  ]}
+ ]}}
+let courseProgressData=JSON.parse(localStorage.getItem("rebelCourseProgress")||"{}");
+let activeCourseLesson={course:"foundations",chapter:0,lesson:0};
+function courseKey(course,chapter,lesson){return course+"-"+chapter+"-"+lesson}
+function isCourseDone(course,chapter,lesson){return !!courseProgressData[courseKey(course,chapter,lesson)]}
+function saveCourseProgress(){localStorage.setItem("rebelCourseProgress",JSON.stringify(courseProgressData));localStorage.setItem("rebelCourseLast",JSON.stringify(activeCourseLesson))}
+function courseStats(course){
+ const d=courseCatalog[course],total=d.chapters.reduce((n,ch)=>n+ch.lessons.length,0),done=Object.keys(courseProgressData).filter(k=>k.startsWith(course+"-")&&courseProgressData[k]).length;
+ return {total,done,pct:total?Math.round(done/total*100):0}
+}
+function findNextCourseLesson(course){
+ const d=courseCatalog[course];
+ for(let ci=0;ci<d.chapters.length;ci++)for(let li=0;li<d.chapters[ci].lessons.length;li++)if(!isCourseDone(course,ci,li))return {chapter:ci,lesson:li};
+ const last=d.chapters.length-1;return {chapter:last,lesson:d.chapters[last].lessons.length-1};
+}
+function renderCourseProgress(){
+ const d=courseCatalog[activeCourse],s=courseStats(activeCourse),el=$("#courseLessonList");if(!el||!d)return;
+ $("#coursePathMeta").textContent=s.done+" / "+s.total+" lessons complete · "+s.pct+"%";
+ $("#courseProgress").style.width=s.pct+"%";
+ el.innerHTML=d.chapters.map((ch,ci)=>'<div class="courseChapter"><div class="courseChapterBar"><h3>'+ch.title+'</h3><small class="muted">'+ch.lessons.filter((_,li)=>isCourseDone(activeCourse,ci,li)).length+'/'+ch.lessons.length+'</small></div>'+ch.lessons.map((l,li)=>{const done=isCourseDone(activeCourse,ci,li),cur=activeCourseLesson.chapter===ci&&activeCourseLesson.lesson===li;return '<div class="lessonRow '+(done?"done ":"")+(cur?"current ":"")+(done||ci===0||li===0?"":"locked")+'" data-course-lesson="'+ci+':'+li+'"><div class="lessonNum">'+(done?"✓":(li+1))+'</div><div><b>'+l.title+'</b><small>'+l.text+'</small></div><span class="completionTag">'+(done?"DONE":cur?"NOW":"NEXT")+'</span></div>'}).join("")+'</div>').join("");
+ $("#completeCourseLesson").disabled=isCourseDone(activeCourse,activeCourseLesson.chapter,activeCourseLesson.lesson);
+}
+function openCourseLesson(course,chapter,lesson){
+ const d=courseCatalog[course];if(!d||!d.chapters[chapter]||!d.chapters[chapter].lessons[lesson])return;
+ activeCourse=course;activeCourseLesson={course,chapter,lesson};const l=d.chapters[chapter].lessons[lesson];
+ courseGame=new Chess(l.fen);courseSelected=null;cancelAnalysisIf("course");
+ $("#courseTitle").textContent=d.title+" · "+l.title;$("#courseText").textContent=l.text;
+ $("#courseStep").textContent="Chapter "+(chapter+1)+" · Lesson "+(lesson+1);
+ $("#courseStatus").textContent=engineReady?"Stockfish ready — make your move first.":"Waiting for Stockfish…";$("#courseProgress").style.width=courseStats(course).pct+"%";
+ renderCourseProgress();renderAll();showPage("coursePage");
+}
+function nextCourseLesson(){
+ const d=courseCatalog[activeCourse];let ci=activeCourseLesson.chapter,li=activeCourseLesson.lesson;
+ if(li+1<d.chapters[ci].lessons.length)li++;else if(ci+1<d.chapters.length){ci++;li=0}else{renderCourseProgress();return}
+ openCourseLesson(activeCourse,ci,li);
+}
+$("#completeCourseLesson").onclick=()=>{
+ const k=courseKey(activeCourse,activeCourseLesson.chapter,activeCourseLesson.lesson);
+ if(!courseProgressData[k]){courseProgressData[k]=Date.now();quizXP+=25;saveLearningXP();saveCourseProgress();}
+ renderCourseProgress();refreshRebelArchitecture?.();$("#courseStatus").textContent="Lesson complete! +25 XP. Choose Next lesson to continue.";
+};
+$("#nextCourseLesson").onclick=nextCourseLesson;
+document.addEventListener("click",e=>{const row=e.target.closest("[data-course-lesson]");if(row){const [ci,li]=row.dataset.courseLesson.split(":").map(Number);openCourseLesson(activeCourse,ci,li)}});
+
 document.addEventListener("click",e=>{
  const qa=e.target.closest("[data-quiz-answer]");if(qa){const x=rebelLearning.quiz[quizIndex%rebelLearning.quiz.length],i=Number(qa.dataset.quizAnswer);if(i===x.ok){quizXP+=10;qa.classList.add("correct");$("#quizFeedback").textContent="Correct. +10 XP";}else{qa.classList.add("wrong");$("#quizFeedback").textContent="Not quite. Review the idea and try the next one."}saveLearningXP();$("#quizScore").textContent=quizXP+" XP";}
  const sa=e.target.closest("[data-strategy-answer]");if(sa){const x=rebelLearning.strategy[strategyIndex%rebelLearning.strategy.length],i=Number(sa.dataset.strategyAnswer);if(i===x.ok){strategyXP+=15;sa.classList.add("correct");$("#strategyFeedback").textContent="Strong plan. +15 XP";}else{sa.classList.add("wrong");$("#strategyFeedback").textContent="Review the strategic goal, then continue."}saveLearningXP();$("#strategyScore").textContent=strategyXP+" XP";}
@@ -1024,7 +1103,7 @@ initEngine();
    const b=e.target.closest("[data-page]");
    if(b && b.dataset.page){e.preventDefault();if(typeof window.showPage==="function")window.showPage(b.dataset.page);refreshArchitecture();}
  });
- setTimeout(()=>{refreshArchitecture();renderStudies();renderQuiz();renderStrategy();renderModels();},100);
+ setTimeout(()=>{refreshArchitecture();renderStudies();renderQuiz();renderStrategy();renderModels();renderCourseProgress();},100);
 })();
 </script>
 </body>
