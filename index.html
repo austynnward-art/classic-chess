@@ -945,27 +945,24 @@ initEngine();
 <script>
 (function(){
  function refreshArchitecture(){
-   const hits=Object.values(window.learningBook||{}).reduce((n,x)=>n+(Number(x.hits)||0),0);
-   const games=(window.savedGames||[]).length;
-   const xp=hits*10+games*25;
+   let learning={};try{learning=JSON.parse(localStorage.getItem("rebelClassicLearning")||"{}")}catch{}
+   const hits=Object.values(learning).reduce((n,x)=>n+(Number(x.hits)||0),0);
+   let games=[];try{games=JSON.parse(localStorage.getItem("rebelClassicGames")||"[]")}catch{}
+   const xp=hits*10+games.length*25;
    const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
    set("homeLearningCount",hits);set("homeGameCount",games);
-   set("progressXp",xp);set("progressGames",games);set("progressEngine",window.engineReady?"READY":"LOADING");
+   set("progressXp",xp);set("progressGames",games.length);set("progressEngine",document.getElementById("engineStatus")?.textContent?.includes("ready")?"READY":"LOADING");
    const lane=(hits||games)?Math.min(100,20+hits*5):0;
    set("skillTactics",lane?lane+"%":"Building");
-   set("skillOpenings",games?Math.min(100,25+games*8)+"%":"Building");
+   set("skillOpenings",games.length?Math.min(100,25+games.length*8)+"%":"Building");
    set("skillCalculation",hits?Math.min(100,20+hits*6)+"%":"Building");
-   set("skillReview",games&&hits?Math.min(100,20+games*5+hits*3)+"%":"Building");
+   set("skillReview",games.length&&hits?Math.min(100,20+games.length*5+hits*3)+"%":"Building");
  }
  window.refreshRebelArchitecture=refreshArchitecture;
  document.addEventListener("click",function(e){
    const b=e.target.closest("[data-page]");
    if(b && b.dataset.page){e.preventDefault();if(typeof window.showPage==="function")window.showPage(b.dataset.page);refreshArchitecture();}
  });
- const oldShow=window.showPage;
- if(oldShow){
-   window.showPage=function(id){oldShow(id);refreshArchitecture();}
- }
  setTimeout(refreshArchitecture,100);
 })();
 </script>
