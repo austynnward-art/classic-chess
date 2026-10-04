@@ -17,7 +17,7 @@ test("loads a clean 8x8 starting board", async ({ page }) => {
   await expect(square(page, "board", "a1").locator(".piece")).toHaveText("♖");
   await expect(square(page, "board", "a2").locator(".piece")).toHaveText("♙");
   await expect(square(page, "board", "a7").locator(".piece")).toHaveText("♟");
-  await expect(square(page, "board", "a7 .piece")).toHaveClass(/b/);
+  await expect(square(page, "board", "a7").locator(".piece")).toHaveClass(/b/);
   expect(errors.map(e => e.message)).toEqual([]);
 });
 
@@ -77,7 +77,7 @@ test("trainer has an isolated board and can move pieces", async ({ page }) => {
   await page.getByRole("button", { name: "Opening Basics" }).click();
   await square(page, "trainerBoard", "e7").click();
   await square(page, "trainerBoard", "e5").click();
-  await expect(square(page, "trainerBoard", "e5 .piece")).toHaveText("♟");
+  await expect(square(page, "trainerBoard", "e5").locator(".piece")).toHaveText("♟");
   await expect(page.locator("#moves")).toHaveText("No moves yet.");
 });
 
@@ -90,9 +90,9 @@ test("courses switch positions without touching the main game", async ({ page })
   await expect(page.locator("#courseBoard .sq")).toHaveCount(64);
   await square(page, "courseBoard", "e7").click();
   await square(page, "courseBoard", "e5").click();
-  await expect(square(page, "courseBoard", "e5 .piece")).toHaveText("♟");
+  await expect(square(page, "courseBoard", "e5").locator(".piece")).toHaveText("♟");
   await page.getByRole("button", { name: "Board" }).click();
-  await expect(square(page, "board", "e4 .piece")).toHaveText("♙");
+  await expect(square(page, "board", "e4").locator(".piece")).toHaveText("♙");
   await expect(page.locator("#moves")).toContainText("e4");
 });
 
