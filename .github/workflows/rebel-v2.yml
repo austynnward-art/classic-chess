@@ -1,0 +1,19 @@
+name: Rebel v2 validation
+
+on:
+  push:
+    branches: ["rebel-v2-rebuild"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test v2.e2e.spec.js stockfish-race.e2e.spec.js --reporter=line
