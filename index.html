@@ -92,7 +92,7 @@ let activeLesson = "fork";
 let lessonPositions = {
  fork:{title:"Knight Fork",text:"Find a knight move that attacks two valuable targets.",fen:"r3k2r/ppp2ppp/2n5/8/4N3/2N5/PPP2PPP/R3K2R w KQkq - 0 1"},
  opening:{title:"Opening Basics",text:"Play a sensible developing move and keep the king safe.",fen:"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"},
- mate:{title:"Mate in 1",text:"Find the immediate checkmate.",fen:"6k1/5ppp/8/8/8/5Q2/6PP/6K1 w - - 0 1"}
+ mate:{title:"Mate in 1",text:"Find the immediate checkmate.",fen:"7k/6pp/5Q2/8/8/8/6PP/6K1 w - - 0 1"}
 };
 
 function squareName(r,c){return String.fromCharCode(97+c)+(8-r)}
@@ -217,7 +217,7 @@ function initEngine(){
        engineBusy=false;
        $("#engineStatus").textContent="Stockfish 19 Lite ready";
      }else if(line.startsWith("bestmove")){
-       const uci=line.split(/\\s+/)[1];
+       const uci=line.split(/\s+/)[1];
        if(enginePurpose==="play"){
          if(!game.isGameOver())applyEngineMove(uci);
          else {engineBusy=false;renderAll()}
