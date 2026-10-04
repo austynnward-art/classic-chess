@@ -123,7 +123,9 @@ let engineQueue = [];
 let ignoringBestmove = false;
 let activeLesson = "fork";
 let trainingTarget = null;
+let trainerTarget = null;
 let lessonTarget = null;
+let engineRecoveryTimer = null;
 let coursePositions = {
  foundations:{title:"Chess Fundamentals",text:"Practice a legal starting position and use the engine only after you form your own idea.",fen:"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"},
  opening:{title:"Opening Basics",text:"Develop a piece toward the center and compare your choice with Stockfish.",fen:"rnbqkbnr/pppppppp/8/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 1"},
@@ -206,6 +208,7 @@ function startEngineJob(job){
  engine.postMessage("go depth "+limit.depth+" movetime "+limit.time);
  setEngineStatus("Stockfish thinking…");
  if(job.purpose==="lesson")$("#trainerStatus").textContent="Stockfish is analyzing the lesson position…";
+ if(job.purpose==="training")$("#trainingLoopStatus").textContent="Stockfish is analyzing the training position…";
  if(job.purpose==="course")$("#courseStatus").textContent="Stockfish is analyzing the course position…";
  job.timeout=setTimeout(()=>{
    if(activeEngineJob&&activeEngineJob.id===job.id){
@@ -264,7 +267,7 @@ function applyEngineMove(uci,job){
  }catch{setEngineStatus("Engine move error")}
 }
 function initEngine(){
- if(engine||typeof Worker==="undefined"){
+ if(engine||typeof Worker==="undefined"||engineRecoveryTimer){
    if(typeof Worker==="undefined")setEngineStatus("Web Workers unavailable");
    return;
  }
@@ -331,7 +334,13 @@ function initEngine(){
        setEngineStatus("Stockfish rejected the position");
      }
    };
-   engine.onerror=()=>{engineReady=false;engineBusy=false;activeEngineJob=null;engineQueue=[];engine=null;setEngineStatus("Stockfish failed to load")};
+   engine.onerror=()=>{
+   if(engine)try{engine.terminate()}catch{}
+   engine=null;engineReady=false;engineBusy=false;activeEngineJob=null;engineQueue=[];ignoringBestmove=true;
+   setEngineStatus("Stockfish failed — restarting…");
+   clearTimeout(engineRecoveryTimer);
+   engineRecoveryTimer=setTimeout(()=>{engineRecoveryTimer=null;initEngine()},500);
+ };
    engine.postMessage("uci");
  }catch{engineReady=false;engineBusy=false;setEngineStatus("Stockfish failed to start")}
 }
@@ -345,8 +354,8 @@ function handleTrainerClick(square,dragFrom=null){
        trainerSelected=null;
        renderAll();
        $("#trainerStatus").textContent=move.san+" played. Now compare with the lesson idea.";
-       if(activeLesson==="training"&&trainerGame._trainingTarget){
-         const target=trainerGame._trainingTarget;
+       if(activeLesson==="training"&&trainerTarget){
+         const target=trainerTarget;
          const played=move.from+move.to+(move.promotion||"");
          if(played===target){
            $("#trainerStatus").textContent=move.san+" — correct. You found Stockfish's move.";
@@ -358,17 +367,23 @@ function handleTrainerClick(square,dragFrom=null){
            $("#trainerStatus").textContent=move.san+" is legal, but not the engine target. Try again from the same position.";
            $("#lessonProgress").style.width="10%";
          }
-       }else if(lessonTarget&&lessonTarget.fen===trainerGame.fen()){
+       }else if(lessonTarget){
          const played=move.from+move.to+(move.promotion||"");
-         if(played===lessonTarget.uci){
+         if(lessonTarget.fen===move.before&&played===lessonTarget.uci){
            $("#trainerStatus").textContent=move.san+" — correct. Stockfish confirms the best move.";
            $("#lessonProgress").style.width="100%";
-         }else{
+         }else if(lessonTarget.fen===move.before){
            trainerGame.undo();
            trainerSelected=null;
            renderAll();
            $("#trainerStatus").textContent=move.san+" is legal, but Stockfish's best move is different. Try again.";
            $("#lessonProgress").style.width="10%";
+         }else{
+           trainerGame.undo();
+           trainerSelected=null;
+           renderAll();
+           $("#trainerStatus").textContent="This puzzle changed before validation finished. Reset the lesson and try again.";
+           $("#lessonProgress").style.width="0%";
          }
        }else{
          trainerGame.undo();
@@ -425,12 +440,13 @@ function loadTrainingPosition(fen,uci){
  trainerGame=new Chess(fen);
  trainerSelected=null;
  $("#trainerBoard").dataset.trainingTarget=uci||"";
+ trainerTarget=uci||null;
  $("#lessonTitle").textContent="Game Review Drill";
  $("#lessonText").textContent="Re-play Stockfish's best continuation from the exact position you just played.";
  $("#trainerStatus").textContent="Find the engine move yourself first.";
  $(".lesson").forEach(x=>x.classList.remove("active"));
  $("#lessonProgress").style.width="0%";
- trainerGame._trainingTarget=uci;
+ trainerTarget=uci||null;
  renderAll();
 }
 function loadLesson(id){
@@ -438,6 +454,7 @@ function loadLesson(id){
  activeLesson=id;
  lessonTarget=null;
  $("#trainerBoard").dataset.trainingTarget="";
+ trainerTarget=null;
 
  const d=lessonPositions[id];
  trainerGame=new Chess(d.fen);
