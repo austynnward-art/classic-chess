@@ -3,6 +3,7 @@ export class StockfishService {
     this.workerUrl = workerUrl;
     this.worker = null;
     this.ready = false;
+    this.starting = null;
     this.generation = 0;
     this.queue = [];
     this.active = null;
@@ -11,32 +12,51 @@ export class StockfishService {
 
   async start() {
     if (this.ready && this.worker) return;
+    if (this.starting) return this.starting;
+
     const generation = ++this.generation;
     const worker = new Worker(this.workerUrl);
     this.worker = worker;
     this.ready = false;
-    worker.onmessage = event => this.handleMessage(worker, generation, String(event.data || ""));
-    worker.onerror = () => {
-      if (worker !== this.worker || generation !== this.generation) return;
-      this.restart();
-    };
-    worker.postMessage("uci");
+
+    this.starting = new Promise((resolve, reject) => {
+      worker.onmessage = event => {
+        const line = String(event.data || "");
+        if (worker !== this.worker || generation !== this.generation) return;
+        if (line === "uciok") {
+          worker.postMessage("setoption name Threads value 1");
+          worker.postMessage("isready");
+          return;
+        }
+        if (line === "readyok") {
+          this.ready = true;
+          this.starting = null;
+          this.runNext();
+          resolve();
+          return;
+        }
+        this.handleMessage(worker, generation, line);
+      };
+      worker.onerror = error => {
+        if (worker !== this.worker || generation !== this.generation) return;
+        this.starting = null;
+        this.restart();
+        reject(error instanceof Error ? error : new Error("Stockfish worker error"));
+      };
+      try {
+        worker.postMessage("uci");
+      } catch (error) {
+        this.starting = null;
+        this.restart();
+        reject(error);
+      }
+    });
+
+    return this.starting;
   }
 
   handleMessage(worker, generation, line) {
     if (worker !== this.worker || generation !== this.generation) return;
-
-    if (line === "uciok") {
-      worker.postMessage("setoption name Threads value 1");
-      worker.postMessage("isready");
-      return;
-    }
-
-    if (line === "readyok") {
-      this.ready = true;
-      this.runNext();
-      return;
-    }
 
     if (line.startsWith("bestmove")) {
       const job = this.active;
@@ -60,7 +80,11 @@ export class StockfishService {
         resolve,
         reject
       });
-      this.runNext();
+      if (!this.worker) {
+        this.start().catch(reject);
+      } else {
+        this.runNext();
+      }
     });
   }
 
@@ -89,8 +113,8 @@ export class StockfishService {
   }
 
   cancel() {
-    // Invalidate every response already in flight before accepting a replacement job.
     this.generation++;
+
     const queued = this.queue.splice(0);
     queued.forEach(job => job.reject(new Error("Search cancelled")));
 
@@ -101,15 +125,24 @@ export class StockfishService {
       active.reject(new Error("Search cancelled"));
     }
 
-    if (this.worker) {
-      try { this.worker.postMessage("stop"); } catch {}
-    }
+    const oldWorker = this.worker;
+    this.worker = null;
+    this.ready = false;
+    this.starting = null;
+
+    try { oldWorker?.postMessage("stop"); } catch {}
+    try { oldWorker?.terminate(); } catch {}
+
+    // Replacement searches are queued against a fresh worker, so a late
+    // bestmove from the cancelled worker can never resolve the new search.
+    if (this.queue.length) this.start().catch(() => {});
   }
 
   restart() {
     const oldWorker = this.worker;
     this.worker = null;
     this.ready = false;
+    this.starting = null;
     this.generation++;
     try { oldWorker?.terminate(); } catch {}
 
@@ -125,11 +158,21 @@ export class StockfishService {
   }
 
   destroy() {
-    this.cancel();
+    this.generation++;
+    const queued = this.queue.splice(0);
+    queued.forEach(job => job.reject(new Error("Engine destroyed")));
+
+    const active = this.active;
+    this.active = null;
+    if (active) {
+      clearTimeout(active.timer);
+      active.reject(new Error("Engine destroyed"));
+    }
+
     const worker = this.worker;
     this.worker = null;
     this.ready = false;
-    this.generation++;
+    this.starting = null;
     try { worker?.terminate(); } catch {}
   }
 }
