@@ -94,7 +94,7 @@
 </main>
 </div>
 
-<script type="module">
+<script type="module">>
 import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
 
 const $ = s => document.querySelector(s);
@@ -126,6 +126,21 @@ let coursePositions = {
  stockfish:{title:"Stockfish Course",text:"Find a candidate move first, then use Stockfish to evaluate the course position.",fen:"r1bqk2r/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 4 5"}
 };
 
+const lessonPositions={
+fork:{title:"Knight Fork",text:"Find a knight move that attacks two valuable targets.",fen:"r1bqkbnr/pppp1ppp/2n5/4p3/8/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 2 3"},
+opening:{title:"Opening Basics",text:"Develop a piece toward the center and compare your choice with Stockfish.",fen:"rnbqkbnr/pppppppp/8/4p3/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 1 2"},
+mate:{title:"Mate in 1",text:"Find the immediate checkmate in this training position.",fen:"7k/5Q2/7K/8/8/8/8/8 w - - 0 1"}};
+function renderBoard(targetId,chess,sel){
+const b=$("#"+targetId);if(!b)return;let legal=[];if(sel){try{legal=chess.moves({square:sel,verbose:true}).map(m=>m.to)}catch{}}
+b.innerHTML="";const files="abcdefgh",cells=[];
+for(let r=0;r<8;r++)for(let c=0;c<8;c++){const sq=files[c]+(8-r),p=chess.get(sq),el=document.createElement("button");el.type="button";el.className="sq "+((r+c)%2?"dark":"light");el.dataset.square=sq;if(sel===sq)el.classList.add("selected");if(legal.includes(sq))el.classList.add(p?"capture":"legal");
+if(p){const span=document.createElement("span");span.className="piece "+p.color;span.textContent=glyph[p.color][p.type];el.appendChild(span);el.draggable=p.color===chess.turn()&&!chess.isGameOver()}
+el.onclick=()=>targetId==="board"?handleGameClick(sq):targetId==="trainerBoard"?handleTrainerClick(sq):handleCourseClick(sq);
+el.ondragstart=e=>{if(!p||p.color!==chess.turn())return e.preventDefault();e.dataTransfer.setData("text/plain",sq);if(targetId==="board")selected=sq;else if(targetId==="trainerBoard")trainerSelected=sq;else courseSelected=sq;renderAll()};
+el.ondragover=e=>e.preventDefault();el.ondrop=e=>{e.preventDefault();const from=e.dataTransfer.getData("text/plain");if(from)(targetId==="board"?handleGameClick(sq,from):targetId==="trainerBoard"?handleTrainerClick(sq,from):handleCourseClick(sq,from))};cells.push(el)}
+if(targetId==="board"&&flipped)cells.reverse();cells.forEach(e=>b.appendChild(e))}
+function gameLabel(){if(game.isCheckmate())return"Checkmate — "+(game.turn()==="w"?"Black":"White")+" wins";if(game.isStalemate())return"Draw — stalemate";if(game.isDraw())return"Draw";return(game.turn()==="w"?"White":"Black")+" to move"+(game.inCheck()?" — check":"")}
+function renderAll(){renderBoard("board",game,selected);renderBoard("trainerBoard",trainerGame,trainerSelected);renderBoard("courseBoard",courseGame,courseSelected);$("#status").textContent=gameLabel();$("#modeTag").textContent=mode==="computer"?"COMPUTER":"2 PLAYER";$("#moves").textContent=game.history().length?game.history().map((m,i)=>(i%2===0?((i/2)+1)+". ":"")+(i%2?" "+m:m)).join("\n"):"No moves yet."}
 function engineLimit(){
  const level=Number($("#level").value);
  if(level<=1200)return {depth:7,time:180};
