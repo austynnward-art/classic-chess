@@ -10,20 +10,25 @@ export class StockfishService {
   }
 
   async start() {
-    if (this.ready) return;
+    if (this.ready && this.worker) return;
     const generation = ++this.generation;
-    this.worker = new Worker(this.workerUrl);
-    this.worker.onmessage = event => this.handleMessage(generation, String(event.data || ""));
-    this.worker.onerror = () => this.restart();
-    this.worker.postMessage("uci");
+    const worker = new Worker(this.workerUrl);
+    this.worker = worker;
+    this.ready = false;
+    worker.onmessage = event => this.handleMessage(worker, generation, String(event.data || ""));
+    worker.onerror = () => {
+      if (worker !== this.worker || generation !== this.generation) return;
+      this.restart();
+    };
+    worker.postMessage("uci");
   }
 
-  handleMessage(generation, line) {
-    if (generation !== this.generation || !this.worker) return;
+  handleMessage(worker, generation, line) {
+    if (worker !== this.worker || generation !== this.generation) return;
 
     if (line === "uciok") {
-      this.worker.postMessage("setoption name Threads value 1");
-      this.worker.postMessage("isready");
+      worker.postMessage("setoption name Threads value 1");
+      worker.postMessage("isready");
       return;
     }
 
@@ -34,12 +39,12 @@ export class StockfishService {
     }
 
     if (line.startsWith("bestmove")) {
-      const bestMove = line.split(/\\s+/)[1] || "0000";
       const job = this.active;
-      if (!job) return;
+      if (!job || job.generation !== generation) return;
+      const bestMove = line.split(/\s+/)[1] || "0000";
       this.active = null;
       clearTimeout(job.timer);
-      if (job.generation === this.generation) job.resolve(bestMove);
+      job.resolve(bestMove);
       this.runNext();
     }
   }
@@ -84,30 +89,47 @@ export class StockfishService {
   }
 
   cancel() {
-    this.queue.splice(0).forEach(job => job.reject(new Error("Search cancelled")));
-    if (this.active) {
-      clearTimeout(this.active.timer);
-      this.active.reject(new Error("Search cancelled"));
-      this.active = null;
+    // Invalidate every response already in flight before accepting a replacement job.
+    this.generation++;
+    const queued = this.queue.splice(0);
+    queued.forEach(job => job.reject(new Error("Search cancelled")));
+
+    const active = this.active;
+    this.active = null;
+    if (active) {
+      clearTimeout(active.timer);
+      active.reject(new Error("Search cancelled"));
     }
+
     if (this.worker) {
       try { this.worker.postMessage("stop"); } catch {}
     }
   }
 
   restart() {
-    try { this.worker?.terminate(); } catch {}
+    const oldWorker = this.worker;
     this.worker = null;
     this.ready = false;
     this.generation++;
-    this.cancel();
+    try { oldWorker?.terminate(); } catch {}
+
+    const queued = this.queue.splice(0);
+    queued.forEach(job => job.reject(new Error("Engine restarted")));
+
+    const active = this.active;
+    this.active = null;
+    if (active) {
+      clearTimeout(active.timer);
+      active.reject(new Error("Engine restarted"));
+    }
   }
 
   destroy() {
     this.cancel();
-    try { this.worker?.terminate(); } catch {}
+    const worker = this.worker;
     this.worker = null;
     this.ready = false;
     this.generation++;
+    try { worker?.terminate(); } catch {}
   }
 }
