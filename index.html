@@ -3,1119 +3,278 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Rebel Classic Chess — play, train, study courses, and analyze positions with Stockfish 19 Lite.">
 <meta name="theme-color" content="#07090b">
-<meta name="color-scheme" content="dark">
-<title>Rebel Classic Chess — Play · Train · Watch</title>
+<title>Rebel Classic Chess</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/1.4.0/chess.min.js"></script>
 <style>
-:root{--bg:#07090b;--panel:#0d1217;--panel2:#11181e;--line:#25303a;--text:#f4f6f7;--muted:#8d98a2;--lime:#1597ff;--light:#eee;--dark:#b7c5d6;--blue:#4d8cff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}.app{min-height:100vh;display:grid;grid-template-columns:25vw 1fr}.sideNav{border-right:1px solid var(--line);background:#080b0e;padding:24px 14px;position:sticky;top:0;height:100vh}.brand{display:flex;align-items:center;gap:10px;margin:4px 8px 30px}.logo{width:42px;height:42px;border-radius:12px;background:var(--lime);color:#091007;display:grid;place-items:center;font-size:25px;font-weight:900}.brand b{font-size:16px}.brand small{display:block;color:#69747e;margin-top:3px}.nav button{display:block;width:100%;border:0;background:transparent;color:#87919a;text-align:left;border-radius:10px;padding:13px 12px;margin:5px 0;font-weight:800;cursor:pointer}.nav button.active,.nav button:hover{background:#151c22;color:#fff}.nav button.active:before{content:"";display:inline-block;width:4px;height:16px;border-radius:5px;background:var(--lime);vertical-align:-3px;margin-right:10px}.main{padding:34px 42px 72px}.page{display:none;max-width:1800px;margin:auto}.page.active{display:block}.layout{display:grid;grid-template-columns:minmax(620px,1fr) 390px;gap:24px;justify-content:center}.page>.archPage,.page>.layout,.page>.courseBoard,.page>.trainer,.page>.rebelGrid,.page>.analysisGrid,.page>.modelBoard{width:100%;max-width:1800px;margin-left:auto;margin-right:auto}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px #0005}.boardPanel{padding:22px}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--lime);font-weight:950}.head{display:flex;justify-content:space-between;gap:15px;margin-bottom:17px}.head h1{margin:6px 0 3px;font-size:30px}.muted{color:var(--muted);line-height:1.5}.tag{display:inline-block;padding:6px 9px;border-radius:999px;background:#1597ff18;color:var(--lime);font-size:9px;font-weight:900;letter-spacing:1px}.boardFrame{width:min(720px,100%);margin:auto;background:linear-gradient(145deg,#6b4427,#3f2415);padding:12px 12px 24px;border:3px solid #24150d;border-radius:6px;box-shadow:0 14px 30px #0009,inset 0 1px 0 #ffffff20}.board{width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);border:3px solid #21140c;box-shadow:0 5px 14px #0008}.sq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(34px,7.2vw,72px);line-height:1;user-select:none;overflow:hidden}.light{background:#f1e6cf}.dark{background:#174a78}.sq.selected{box-shadow:inset 0 0 0 5px var(--lime),inset 0 0 22px #ffffff20}.sq.drag-over{box-shadow:inset 0 0 0 5px #fff9}.sq[draggable="true"]{cursor:grab}.sq:active{cursor:grabbing}.sq.legal:after{content:"";width:16%;height:16%;border-radius:50%;background:#07152299;box-shadow:0 1px 3px #0006}.sq.capture:after{content:"";position:absolute;inset:7%;border:4px solid #071522aa;border-radius:50%}.piece{font-family:"DejaVu Sans",serif;display:grid;place-items:center;width:94%;height:94%;transform:translateZ(0);line-height:1;text-align:center;text-shadow:0 3px 3px #0007;position:relative;z-index:2}.piece.w{color:#fff}.piece.b{color:#2468b2}.coord{position:absolute;font:800 9px ui-monospace,monospace;opacity:.78;z-index:3}.rank{left:4px;top:4px}.file{right:4px;bottom:4px}.light .coord{color:#244}.dark .coord{color:#eef6ff}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.btn{border:1px solid var(--line);background:#151c22;color:#e8edf0;border-radius:10px;padding:10px 14px;font-weight:850;cursor:pointer}.btn:hover{border-color:#53606a}.btn:focus-visible,.nav button:focus-visible,.sq:focus-visible,.lesson:focus-visible,.resource:focus-visible{outline:3px solid var(--lime);outline-offset:2px}.btn:disabled{opacity:.55;cursor:not-allowed}.nav button[aria-current="page"]{color:#fff}.btn.primary{background:var(--lime);border-color:var(--lime);color:#fff}.sideCards{display:flex;flex-direction:column;gap:10px}.card{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:15px}.card strong{display:block;color:#68737d;font-size:9px;letter-spacing:1.5px;margin-bottom:7px}.status{font-size:17px;font-weight:900}.moves{max-height:330px;overflow:auto;white-space:pre-line;font:12px/1.8 ui-monospace,monospace}.coach{background:linear-gradient(145deg,#092a48,#0b131a);border-color:#1597ff30}.select{width:100%;margin-top:8px;background:#0b1014;color:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}.hero{padding:32px;border-radius:20px;background:radial-gradient(circle at 80% 20%,#082e57,#08131e 65%);border:1px solid #29362c;margin-bottom:18px}.hero h1{font-size:46px;color:#fff;letter-spacing:-2px;margin:9px 0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.tile{padding:20px;min-height:150px}.tile h3{margin:12px 0 7px}.videoGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:20px}.video{overflow:hidden}.video iframe{width:100%;aspect-ratio:16/9;border:0;display:block;background:#020304}.videoBody{padding:20px}.video{min-height:300px}.video iframe{min-height:300px}.videoBody h3{margin:0 0 5px;font-size:15px}.videoBody p{margin:0 0 12px;color:var(--muted);font-size:12px}.link{color:var(--lime);text-decoration:none;font-weight:800}.resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.courseGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.courseCard{padding:22px;display:flex;flex-direction:column;min-height:230px}.courseCard h3{margin:8px 0 5px}.courseCard .btn{margin-top:auto}.courseBoard{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px}.coursePanel{padding:18px}.courseMeta{display:flex;gap:8px;flex-wrap:wrap}.courseMeta span{padding:5px 8px;border-radius:999px;background:#ffffff09;color:#aab5bd;font-size:10px}.resource{padding:16px;text-decoration:none;color:inherit}.resource:hover{border-color:#1597ff55}.trainer{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:24px}.lessonList{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0}.lesson{padding:14px;cursor:pointer}.lesson.active{border-color:var(--lime);box-shadow:0 0 0 1px #1597ff22}.lesson b{display:block;margin-bottom:6px}.lesson small{color:var(--muted)}.trainerBoard{padding:18px}.notice{padding:12px;border-radius:10px;background:#ffffff08;color:#cbd3d8;font-size:12px;margin-top:10px}.hidden{display:none!important}.videoNote{margin-top:15px;padding:14px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px}.progress{height:7px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--lime);width:0}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.flipInfo{font-size:11px;color:var(--muted)}
-.rebelGrid{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:24px}
-.rebelCards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.metric{font-size:24px;font-weight:950;margin-top:5px}
-.tableWrap{overflow:auto;max-height:430px}
-.gameRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px;border-top:1px solid var(--line)}
-.gameRow:first-child{border-top:0}
-.gameRow small{display:block;color:var(--muted);margin-top:3px}
-.analysisGrid{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:24px}
-.analysisSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.analysisBadge{padding:14px;border:1px solid var(--line);border-radius:12px;background:#ffffff06}
-.analysisBadge b{display:block;font-size:24px;margin-top:4px}
-.analysisMove{display:grid;grid-template-columns:52px 72px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
-.analysisMove.good{border-left:3px solid #1597ff;padding-left:9px}
-.analysisMove.inaccuracy{border-left:3px solid #d7b400;padding-left:9px}
-.analysisMove.mistake{border-left:3px solid #d77900;padding-left:9px}
-.analysisMove.blunder{border-left:3px solid #d73535;padding-left:9px}
-.analysisMove small{color:var(--muted)}
-.analysisLines{font:11px/1.6 ui-monospace,monospace;color:#cbd3d8}
-.analysisProgress{height:7px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:10px}
-.analysisProgress i{display:block;height:100%;background:var(--lime);width:0}
-.engineReadout{font:11px/1.7 ui-monospace,monospace;white-space:pre-wrap;background:#080d11;border:1px solid var(--line);border-radius:10px;padding:12px;min-height:120px}
-.bookMove{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line);font:12px ui-monospace,monospace}
-.bookMove:first-child{border-top:0}
-textarea.fenInput{width:100%;min-height:74px;resize:vertical;background:#080d11;color:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;font:12px ui-monospace,monospace}
-@media(max-width:1050px){.rebelGrid,.analysisGrid{grid-template-columns:1fr}.rebelCards,.analysisSummary{grid-template-columns:1fr 1fr}}
-@media(max-width:680px){.rebelCards{grid-template-columns:1fr}}@media(max-width:1250px){.layout{grid-template-columns:minmax(0,1fr) 330px}.trainer{grid-template-columns:minmax(0,1fr) 330px}.rebelGrid,.analysisGrid,.modelBoard{grid-template-columns:minmax(0,1fr) 330px}}@media(max-width:1050px){.courseGrid{grid-template-columns:1fr 1fr}.courseBoard{grid-template-columns:1fr}.nav button{font-size:12px}.nav button.active:before{margin-right:6px}}@media(max-width:1050px){.app{grid-template-columns:25vw 1fr}.sideNav{padding:20px 8px}.brand{justify-content:center}.brand>div:not(.logo){display:none}.nav button{font-size:0;text-align:center}.nav button.active:before{margin:0}.layout,.trainer{grid-template-columns:1fr}.sideCards{display:grid;grid-template-columns:1fr 1fr}.coach{grid-column:1/-1}.grid3,.resourceGrid{grid-template-columns:1fr 1fr}}@media(max-width:680px){.app{display:block}.sideNav{height:62px;position:sticky;z-index:10;display:flex;align-items:center;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.brand{margin:0}.nav{display:flex;gap:4px;margin-left:auto}.nav button{font-size:12px;padding:9px}.nav button.active:before{display:none}.main{padding:16px 10px 40px}.boardPanel{padding:13px}.head h1{font-size:24px}.sideCards{display:block}.card{margin-top:10px}.videoGrid,.grid3,.resourceGrid,.lessonList,.courseGrid{grid-template-columns:1fr}.hero{padding:24px}.hero h1{font-size:36px}}
-
-.archPage{max-width:1400px;margin:auto}
-.archHero{padding:28px;border-radius:20px;background:radial-gradient(circle at 80% 20%,#082e57,#08131e 65%);border:1px solid #29362c;margin-bottom:18px}
-.archHero h1{font-size:40px;margin:8px 0}.archGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.archCard{padding:18px}.archCard h3{margin:7px 0}.archStat{font-size:27px;font-weight:950}.archList{display:grid;gap:9px;margin-top:12px}
-.archItem{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px;background:#ffffff05}
-.archItem small{color:var(--muted)}.archProgress{height:8px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:8px}.archProgress i{display:block;height:100%;background:var(--lime);width:0}
-.archPill{display:inline-block;padding:5px 8px;border-radius:999px;background:#1597ff18;color:var(--lime);font-size:9px;font-weight:900;letter-spacing:1px}
-@media(max-width:900px){.archGrid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.archGrid{grid-template-columns:1fr}.archHero h1{font-size:31px}}
-.chesslyGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.chesslyCard{padding:18px;min-height:190px}.chesslyCard h3{margin:8px 0}.chesslyCard .btn{margin-top:12px}.lessonRows{display:grid;gap:9px;margin-top:14px}.courseChapter{margin-top:18px}.courseChapter h3{margin:0 0 8px}.courseChapterBar{display:flex;justify-content:space-between;gap:10px;align-items:center}.lessonRow.done{border-color:#1597ff55;background:#1597ff0d}.lessonRow.current{border-color:var(--lime);box-shadow:0 0 0 1px #1597ff22}.lessonRow.locked{opacity:.48}.completionTag{font-size:9px;font-weight:900;letter-spacing:1px;color:var(--lime)}.lessonRow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:12px;background:#ffffff05}.lessonNum{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#1597ff18;color:var(--lime);font-weight:900}.lessonRow small{display:block;color:var(--muted);margin-top:3px}.filterBar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.filterBar .btn.active{background:var(--lime);border-color:var(--lime);color:#fff}.quizOption{display:block;width:100%;text-align:left;margin:8px 0}.quizOption.correct{border-color:#2fbf71;background:#2fbf7118}.quizOption.wrong{border-color:#d73535;background:#d7353518}.xpBadge{font-size:28px;font-weight:950}.modelBoard{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:24px}.modelMoves{max-height:420px;overflow:auto}.modelMove{padding:10px;border-top:1px solid var(--line);cursor:pointer}.modelMove:hover{background:#ffffff08}.shuffleHero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}.streak{font-size:40px;font-weight:950}@media(max-width:900px){.chesslyGrid{grid-template-columns:1fr 1fr}.modelBoard{grid-template-columns:1fr}}@media(max-width:600px){.chesslyGrid{grid-template-columns:1fr}.shuffleHero{grid-template-columns:1fr}}
+:root{--bg:#07090b;--panel:#10151a;--panel2:#151c22;--line:#28323b;--text:#f4f6f7;--muted:#8e99a3;--accent:#1597ff;--light:#eee6d5;--dark:#174a78}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,system-ui,sans-serif}.app{min-height:100vh;display:grid;grid-template-columns:25vw 1fr}.side{position:sticky;top:0;height:100vh;padding:24px 14px;background:#090c0f;border-right:1px solid var(--line)}.brand{display:flex;gap:10px;align-items:center;margin:4px 8px 28px}.logo{width:42px;height:42px;border-radius:12px;background:var(--accent);display:grid;place-items:center;font-size:25px}.brand b{font-size:16px}.brand small{display:block;color:var(--muted);margin-top:3px}.nav button{width:100%;display:block;text-align:left;border:0;background:none;color:#89949e;border-radius:10px;padding:13px 12px;margin:4px 0;font-weight:800;cursor:pointer}.nav button:hover,.nav button.active{background:#151c22;color:#fff}.nav button.active:before{content:"";display:inline-block;width:4px;height:16px;background:var(--accent);border-radius:4px;margin-right:9px;vertical-align:-3px}.main{padding:30px 38px 70px}.page{display:none;max-width:1700px;margin:auto}.page.active{display:block}.hero{padding:28px;border:1px solid var(--line);border-radius:18px;background:radial-gradient(circle at 80% 20%,#0a3157,#0a1117 65%);margin-bottom:18px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:900;color:var(--accent);text-transform:uppercase}.hero h1{font-size:40px;margin:8px 0}.muted{color:var(--muted);line-height:1.5}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px}.card{padding:18px}.card h2,.card h3{margin-top:6px}.btn{border:1px solid var(--line);background:var(--panel2);color:#edf2f5;border-radius:9px;padding:10px 14px;font-weight:800;cursor:pointer}.btn:hover{border-color:#61707d}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.layout{display:grid;grid-template-columns:minmax(600px,1fr) 350px;gap:20px}.boardPanel{padding:20px}.boardFrame{width:min(760px,100%);margin:auto;background:#402515;padding:12px;border:3px solid #21140c}.board{width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);border:2px solid #21140c}.sq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(32px,6.7vw,70px);line-height:1;overflow:hidden}.sq.light{background:var(--light)}.sq.dark{background:var(--dark)}.sq.selected{box-shadow:inset 0 0 0 5px var(--accent)}.sq.legal:after{content:"";width:15%;height:15%;border-radius:50%;background:#07152299}.sq.capture:after{content:"";position:absolute;inset:7%;border:4px solid #071522aa;border-radius:50%}.piece{font-family:"DejaVu Sans",serif;display:grid;place-items:center;width:94%;height:94%;text-shadow:0 3px 3px #0007;z-index:2}.piece.w{color:#fff}.piece.b{color:#2470ba}.coord{position:absolute;font:800 9px monospace;opacity:.75;z-index:3}.rank{left:4px;top:3px}.file{right:4px;bottom:3px}.light .coord{color:#26352d}.dark .coord{color:#fff}.status{font-size:18px;font-weight:900}.moves{max-height:330px;overflow:auto;white-space:pre-line;font:12px/1.8 monospace}.tag{display:inline-block;padding:5px 8px;border-radius:99px;background:#1597ff18;color:var(--accent);font-size:9px;font-weight:900;letter-spacing:1px}.stat{font-size:28px;font-weight:950;margin-top:6px}.progress{height:7px;background:#20272d;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;width:0;background:var(--accent)}.rows{display:grid;gap:8px;margin-top:12px}.row{padding:12px;border:1px solid var(--line);border-radius:11px;background:#ffffff05}.row:hover{border-color:#1597ff55}.select,.fen{background:#090e12;color:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}.fen{width:100%;min-height:70px;font:12px monospace;resize:vertical}.boardGrid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:20px}.courseGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.lesson{padding:15px;cursor:pointer}.lesson.active{border-color:var(--accent)}.lesson.done{background:#1597ff0d}.report{display:grid;grid-template-columns:55px 70px 1fr auto;gap:10px;padding:11px 0;border-top:1px solid var(--line);align-items:center}.good{border-left:3px solid #1597ff;padding-left:8px}.inaccuracy{border-left:3px solid #d7b400;padding-left:8px}.mistake{border-left:3px solid #d77900;padding-left:8px}.blunder{border-left:3px solid #d73535;padding-left:8px}.console{font:12px/1.7 monospace;white-space:pre-wrap;background:#080d11;border:1px solid var(--line);border-radius:10px;padding:12px;min-height:120px}.hidden{display:none!important}@media(max-width:1100px){.app{grid-template-columns:25vw 1fr}.layout,.boardGrid{grid-template-columns:1fr}.sideCards{display:grid;grid-template-columns:1fr 1fr}.courseGrid,.grid{grid-template-columns:1fr 1fr}}@media(max-width:700px){.app{display:block}.side{height:auto;position:sticky;z-index:5;display:flex;align-items:center;padding:8px;border-right:0;border-bottom:1px solid var(--line)}.brand{margin:0}.brand div:last-child{display:none}.nav{display:flex;gap:4px;overflow:auto;margin-left:auto}.nav button{font-size:12px;padding:9px;white-space:nowrap}.nav button.active:before{display:none}.main{padding:15px 10px 45px}.hero h1{font-size:31px}.boardPanel{padding:12px}.sideCards,.courseGrid,.grid{display:grid;grid-template-columns:1fr}.report{grid-template-columns:42px 60px 1fr}.boardFrame{padding:7px}}
 </style>
 </head>
 <body>
 <div class="app">
-<aside class="sideNav">
- <div class="brand"><div class="logo">♞</div><div><b>Rebel Classic Chess</b><small>REBEL CHESS LAB</small></div></div>
- <nav class="nav" aria-label="Primary"><button class="active" aria-current="page" data-page="homePage">Home</button><button data-page="coursePage">Courses</button><button data-page="studyPage">Study</button><button data-page="trainerPage">Drills</button><button data-page="quizPage">Quizzes</button><button data-page="strategyPage">Strategy</button><button data-page="shufflePage">Shuffle</button><button data-page="modelsPage">Model Games</button><button data-page="boardPage">Play</button><button data-page="rebelPage">Lab</button><button data-page="progressPage">Progress</button><button data-page="videoPage">Videos</button><button data-page="rulesPage">Rules</button></nav>
+<aside class="side">
+ <div class="brand"><div class="logo">♞</div><div><b>Rebel Classic Chess</b><small>PLAY · TRAIN · ANALYZE</small></div></div>
+ <nav class="nav" aria-label="Main">
+  <button class="active" data-page="home">Home</button><button data-page="play">Play</button><button data-page="courses">Courses</button><button data-page="trainer">Drills</button><button data-page="lab">Rebel Lab</button><button data-page="progress">Progress</button>
+ </nav>
 </aside>
 <main class="main">
 
-<section id="homePage" class="page active">
- <div class="archPage">
-  <div class="archHero"><span class="eyebrow">Rebel learning system</span><h1>Learn → Play → Analyze → Train</h1><p class="muted">Your Chessly-style course workflow is now connected to the existing Rebel board, Stockfish analysis, saved games and training positions.</p>
-   <div class="controls"><button class="btn primary" data-page="coursePage">Continue learning</button><button class="btn" data-page="trainerPage">Train weaknesses</button><button class="btn" data-page="boardPage">Play a game</button></div>
-  </div>
-  <div class="archGrid">
-   <div class="panel archCard"><span class="archPill">LEARNING</span><h3>Courses</h3><div class="archStat">3</div><small class="muted">Interactive course paths currently connected.</small><div class="archProgress"><i style="width:33%"></i></div></div>
-   <div class="panel archCard"><span class="archPill">TRAINING</span><h3>Saved positions</h3><div id="homeLearningCount" class="archStat">0</div><small class="muted">Engine-checked positions in your Rebel learning book.</small></div>
-   <div class="panel archCard"><span class="archPill">GAMES</span><h3>Saved games</h3><div id="homeGameCount" class="archStat">0</div><small class="muted">Games available in your local Rebel database.</small></div>
-  </div>
-  <div class="archGrid" style="margin-top:14px">
-   <div class="panel archCard"><span class="eyebrow">Course path</span><h3>Chess Fundamentals</h3><p class="muted">Board setup → legal moves → checks → tactics → analysis.</p><button class="btn primary" data-course="foundations">Open course</button></div>
-   <div class="panel archCard"><span class="eyebrow">Recommended</span><h3>Train your latest analysis</h3><p class="muted">Turn an analyzed position into a repeatable drill.</p><button class="btn" data-page="trainerPage">Open Trainer</button></div>
-   <div class="panel archCard"><span class="eyebrow">Rebel Lab</span><h3>Review a game</h3><p class="muted">Mistakes, blunders, best moves, alternatives and move-by-move reporting.</p><button class="btn" data-page="rebelPage">Open Lab</button></div>
-  </div>
+<section id="home" class="page active">
+ <div class="hero"><span class="eyebrow">Rebel Classic Chess</span><h1>Learn → Play → Analyze → Train</h1><p class="muted">A clean chess workspace with one board model, one Stockfish service, courses, drills, saved games, and game review.</p><div class="controls"><button class="btn primary" data-page="play">Play now</button><button class="btn" data-page="courses">Continue learning</button><button class="btn" data-page="lab">Open Rebel Lab</button></div></div>
+ <div class="grid">
+  <div class="panel card"><span class="tag">COURSES</span><div id="homeCourse" class="stat">0%</div><p class="muted">Course completion</p><div class="progress"><i id="homeCourseBar"></i></div></div>
+  <div class="panel card"><span class="tag">GAMES</span><div id="homeGames" class="stat">0</div><p class="muted">Saved games</p></div>
+  <div class="panel card"><span class="tag">ENGINE</span><div id="homeEngine" class="stat">Loading</div><p class="muted">Stockfish service</p></div>
+ </div>
+ <div class="grid" style="margin-top:14px">
+  <div class="panel card"><span class="eyebrow">Course path</span><h3>Chess Fundamentals</h3><p class="muted">Board → moves → tactics → review.</p><button class="btn primary" data-course="foundations">Open course</button></div>
+  <div class="panel card"><span class="eyebrow">Training</span><h3>Weakness Drill</h3><p class="muted">Practice a position from your latest game.</p><button class="btn" data-page="trainer">Open drills</button></div>
+  <div class="panel card"><span class="eyebrow">Analysis</span><h3>Game Review</h3><p class="muted">Best moves, mistakes, blunders, and alternatives.</p><button class="btn" data-page="lab">Analyze a game</button></div>
  </div>
 </section>
 
-<section id="progressPage" class="page">
- <div class="archPage">
-  <div class="archHero"><span class="eyebrow">Progress</span><h1>Your Rebel training profile</h1><p class="muted">Progress is calculated from the training and game data already stored in this browser.</p></div>
-  <div class="archGrid">
-   <div class="panel archCard"><span class="archPill">XP</span><h3>Total learning XP</h3><div id="progressXp" class="archStat">0</div><small class="muted">Training hits + saved games + completed drills.</small></div>
-   <div class="panel archCard"><span class="archPill">GAMES</span><h3>Games analyzed</h3><div id="progressGames" class="archStat">0</div><small class="muted">Local saved-game library.</small></div>
-   <div class="panel archCard"><span class="archPill">ENGINE</span><h3>Engine state</h3><div id="progressEngine" class="archStat">—</div><small class="muted">Single Stockfish service.</small></div>
-  </div>
-  <div class="panel archCard" style="margin-top:14px"><span class="eyebrow">Skill lanes</span><h2>Training categories</h2>
-   <div class="archList">
-    <div class="archItem"><div><b>Tactics</b><small>Forks, checks, captures and threats</small></div><span id="skillTactics">Building</span></div>
-    <div class="archItem"><div><b>Openings</b><small>Course and book positions</small></div><span id="skillOpenings">Building</span></div>
-    <div class="archItem"><div><b>Calculation</b><small>Engine-checked candidate moves</small></div><span id="skillCalculation">Building</span></div>
-    <div class="archItem"><div><b>Game review</b><small>Mistakes converted into training</small></div><span id="skillReview">Building</span></div>
-   </div>
-  </div>
- </div>
-</section>
-<section id="boardPage" class="page">
+<section id="play" class="page">
  <div class="layout">
   <section class="panel boardPanel">
-   <div class="head"><div><span class="eyebrow">Live chess board</span><h1>Play against Stockfish</h1><p class="muted">White starts on rank 1. Blue pieces are Black.</p></div><span id="modeTag" class="tag">2 PLAYER</span></div>
-   <div class="boardFrame"><div id="board" class="board" role="grid" aria-label="Chess board"></div></div>
-   <div class="controls">
-    <button class="btn primary" id="newGame">New game</button><button class="btn" id="computerBtn">Play computer</button><button class="btn" id="localBtn">2 players</button><button class="btn" id="undoBtn">Undo</button><button class="btn" id="flipBtn">Flip board</button>
-   </div>
-   <div class="card" style="margin-top:14px"><strong>TRAINING LOOP</strong><div id="trainingLoopStatus" class="status">Play a game to build a training plan.</div><p id="trainingLoopText" class="muted">Play → analyze → drill → retest.</p><div class="progress"><i id="trainingLoopProgress"></i></div><div class="controls"><button class="btn" id="startTrainingFromGame">Train this position</button></div></div>
-   <div class="controls"><span class="tag">STOCKFISH 19 LITE</span><select id="level" class="select" style="max-width:180px" aria-label="Stockfish level"><option value="1200">Easy</option><option value="1600">Medium</option><option value="2000">Hard</option><option value="2400">Strong</option><option value="2800">Max</option></select><button class="btn" id="applyLevel">Apply level</button><span id="engineStatus" class="muted" aria-live="polite">Loading engine…</span></div>
+   <div><span class="eyebrow">Play</span><h1>Chess board</h1><p class="muted">White starts on rank 1. Pieces are centered on every square.</p></div>
+   <div class="boardFrame"><div id="mainBoard" class="board" role="grid" aria-label="Chess board"></div></div>
+   <div class="controls"><button class="btn primary" id="newGame">New game</button><button class="btn" id="computer">Play vs computer</button><button class="btn" id="twoPlayer">2 players</button><button class="btn" id="undo">Undo</button><button class="btn" id="flip">Flip</button></div>
+   <div class="controls"><span class="tag">STOCKFISH</span><select id="level" class="select"><option value="1000">Easy</option><option value="1500">Medium</option><option value="2000">Hard</option><option value="2400">Strong</option></select><button class="btn" id="applyLevel">Apply</button><span id="engineStatus" class="muted">Loading engine…</span></div>
   </section>
   <aside class="sideCards">
-   <div class="card"><strong>TURN</strong><div id="status" class="status" aria-live="polite">White to move</div></div>
-   <div class="card"><strong>GAME MOVES</strong><div id="moves" class="moves">No moves yet.</div></div>
-   <div class="card coach"><span class="tag">COACH</span><p id="coach">Checks, captures, threats. Look for forcing moves first.</p><div class="notice">Stockfish moves are applied to the same chess position that renders this board.</div></div>
+   <div class="panel card"><strong>STATUS</strong><div id="gameStatus" class="status">White to move</div></div>
+   <div class="panel card"><strong>MOVES</strong><div id="moveList" class="moves">No moves yet.</div></div>
+   <div class="panel card"><span class="tag">COACH</span><p id="coach" class="muted">Look for checks, captures, and threats before moving.</p><button class="btn" id="trainPosition">Train this position</button></div>
   </aside>
  </div>
 </section>
 
-<section id="trainerPage" class="page">
- <div class="hero"><span class="eyebrow">Interactive trainer</span><h1>Learn on the same board.</h1><p class="muted">Every lesson uses the same legal-move system and Stockfish connection as the game board.</p></div>
- <div class="trainer">
-  <section class="panel trainerBoard">
-   <div class="lessonList">
-    <button class="panel lesson active" data-lesson="fork"><b>Knight Fork</b><small>Find a forcing double attack.</small></button>
-    <button class="panel lesson" data-lesson="opening"><b>Opening Basics</b><small>Develop and control the center.</small></button>
-    <button class="panel lesson" data-lesson="mate"><b>Mate in 1</b><small>Find the immediate checkmate.</small></button>
-   </div>
-   <div class="boardFrame"><div id="trainerBoard" class="board" role="grid" aria-label="Trainer chess board"></div></div>
-   <div class="controls"><button class="btn primary" id="analyzeLesson">Analyze with Stockfish</button><button class="btn" id="resetLesson">Reset position</button><span id="trainerStatus" class="muted" aria-live="polite">Find the move yourself first.</span></div>
-   <div class="progress"><i id="lessonProgress"></i></div>
-  </section>
-  <aside class="card"><span class="tag">LESSON</span><h2 id="lessonTitle">Knight Fork</h2><p id="lessonText" class="muted">Find a knight move that attacks two valuable targets.</p><div class="notice">Stockfish validates the puzzle target. Legal moves that are not the engine target are rejected and reset.</div></aside>
- </div>
-</section>
-
-<section id="coursePage" class="page">
- <div class="hero"><span class="eyebrow">Courses</span><h1>Learn → Practice → Analyze</h1><p class="muted">Every course lesson uses the same legal chess board and the same single Stockfish 19 engine service, with one request at a time so analysis cannot collide.</p></div>
+<section id="courses" class="page">
+ <div class="hero"><span class="eyebrow">Courses</span><h1>Rebel Academy</h1><p class="muted">Sequential lessons with persistent browser progress. Each lesson is tied to a real FEN position.</p></div>
  <div class="courseGrid">
-  <article class="panel courseCard"><span class="tag">FOUNDATIONS</span><h3>Chess Fundamentals</h3><p class="muted">Board setup, piece movement, checks, captures, castling, promotion and basic tactics.</p><div class="courseMeta"><span>8 lessons</span><span>Interactive</span></div><button class="btn primary" data-course="foundations">Start course</button></article>
-  <article class="panel courseCard"><span class="tag">OPENINGS</span><h3>Opening Basics</h3><p class="muted">Build a sound opening with center control, development and king safety.</p><div class="courseMeta"><span>6 lessons</span><span>Stockfish</span></div><button class="btn primary" data-course="opening">Start course</button></article>
-  <article class="panel courseCard"><span class="tag">ENGINE LAB</span><h3>Stockfish Course</h3><p class="muted">Learn evaluation, candidate moves, tactics and how to compare your idea with engine analysis.</p><div class="courseMeta"><span>10 lessons</span><span>Stockfish 19</span></div><button class="btn primary" data-course="stockfish">Start course</button></article>
+  <article class="panel card"><span class="tag">FOUNDATIONS</span><h3>Chess Fundamentals</h3><p class="muted">Board, movement, checks, captures, tactics, and review.</p><button class="btn primary" data-course="foundations">Open</button></article>
+  <article class="panel card"><span class="tag">OPENINGS</span><h3>Opening Basics</h3><p class="muted">Center control, development, king safety, and first repertoire ideas.</p><button class="btn primary" data-course="opening">Open</button></article>
+  <article class="panel card"><span class="tag">ENGINE LAB</span><h3>Stockfish Fundamentals</h3><p class="muted">Evaluation, candidate moves, best lines, and game review.</p><button class="btn primary" data-course="engine">Open</button></article>
  </div>
- <div class="courseBoard" style="margin-top:18px">
-  <section class="panel coursePanel">
-   <div class="head"><div><span class="eyebrow">Course lesson board</span><h2 id="courseTitle">Chess Fundamentals</h2><p id="courseText" class="muted">Start with a legal position, make your move, then ask the same Stockfish service to analyze it.</p></div><span class="tag">ONE ENGINE</span></div>
-   <div class="boardFrame"><div id="courseBoard" class="board" role="grid" aria-label="Course chess board"></div></div>
-   <div class="controls"><button class="btn primary" id="analyzeCourse">Analyze lesson</button><button class="btn" id="resetCourse">Reset lesson</button><span id="courseStatus" class="muted" aria-live="polite">Stockfish ready state will appear here.</span></div>
-  </section>
-  <aside class="card"><span class="tag">COURSE PATH</span><h3 id="courseStep">Lesson 1</h3><div id="coursePathMeta" class="muted">0% complete</div><div class="progress"><i id="courseProgress"></i></div><div id="courseLessonList" class="lessonRows"></div><div class="controls"><button class="btn primary" id="completeCourseLesson">Mark lesson complete</button><button class="btn" id="nextCourseLesson">Next lesson</button></div><div class="notice">Progress is saved in this browser. Complete lessons in order, then resume exactly where you left off.</div></aside>
+ <div class="boardGrid" style="margin-top:18px">
+  <section class="panel card"><span class="eyebrow">Active lesson</span><h2 id="courseTitle">Chess Fundamentals</h2><p id="courseText" class="muted"></p><div class="boardFrame"><div id="courseBoard" class="board"></div></div><div class="controls"><button class="btn primary" id="courseAnalyze">Analyze</button><button class="btn" id="courseReset">Reset</button><button class="btn" id="courseComplete">Complete lesson</button><span id="courseStatus" class="muted"></span></div></section>
+  <aside class="panel card"><span class="tag">PATH</span><div id="courseMeta" class="muted"></div><div class="progress"><i id="courseBar"></i></div><div id="courseLessons" class="rows"></div><button class="btn" id="courseNext" style="margin-top:12px">Next lesson</button></aside>
  </div>
 </section>
 
-<section id="rebelPage" class="page">
- <div class="hero"><span class="eyebrow">Rebel feature lab</span><h1>Database · Book · War Room · Learning</h1><p class="muted">A modern Rebel-inspired workspace built on your same legal chess board and single Stockfish service. Your games, positions, analysis notes and learning statistics stay in this browser.</p></div>
- <div class="rebelCards">
-  <div class="panel card"><strong>SAVED GAMES</strong><div id="savedGameCount" class="metric">0</div><small class="muted">Local game library</small></div>
-  <div class="panel card"><strong>LEARNING HITS</strong><div id="learningCount" class="metric">0</div><small class="muted">Positions analyzed</small></div>
-  <div class="panel card"><strong>ENGINE</strong><div id="rebelEngineState" class="metric">—</div><small class="muted">Stockfish 19 Lite</small></div>
+<section id="trainer" class="page">
+ <div class="hero"><span class="eyebrow">Drills</span><h1>Rebel Training Room</h1><p class="muted">Find the move first. Then let Stockfish validate the position.</p></div>
+ <div class="courseGrid">
+  <button class="panel card lesson" data-drill="fork"><span class="tag">TACTICS</span><h3>Knight Fork</h3><p class="muted">Find the double attack.</p></button>
+  <button class="panel card lesson" data-drill="mate"><span class="tag">MATE</span><h3>Mate in 1</h3><p class="muted">Find the immediate finish.</p></button>
+  <button class="panel card lesson" data-drill="opening"><span class="tag">OPENING</span><h3>Opening Move</h3><p class="muted">Choose a strong developing move.</p></button>
  </div>
- <div class="rebelGrid" style="margin-top:16px">
-  <section class="panel card">
-   <div class="head"><div><span class="eyebrow">Game database</span><h2>My Games</h2><p class="muted">Save and reopen positions without leaving the site.</p></div><button class="btn primary" id="saveGameBtn">Save current game</button></div>
-   <div id="gameDatabase" class="tableWrap"><div class="notice">No saved games yet. Play a game and save it here.</div></div>
-  </section>
-  <aside class="panel card">
-   <span class="eyebrow">Opening book</span><h2>Book Explorer</h2>
-   <p id="bookSummary" class="muted">Start from the opening position to see common book moves.</p>
-   <div id="bookMoves"></div>
-   <div class="notice">This is a lightweight built-in study book, not a copied Rebel database.</div>
-  </aside>
- </div>
- <div class="rebelGrid" style="margin-top:16px">
-  <section class="panel card">
-   <div class="head"><div><span class="eyebrow">War room</span><h2>Engine thinking</h2></div><button class="btn" id="analyzeMainBtn">Analyze current board</button></div>
-   <div id="engineReadout" class="engineReadout">Waiting for an analysis.</div>
-   <div class="controls"><select id="multiPv" class="select" style="max-width:180px" aria-label="Candidate lines"><option value="1">1 candidate</option><option value="2">2 candidates</option><option value="3">3 candidates</option><option value="4">4 candidates</option></select><button class="btn" id="applyMultiPv">Apply lines</button></div>
-  </section>
-  <aside class="panel card">
-   <span class="eyebrow">Position tools</span><h2>FEN / EPD style setup</h2>
-   <p class="muted">Load a legal FEN directly onto the main board.</p>
-   <textarea id="fenInput" class="fenInput" spellcheck="false" aria-label="FEN position"></textarea>
-   <div class="controls"><button class="btn primary" id="loadFenBtn">Load position</button><button class="btn" id="copyFenBtn">Use current FEN</button></div>
-   <div id="fenStatus" class="notice">Ready.</div>
-  </aside>
- </div>
- <div class="panel card" style="margin-top:16px">
-  <div class="head"><div><span class="eyebrow">Game analysis</span><h2>Rebel-style Game Review</h2><p class="muted">Review every move with Stockfish. The report compares the move played with the engine's best line and alternative candidates.</p></div><span id="analysisState" class="tag">READY</span></div>
-  <div class="controls"><button class="btn primary" id="analyzeGameBtn">Analyze full game</button><button class="btn" id="stopAnalysisBtn">Stop analysis</button><button class="btn" id="clearAnalysisBtn">Clear report</button></div>
-  <div class="analysisProgress"><i id="analysisProgressBar"></i></div>
-  <div id="analysisProgressText" class="muted" style="margin-top:7px">No analysis running.</div>
-  <div class="analysisSummary" style="margin-top:14px">
-   <div class="analysisBadge"><small class="muted">INACCURACIES</small><b id="analysisInaccuracies">0</b></div>
-   <div class="analysisBadge"><small class="muted">MISTAKES</small><b id="analysisMistakes">0</b></div>
-   <div class="analysisBadge"><small class="muted">BLUNDERS</small><b id="analysisBlunders">0</b></div>
-   <div class="analysisBadge"><small class="muted">GOOD MOVES</small><b id="analysisGood">0</b></div>
-  </div>
-  <div class="analysisGrid" style="margin-top:16px">
-   <div><h3>Move-by-move report</h3><div id="analysisReport" class="tableWrap"><div class="notice">Analyze a completed or in-progress game to generate the report.</div></div></div>
-   <aside><h3>Game report</h3><div id="analysisNarrative" class="notice">Your report will summarize the critical moments here.</div><h3 style="margin-top:16px">Current move</h3><div id="analysisCurrent" class="engineReadout">Waiting.</div></aside>
-  </div>
- </div>
- <div class="panel card" style="margin-top:16px">
-  <span class="eyebrow">REBLEARN</span><h2>Automatic learning</h2>
-  <p class="muted">Every saved or analyzed position contributes to a local learning record. Use it to revisit positions where the engine found a different idea.</p>
-  <div id="learningList"></div>
- </div>
+ <div class="boardGrid" style="margin-top:18px"><section class="panel card"><h2 id="drillTitle">Knight Fork</h2><p id="drillText" class="muted"></p><div class="boardFrame"><div id="drillBoard" class="board"></div></div><div class="controls"><button class="btn primary" id="drillValidate">Validate with Stockfish</button><button class="btn" id="drillReset">Reset</button><span id="drillStatus" class="muted">Choose a move.</span></div></section><aside class="panel card"><span class="tag">TARGET</span><div id="drillTarget" class="console">Stockfish will identify the best move.</div></aside></div>
 </section>
 
-<section id="studyPage" class="page">
- <div class="hero"><span class="eyebrow">Study library</span><h1>Rebel Studies</h1><p class="muted">Organize opening ideas, tactical themes, endgames, and your own analyzed positions into study paths.</p></div>
- <div class="filterBar"><button class="btn active" data-study-filter="all">All</button><button class="btn" data-study-filter="opening">Openings</button><button class="btn" data-study-filter="tactics">Tactics</button><button class="btn" data-study-filter="endgame">Endgames</button></div>
- <div id="studyGrid" class="chesslyGrid"></div>
-</section>
-<section id="quizPage" class="page">
- <div class="hero"><span class="eyebrow">Quiz room</span><h1>Rebel Quizzes</h1><p class="muted">Quick knowledge checks after a lesson. Your score and XP are saved locally.</p></div>
- <div class="panel card"><span class="tag">CURRENT QUIZ</span><h2 id="quizTitle">Chess Fundamentals</h2><p id="quizQuestion" class="muted"></p><div id="quizOptions"></div><div id="quizFeedback" class="notice">Choose an answer.</div><div class="controls"><button class="btn" id="nextQuiz">Next question</button><span class="xpBadge" id="quizScore">0 XP</span></div></div>
-</section>
-<section id="strategyPage" class="page">
- <div class="hero"><span class="eyebrow">Strategy tests</span><h1>Think like a player, not an engine.</h1><p class="muted">Choose the strategic plan that best fits the position before checking the engine.</p></div>
- <div class="panel card"><h2 id="strategyTitle">Find the best plan</h2><p id="strategyQuestion" class="muted"></p><div id="strategyOptions"></div><div id="strategyFeedback" class="notice">Pick a plan.</div><div class="controls"><button class="btn" id="nextStrategy">Next test</button><span class="xpBadge" id="strategyScore">0 XP</span></div></div>
-</section>
-<section id="shufflePage" class="page">
- <div class="hero shuffleHero"><div><span class="eyebrow">Drill shuffle</span><h1>Weakness Queue</h1><p class="muted">Shuffle through tactics, openings, calculation, and review positions. The queue prioritizes items you miss.</p></div><div><div class="streak" id="shuffleStreak">0</div><small class="muted">streak</small></div></div>
- <div class="chesslyGrid">
-  <div class="panel chesslyCard"><span class="tag">TACTICS</span><h3>Forks & threats</h3><p class="muted">Rapid tactical pattern recognition.</p><button class="btn primary" data-lesson="fork">Start drill</button></div>
-  <div class="panel chesslyCard"><span class="tag">OPENING</span><h3>Opening recall</h3><p class="muted">Replay key moves from your course path.</p><button class="btn" data-course="opening">Start drill</button></div>
-  <div class="panel chesslyCard"><span class="tag">GAME REVIEW</span><h3>Fix a mistake</h3><p class="muted">Turn your latest analyzed position into a repeat attempt.</p><button class="btn" data-page="rebelPage">Review mistakes</button></div>
+<section id="lab" class="page">
+ <div class="hero"><span class="eyebrow">Rebel Lab</span><h1>Analyze. Explain. Train.</h1><p class="muted">The Lab owns the engine queue and game review. Searches are serialized and stale results are discarded.</p></div>
+ <div class="grid">
+  <div class="panel card"><span class="tag">SAVED GAMES</span><div id="savedCount" class="stat">0</div></div>
+  <div class="panel card"><span class="tag">LEARNING</span><div id="learningCount" class="stat">0</div></div>
+  <div class="panel card"><span class="tag">ENGINE</span><div id="labEngine" class="stat">Loading</div></div>
  </div>
-</section>
-<section id="modelsPage" class="page">
- <div class="hero"><span class="eyebrow">Model games</span><h1>Study complete games</h1><p class="muted">Follow annotated model-game move lists and jump to the Play board to explore the position yourself.</p></div>
- <div class="modelBoard"><section class="panel card"><span class="tag">MODEL GAME</span><h2 id="modelTitle">Classical Development Model</h2><p id="modelText" class="muted">A short teaching game focused on development and king safety.</p><div id="modelMoves" class="modelMoves"></div></section><aside class="panel card"><h3>How to study</h3><div class="lessonRows"><div class="lessonRow"><div class="lessonNum">1</div><div><b>Guess</b><small>Pause before each move.</small></div></div><div class="lessonRow"><div class="lessonNum">2</div><div><b>Explain</b><small>Name the idea behind the move.</small></div></div><div class="lessonRow"><div class="lessonNum">3</div><div><b>Replay</b><small>Test the position on the board.</small></div></div></div><button class="btn primary" data-page="boardPage">Open board</button></aside></div>
-</section>
-<section id="rulesPage" class="page">
- <div class="hero"><span class="eyebrow">Chess rules library</span><h1>Rules & Handbooks</h1><p class="muted">Use official rule sources as references for the learning platform. The current FIDE Laws took effect January 1, 2023.</p></div>
- <div class="resourceGrid">
-  <a class="panel resource" href="https://rcc.fide.com/wp-content/uploads/2022/12/20230101Laws-of-Chess_final.pdf" target="_blank" rel="noopener"><b>FIDE Laws of Chess</b><p class="muted">Official 2023 Laws of Chess PDF ↗</p></a>
-  <a class="panel resource" href="https://www.fide.com/main/rules/" target="_blank" rel="noopener"><b>FIDE Rules</b><p class="muted">Official FIDE rules hub ↗</p></a>
-  <a class="panel resource" href="https://www.fide.com/fide-publishes-technical-commission-manual/" target="_blank" rel="noopener"><b>FIDE Technical Commission</b><p class="muted">Current technical regulations reference ↗</p></a>
+ <div class="boardGrid" style="margin-top:18px">
+  <section class="panel card"><span class="eyebrow">War Room</span><h2>Current position</h2><div class="boardFrame"><div id="labBoard" class="board"></div></div><div class="controls"><button class="btn primary" id="analyzePosition">Analyze position</button><button class="btn" id="saveGame">Save game</button></div><div id="engineConsole" class="console" style="margin-top:12px">Waiting for analysis.</div></section>
+  <aside class="panel card"><span class="eyebrow">Position</span><textarea id="fen" class="fen"></textarea><div class="controls"><button class="btn primary" id="loadFen">Load FEN</button><button class="btn" id="useFen">Use current</button></div><div id="fenStatus" class="muted" style="margin-top:8px">Ready.</div><hr style="border-color:var(--line);border-width:1px 0 0;margin:20px 0"><span class="eyebrow">Saved games</span><div id="savedGames" class="rows"></div></aside>
  </div>
- <div class="card" style="margin-top:14px"><strong>BOARD SETUP</strong><p class="muted">The platform uses a standard 8×8 board with equal-size squares. White begins on ranks 1–2 and moves first; Black begins on ranks 7–8. The board renderer keeps every square the same size and centers every piece.</p></div>
+ <div class="panel card" style="margin-top:18px"><div class="controls"><button class="btn primary" id="fullReview">Analyze full game</button><button class="btn" id="stopReview">Stop</button><button class="btn" id="clearReview">Clear</button><span id="reviewStatus" class="muted">No report.</span></div><div class="progress"><i id="reviewBar"></i></div><div id="reviewSummary" class="muted" style="margin:12px 0"></div><div id="reviewReport"></div></div>
 </section>
 
-<section id="videoPage" class="page">
- <div class="hero"><span class="eyebrow">Video room</span><h1>Chessly + GothamChess</h1><p class="muted">Separate URLs for each source. YouTube videos can play directly inside this page.</p></div>
- <div class="videoGrid">
-  <article class="panel video"><iframe src="https://www.youtube.com/embed/AsMmg18kuU8" title="GothamChess video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><div class="videoBody"><h3>GothamChess — video lesson</h3><p>Embedded YouTube playback.</p><a class="link" href="https://www.youtube.com/watch?v=AsMmg18kuU8" target="_blank" rel="noopener">Open original URL ↗</a></div></article>
-  <article class="panel video"><iframe src="https://www.youtube.com/embed/7b8FFc2G_wY" title="GothamChess video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><div class="videoBody"><h3>GothamChess — second video</h3><p>Different video URL, still playable in the app.</p><a class="link" href="https://www.youtube.com/watch?v=7b8FFc2G_wY" target="_blank" rel="noopener">Open original URL ↗</a></div></article>
- </div>
- <div class="resourceGrid">
-  <a class="panel resource" href="https://chessly.com/" target="_blank" rel="noopener"><b>Chessly</b><p class="muted">Official Chessly site ↗</p></a>
-  <a class="panel resource" href="https://chessly.com/courses/d4f3504b-8bbd-4435-ae30-a0b8372c9286/chapters/5359ed5a-904f-4da6-a802-55c538eff481/studies/efc05bd2-5f5e-4c35-963c-dc5c1c2ab5e6/path-video?tileId=46a046d5-0f8e-4cfb-9f2c-9f1f875c30e8" target="_blank" rel="noopener"><b>Chessly Caro-Kann video URL</b><p class="muted">Separate course-video URL ↗</p></a>
-  <a class="panel resource" href="https://www.gothamchess.com/" target="_blank" rel="noopener"><b>GothamChess</b><p class="muted">Official training site ↗</p></a>
- </div>
- <div class="videoNote">If a Chessly page refuses to display inside an iframe, that is controlled by Chessly's website security headers. The app keeps the exact URL as a one-click link instead of pretending the page can be embedded.</div>
+<section id="progress" class="page">
+ <div class="hero"><span class="eyebrow">Progress</span><h1>Your Rebel profile</h1><p class="muted">All progress is stored locally in this browser.</p></div>
+ <div class="grid"><div class="panel card"><span class="tag">XP</span><div id="xp" class="stat">0</div></div><div class="panel card"><span class="tag">LESSONS</span><div id="lessonsDone" class="stat">0</div></div><div class="panel card"><span class="tag">GAMES</span><div id="gamesDone" class="stat">0</div></div></div>
+ <div class="panel card" style="margin-top:18px"><span class="eyebrow">Skill lanes</span><div class="rows"><div class="row"><b>Tactics</b><p class="muted">Drills completed: <span id="tactics">0</span></p></div><div class="row"><b>Opening</b><p class="muted">Opening lessons: <span id="openings">0</span></p></div><div class="row"><b>Analysis</b><p class="muted">Positions analyzed: <span id="analysisCount">0</span></p></div></div></div>
 </section>
 </main>
 </div>
 
-<script type="module">
-import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
+<script>
+const START_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const PIECES={w:{p:"♙",n:"♘",b:"♗",r:"♖",q:"♕",k:"♔"},b:{p:"♟",n:"♞",b:"♝",r:"♜",q:"♛",k:"♚"}};
+const $=id=>document.getElementById(id), $$=s=>[...document.querySelectorAll(s)];
+let game=new Chess(), mode="local", flipped=false, selected=null;
+let courseGame=new Chess(), courseId="foundations", courseIndex=0, courseSelected=null;
+let drillGame=new Chess(), drillId="fork", drillSelected=null;
+let labGame=new Chess(), labSelected=null;
+let engine=null, engineReady=false, engineBusy=false, engineStopping=false, engineGeneration=0, activeJob=null, queue=[], jobId=0, stopTimer=null, recoveryTimer=null, multiPv=1;
+let lastInfo={depth:0,score:"—",nodes:"—",time:"—",pv:"—"};
+let saved=JSON.parse(localStorage.getItem("rebelGames")||"[]");
+let progress=JSON.parse(localStorage.getItem("rebelProgress")||"{}");
 
-const $ = s => document.querySelector(s);
-const $$ = s => [...document.querySelectorAll(s)];
-const glyph = {
- w:{p:"♙",n:"♘",b:"♗",r:"♖",q:"♕",k:"♔"},
- b:{p:"♟",n:"♞",b:"♝",r:"♜",q:"♛",k:"♚"}
-};
+const courses={
+ foundations:[
+  ["Board & legal moves","Start from the initial position and make a legal move.",START_FEN],
+  ["Checks & captures","Practice identifying forcing moves.", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"],
+  ["Knight forks","Learn the idea of attacking two targets.", "r1bqkbnr/pppp1ppp/2n5/4p3/8/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 2 3"],
+  ["Game review","Use a candidate move before consulting the engine.", "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"]
+ ],
+ opening:[
+  ["Control the center","Choose a move that contests central space.",START_FEN],
+  ["Develop pieces","Bring a minor piece toward the center.", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"],
+  ["King safety","Build toward safe castling.", "rnbqkbnr/pppp1ppp/8/4p3/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 0 2"]
+ ],
+ engine:[
+  ["Evaluation","Make your own candidate move before checking Stockfish.",START_FEN],
+  ["Candidate moves","Compare your idea with the engine.", "rnbqkbnr/pppppppp/8/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 1"],
+  ["Best line","Use the engine principal variation to study a position.", "r1bqk2r/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 4 5"]
+ ]};
+const drills={
+ fork:["Knight Fork","Find a forcing double attack.","r1bqkbnr/pppp1ppp/2n5/4p3/8/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 2 3"],
+ mate:["Mate in 1","Find the immediate checkmate.","7k/5Q2/7K/8/8/8/8/8 w - - 0 1"],
+ opening:["Opening Move","Find a strong first move.","rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"]};
 
-let game = new Chess();
-let trainerGame = new Chess();
-let flipped = false;
-let mode = "local";
-let selected = null;
-let trainerSelected = null;
-let courseGame = new Chess();
-let courseSelected = null;
-let activeCourse = "foundations";
-let engine = null;
-let engineReady = false;
-let engineBusy = false;
-let engineRequest = 0;
-let activeEngineJob = null;
-let engineQueue = [];
-let ignoringBestmove = false;
-let engineStopping = false;
-let engineStopTimer = null;
-let engineGeneration = 0;
-let activeLesson = "fork";
-let trainingTarget = null;
-let trainerTarget = null;
-let lessonTarget = null;
-let engineRecoveryTimer = null;
-let savedGames = JSON.parse(localStorage.getItem("rebelClassicGames") || "[]");
-let learningBook = JSON.parse(localStorage.getItem("rebelClassicLearning") || "{}");
-let lastEngineInfo = {depth:0,score:"—",pv:"",nodes:"—",time:"—"};
-let multiPv = 1;
-let gameStartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-let gameAnalysis = null;
-let coursePositions = {
- foundations:{title:"Chess Fundamentals",text:"Practice a legal starting position and use the engine only after you form your own idea.",fen:"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"},
- opening:{title:"Opening Basics",text:"Develop a piece toward the center and compare your choice with Stockfish.",fen:"rnbqkbnr/pppppppp/8/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 1"},
- stockfish:{title:"Stockfish Course",text:"Find a candidate move first, then use Stockfish to evaluate the course position.",fen:"r1bqk2r/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 4 5"}
-};
-
-const lessonPositions={
-fork:{title:"Knight Fork",text:"Find a knight move that attacks two valuable targets.",fen:"r1bqkbnr/pppp1ppp/2n5/4p3/8/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 2 3"},
-opening:{title:"Opening Basics",text:"Develop a piece toward the center and compare your choice with Stockfish.",fen:"rnbqkbnr/pppppppp/8/4p3/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 1 2"},
-mate:{title:"Mate in 1",text:"Find the immediate checkmate in this training position.",fen:"7k/5Q2/7K/8/8/8/8/8 w - - 0 1"}};
-function renderBoard(targetId,chess,sel){
-const b=$("#"+targetId);if(!b)return;let legal=[];if(sel){try{legal=chess.moves({square:sel,verbose:true}).map(m=>m.to)}catch{}}
-b.innerHTML="";const files="abcdefgh",cells=[];
-for(let r=0;r<8;r++)for(let c=0;c<8;c++){const sq=files[c]+(8-r),p=chess.get(sq),el=document.createElement("button");el.type="button";el.setAttribute("role","gridcell");el.className="sq "+((r+c)%2?"dark":"light");el.dataset.square=sq;el.setAttribute("aria-label",p?((p.color==="w"?"White ":"Black ")+({p:"pawn",n:"knight",b:"bishop",r:"rook",q:"queen",k:"king"}[p.type])+" on "+sq):"Empty square "+sq);if(sel===sq)el.classList.add("selected");if(legal.includes(sq))el.classList.add(p?"capture":"legal");
-if(p){const span=document.createElement("span");span.className="piece "+p.color;span.textContent=glyph[p.color][p.type];el.appendChild(span);el.draggable=p.color===chess.turn()&&!chess.isGameOver()}
-el.onclick=()=>targetId==="board"?handleGameClick(sq):targetId==="trainerBoard"?handleTrainerClick(sq):handleCourseClick(sq);
-el.ondragstart=e=>{if(!p||p.color!==chess.turn())return e.preventDefault();e.dataTransfer.setData("text/plain",sq);if(targetId==="board")selected=sq;else if(targetId==="trainerBoard")trainerSelected=sq;else courseSelected=sq;renderAll()};
-el.ondragover=e=>e.preventDefault();el.ondrop=e=>{e.preventDefault();const from=e.dataTransfer.getData("text/plain");if(from)(targetId==="board"?handleGameClick(sq,from):targetId==="trainerBoard"?handleTrainerClick(sq,from):handleCourseClick(sq,from))};cells.push(el)}
-if(targetId==="board"&&flipped)cells.reverse();cells.forEach(e=>b.appendChild(e))}
-function updateTrainingLoop(){
- const status=$("#trainingLoopStatus"),text=$("#trainingLoopText"),bar=$("#trainingLoopProgress");
- if(!status)return;
- const moves=game.history();
- if(!moves.length){status.textContent="Play a game to build a training plan.";text.textContent="Play → analyze → drill → retest.";bar.style.width="0%";return}
- if(trainingTarget&&trainingTarget.fen===game.fen()){
-   status.textContent="Training position analyzed";
-   text.textContent="Stockfish found "+trainingTarget.uci.slice(0,2)+" → "+trainingTarget.uci.slice(2,4)+". Train the exact position.";
-   bar.style.width="55%";
-   return;
- }
- status.textContent="Game position ready to analyze";
- text.textContent="Last move: "+moves[moves.length-1]+". Analyze it, then drill the exact position.";
- bar.style.width="25%";
+function saveState(){localStorage.setItem("rebelGames",JSON.stringify(saved));localStorage.setItem("rebelProgress",JSON.stringify(progress));renderStats()}
+function showPage(id){
+ $$(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+ $$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ renderAllBoards();
+ if(id==="lab")renderSaved();
 }
-function gameLabel(){if(game.isCheckmate())return"Checkmate — "+(game.turn()==="w"?"Black":"White")+" wins";if(game.isStalemate())return"Draw — stalemate";if(game.isDraw())return"Draw";return(game.turn()==="w"?"White":"Black")+" to move"+(game.inCheck()?" — check":"")}
-function renderAll(){renderBoard("board",game,selected);renderBoard("trainerBoard",trainerGame,trainerSelected);renderBoard("courseBoard",courseGame,courseSelected);$("#status").textContent=gameLabel();$("#modeTag").textContent=mode==="computer"?"COMPUTER":"2 PLAYER";$("#moves").textContent=game.history().length?game.history().map((m,i)=>(i%2===0?((i/2)+1)+". ":"")+(i%2?" "+m:m)).join("\n"):"No moves yet.";updateTrainingLoop()}
-function promotionFor(chess,from,to){
- const candidates=chess.moves({square:from,verbose:true}).filter(m=>m.to===to&&m.promotion);
- if(!candidates.length)return null;
- const allowed=["q","r","b","n"];
- const choice=(window.prompt("Promote to: queen, rook, bishop, or knight","q")||"q").trim().toLowerCase()[0];
- return allowed.includes(choice)?choice:"q";
+function pieceText(p){return p?PIECES[p.color][p.type]:""}
+function renderBoard(el,chess,sel){
+ if(!el)return;
+ el.innerHTML="";
+ const files=["a","b","c","d","e","f","g","h"], ranks=[8,7,6,5,4,3,2,1];
+ const order=flipped?[...ranks].reverse():ranks, fs=flipped?[...files].reverse():files;
+ order.forEach((rank,ri)=>fs.forEach((file,fi)=>{
+  const sq=file+rank, p=chess.get(sq), b=document.createElement("button");
+  b.className="sq "+(((files.indexOf(file)+rank)%2)?"dark":"light");
+  if(sel===sq)b.classList.add("selected");
+  if(p&&sel&&p.color===chess.turn()&&chess.moves({square:sel,verbose:true}).some(m=>m.to===sq))b.classList.add(p?"capture":"legal");
+  b.dataset.square=sq; b.setAttribute("aria-label",sq+" "+(p?pieceText(p):"empty"));
+  b.innerHTML='<span class="piece '+(p?p.color:"")+'">'+pieceText(p)+'</span><span class="coord rank">'+(fi===0?rank:"")+'</span><span class="coord file">'+(ri===7?file:"")+'</span>';
+  b.onclick=()=>boardClick(chess,sq,el);
+  el.appendChild(b);
+ }))
 }
-function handleGameClick(square,dragFrom=null){
- if(game.isGameOver()||engineBusy)return;
- const from=dragFrom||selected;
- if(from){
+function boardClick(chess,sq,el){
+ let state=el.id==="mainBoard"?{get:()=>selected,set:v=>selected=v}:el.id==="courseBoard"?{get:()=>courseSelected,set:v=>courseSelected=v}:el.id==="drillBoard"?{get:()=>drillSelected,set:v=>drillSelected=v}:{get:()=>labSelected,set:v=>labSelected=v};
+ const sel=state.get();
+ if(sel){
   try{
-   const promotion=promotionFor(game,from,square);
-   const move=game.move({from,to:square,promotion:promotion||"q"});
-   if(move){
-    selected=null;renderAll(); renderRebelLab();
-    if(mode==="computer"&&game.turn()==="b"&&!game.isGameOver())requestEngine("play",game,applyEngineMove);
-    return;
-   }
+   const move=chess.move({from:sel,to:sq,promotion:"q"});
+   if(move){state.set(null);afterMove(chess,el,move);renderAllBoards();return}
   }catch{}
-  selected=null;
+  state.set(null);
  }
- const p=game.get(square);
- if(p&&p.color===game.turn())selected=square;
- renderAll();
+ const p=chess.get(sq); if(p&&p.color===chess.turn())state.set(sq);
+ renderAllBoards();
 }
-function engineLimit(){
- const level=Number($("#level").value);
- if(level<=1200)return {depth:7,time:180};
- if(level<=1600)return {depth:9,time:320};
- if(level<=2000)return {depth:11,time:520};
- if(level<=2400)return {depth:13,time:820};
- return {depth:15,time:1200};
+function afterMove(chess,el,move){
+ if(chess===game){$("coach").textContent=move.san+" played. Look for the opponent's forcing reply.";renderGame()}
+ if(chess===courseGame){$("courseStatus").textContent=move.san+" played. Now compare your idea with Stockfish."}
+ if(chess===drillGame){$("drillStatus").textContent=move.san+" played. Validate it when ready."}
+ if(chess===labGame){$("engineConsole").textContent="Position changed. Analyze again when ready."}
+ if(chess===game&&mode==="computer"&&chess.turn()==="b")engineSearch("play",game,applyComputerMove)
 }
-function setEngineStatus(message){$("#engineStatus").textContent=message}
-function finishEngineJob(job,uci){
- if(!activeEngineJob||activeEngineJob.id!==job.id)return false;
- clearTimeout(job.timeout);
- activeEngineJob=null;
- engineBusy=false;
+function renderAllBoards(){renderBoard($("mainBoard"),game,selected);renderBoard($("courseBoard"),courseGame,courseSelected);renderBoard($("drillBoard"),drillGame,drillSelected);renderBoard($("labBoard"),labGame,labSelected)}
+function renderGame(){
+ const side=game.turn()==="w"?"White":"Black";
+ $("gameStatus").textContent=game.isCheckmate()?side+" is checkmated":game.isDraw()?"Draw":side+" to move"+(game.isCheck()?" — check":"");
+ const h=game.history(); $("moveList").textContent=h.length?h.map((m,i)=>(i%2?"... ":"")+m+(i%2?"":" ")).join("").trim():"No moves yet.";
+}
+function newGame(){cancelEngine();game=new Chess();selected=null;mode="local";renderGame();renderAllBoards();$("coach").textContent="New game. Look for checks, captures, and threats."}
+function applyComputerMove(uci,job){
+ if(!uci||job.fen!==game.fen()||game.turn()!=="b")return;
+ try{game.move({from:uci.slice(0,2),to:uci.slice(2,4),promotion:uci[4]||"q"});renderGame();renderAllBoards()}catch{}
+}
+function scoreCp(t,n){n=Number(n);return t==="mate"?(n>0?100000:-100000):n}
+function engineLimit(){return {depth:12,time:1800}}
+function setEngineStatus(t){$("engineStatus").textContent=t;$("homeEngine").textContent=engineReady?"READY":"LOADING";$("labEngine").textContent=engineReady?"READY":"LOADING"}
+function initEngine(){
+ if(engine||recoveryTimer||typeof Worker==="undefined")return;
+ try{
+  const gen=++engineGeneration;
+  engine=new Worker("https://cdn.jsdelivr.net/gh/nmrugg/stockfish.js@v19.0.0/src/stockfish-19-lite-single.js");
+  engine.onmessage=e=>{
+   if(gen!==engineGeneration||!engine)return;
+   const line=String(e.data||"").trim();
+   if(line==="uciok"){engine.postMessage("setoption name Threads value 1");engine.postMessage("setoption name MultiPV value "+multiPv);engine.postMessage("isready")}
+   else if(line==="readyok"){engineReady=true;engineStopping=false;engineBusy=false;setEngineStatus("Stockfish ready");runNext()}
+   else if(line.startsWith("info ")){const d=line.match(/\bdepth (\d+)/),s=line.match(/\bscore (cp|mate) (-?\d+)/),pv=line.match(/\bpv (.+)$/);if(d)lastInfo.depth=+d[1];if(s)lastInfo.score=s[1]==="mate"?"M"+s[2]:(+s[2]/100).toFixed(2);if(pv)lastInfo.pv=pv[1];const n=line.match(/\bnodes (\d+)/),t=line.match(/\btime (\d+)/);if(n)lastInfo.nodes=n[1];if(t)lastInfo.time=t[1];if(activeJob)activeJob.info={...lastInfo}}
+   else if(line.startsWith("bestmove"))finishEngine(line.split(/\s+/)[1]||"0000");
+   else if(line.includes("CRITICAL ERROR"))restartEngine();
+  };
+  engine.onerror=restartEngine;engine.postMessage("uci");
+ }catch{restartEngine()}
+}
+function restartEngine(){
+ try{engine&&engine.terminate()}catch{} engine=null;engineReady=false;engineBusy=false;activeJob=null;queue=[];engineGeneration++;setEngineStatus("Restarting engine…");clearTimeout(recoveryTimer);recoveryTimer=setTimeout(()=>{recoveryTimer=null;initEngine()},500)
+}
+function runNext(){
+ if(engineBusy||engineStopping||!engineReady||!queue.length)return;
+ const job=queue.shift();activeJob=job;engineBusy=true;job.gen=engineGeneration;
+ try{engine.postMessage("position fen "+job.fen);const lim=engineLimit();engine.postMessage("go depth "+lim.depth+" movetime "+lim.time);job.timer=setTimeout(()=>{if(activeJob===job){activeJob=null;engineBusy=false;engine.postMessage("stop");setEngineStatus("Search timed out");runNext()}},lim.time+1500)}catch{restartEngine()}
+}
+function finishEngine(uci){
+ const job=activeJob;if(!job)return;clearTimeout(job.timer);activeJob=null;engineBusy=false;
+ if(job.gen!==engineGeneration){runNext();return}
  if(job.callback)job.callback(uci,job);
- if(engineQueue.length)startEngineJob(engineQueue.shift());
- else setEngineStatus("Stockfish 19 Lite ready"); renderRebelLab();
- return true;
+ if(job.resolve)job.resolve(uci,job);
+ setEngineStatus("Stockfish ready");runNext()
 }
-function startEngineJob(job){
- if(!engine||!engineReady||engineBusy||engineStopping)return false;
- job.engineGeneration=engineGeneration;
- activeEngineJob=job;
- engineBusy=true;
- engine.postMessage("position fen "+job.fen);
- const limit=engineLimit();
- engine.postMessage("go depth "+limit.depth+" movetime "+limit.time);
- setEngineStatus("Stockfish thinking…");
- if(job.purpose==="lesson")$("#trainerStatus").textContent="Stockfish is analyzing the lesson position…";
- if(job.purpose==="training")$("#trainingLoopStatus").textContent="Stockfish is analyzing the training position…";
- if(job.purpose==="course")$("#courseStatus").textContent="Stockfish is analyzing the course position…";
- job.timeout=setTimeout(()=>{
-   if(activeEngineJob&&activeEngineJob.id===job.id){
-     clearTimeout(job.timeout);
-     activeEngineJob=null;
-     engineBusy=false;
-     beginEngineStop();
-     setEngineStatus("Stockfish search timed out — stopping");
-     if(job.purpose==="lesson")$("#trainerStatus").textContent="Stockfish timed out. Try again.";
-     if(job.purpose==="course")$("#courseStatus").textContent="Stockfish timed out. Try again.";
-     if(job.purpose==="training")$("#trainingLoopStatus").textContent="Analysis timed out — try again.";
-     if(job.purpose==="rebel")$("#engineReadout").textContent="Search timed out — engine is stopping safely.";
-   }
- },limit.time+1500);
- return true;
-}
-function beginEngineStop(){
- if(!engine){
-   engineStopping=false;
-   engineBusy=false;
-   return;
- }
- engineStopping=true;
- ignoringBestmove=true;
- clearTimeout(engineStopTimer);
- engineStopTimer=setTimeout(()=>{
-   engineStopTimer=null;
-   if(!engineStopping)return;
-   try{engine.terminate()}catch{}
-   engine=null;
-   engineReady=false;
-   engineBusy=false;
-   activeEngineJob=null;
-   engineStopping=false;
-   ignoringBestmove=false;
-   setEngineStatus("Stockfish restarting…");
-   clearTimeout(engineRecoveryTimer);
-   engineRecoveryTimer=setTimeout(()=>{
-     engineRecoveryTimer=null;
-     initEngine();
-   },250);
- },2500);
- try{engine.postMessage("stop")}catch{}
-}
-function requestEngine(purpose,chessPosition=game,callback=null){
- if(!engineReady||!engine||chessPosition.isGameOver())return false;
- const job={id:++engineRequest,purpose,fen:chessPosition.fen(),callback,generation:engineRequest};
- if(engineStopping){
-   engineQueue=[job];
-   setEngineStatus("Stockfish finishing previous search…");
-   return true;
- }
- if(engineBusy){
-   setEngineStatus("Stockfish busy — wait for current search");
-   return false;
- }
- return startEngineJob(job);
+function engineSearch(purpose,chess,callback){
+ if(!engineReady||!chess||chess.isGameOver())return false;
+ const job={id:++jobId,purpose,fen:chess.fen(),callback,info:null,resolve:null};queue.push(job);runNext();return true
 }
 function cancelEngine(){
- engineRequest++;
- engineQueue=[];
- if(activeEngineJob){
-   clearTimeout(activeEngineJob.timeout);
-   activeEngineJob=null;
- }
- engineBusy=false;
- if(engine)beginEngineStop();
- else{
-   engineStopping=false;
-   ignoringBestmove=false;
-   setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
- }
+ queue=[];if(activeJob)clearTimeout(activeJob.timer);activeJob=null;engineBusy=false;
+ if(engine){engineStopping=true;try{engine.postMessage("stop")}catch{} clearTimeout(stopTimer);stopTimer=setTimeout(()=>{if(engineStopping){try{engine.terminate()}catch{}engine=null;engineReady=false;engineStopping=false;engineGeneration++;initEngine()}},500)}
 }
-function cancelAnalysisIf(purpose){
- engineQueue=engineQueue.filter(q=>q.purpose!==purpose);
- if(activeEngineJob&&activeEngineJob.purpose===purpose){
-   clearTimeout(activeEngineJob.timeout);
-   activeEngineJob=null;
-   engineBusy=false;
-   beginEngineStop();
- }else if(!activeEngineJob){
-   setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
- }
+function analyzePosition(){
+ $("engineConsole").textContent="Stockfish thinking…";engineSearch("lab",labGame,(uci,job)=>{$("engineConsole").textContent="Best move: "+uci+"\nScore: "+job.info.score+"\nDepth: "+job.info.depth+"\nNodes: "+job.info.nodes+"\nTime: "+job.info.time+"\nPV: "+job.info.pv;progress.analysis=(progress.analysis||0)+1;saveState()})
 }
-function applyEngineMove(uci,job){
- if(!uci||uci==="0000"){setEngineStatus("No engine move");return}
- const from=uci.slice(0,2),to=uci.slice(2,4),promotion=uci[4]||"q";
- try{
-   if(job.fen!==game.fen()){setEngineStatus("Engine result discarded — board changed");return}
-   const legal=game.moves({verbose:true}).some(m=>m.from===from&&m.to===to&&(!m.promotion||m.promotion===promotion));
-   if(!legal){setEngineStatus("Engine returned an illegal move");return}
-   game.move({from,to,promotion});
-   selected=null;
-   renderAll();
- }catch{setEngineStatus("Engine move error")}
+function openCourse(id){
+ cancelEngine();courseId=id;const list=courses[id];const savedIndex=Number(localStorage.getItem("course:"+id)||0);courseIndex=Math.min(savedIndex,list.length-1);loadCourseLesson();showPage("courses")
 }
-function initEngine(){
- if(engine||typeof Worker==="undefined"||engineRecoveryTimer){
-   if(typeof Worker==="undefined")setEngineStatus("Web Workers unavailable");
-   return;
- }
- try{
-   const workerGeneration=++engineGeneration;
-   engine=new Worker("https://cdn.jsdelivr.net/gh/nmrugg/stockfish.js@v19.0.0/src/stockfish-19-lite-single.js");
-   engine.onmessage=e=>{
-     if(workerGeneration!==engineGeneration||!engine)return;
-     const line=typeof e.data==="string"?e.data.trim():"";
-     if(line==="uciok"){
-       engine.postMessage("setoption name Threads value 1");
-       engine.postMessage("setoption name MultiPV value "+multiPv);
-       engine.postMessage("isready");
-     }else if(line==="readyok"){
-       engineReady=true;
-       engineBusy=false;
-       engineStopping=false;
-       ignoringBestmove=false;
-       setEngineStatus("Stockfish 19 Lite ready");
-       if(engineQueue.length&&!engineBusy&&!activeEngineJob&&!engineStopping){
-         const queued=engineQueue.shift();
-         startEngineJob(queued);
-       }else if(activeLesson!=="training" && trainerGame && !lessonTarget){
-         requestEngine("lesson",trainerGame);
-       }
-     }else if(line.startsWith("info ")){
-       const depthMatch=line.match(/\bdepth (\d+)/);
-       const scoreMatch=line.match(/\bscore (cp|mate) (-?\d+)/);
-       const pvMatch=line.match(/\bpv (.+)$/);
-       const nodesMatch=line.match(/\bnodes (\d+)/);
-       const timeMatch=line.match(/\btime (\d+)/);
-       if(depthMatch){lastEngineInfo.depth=Number(depthMatch[1]);if(activeEngineJob)activeEngineJob.lastDepth=Number(depthMatch[1]);}
-       if(scoreMatch){lastEngineInfo.score=scoreMatch[1]==="mate"?"M"+scoreMatch[2]:(Number(scoreMatch[2])/100).toFixed(2);if(activeEngineJob){activeEngineJob.finalScoreCp=scoreToCp(scoreMatch[1],scoreMatch[2]);}}
-       if(pvMatch){lastEngineInfo.pv=pvMatch[1];if(activeEngineJob){const mm=line.match(/\bmultipv (\d+)/);const rank=mm?Number(mm[1]):1;activeEngineJob.lines=activeEngineJob.lines||{};activeEngineJob.lines[rank]={rank,uci:pvMatch[1].split(/\s+/)[0],scoreCp:activeEngineJob.finalScoreCp||0,pv:pvMatch[1]};}}
-       if(nodesMatch)lastEngineInfo.nodes=nodesMatch[1];
-       if(timeMatch)lastEngineInfo.time=timeMatch[1]+" ms";
-       renderRebelLab();
-     }else if(line.startsWith("bestmove")){
-       if(engineStopping){
-         clearTimeout(engineStopTimer);
-         engineStopTimer=null;
-         engineStopping=false;
-         ignoringBestmove=false;
-         engineBusy=false;
-         setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
-         if(engineQueue.length&&engineReady&&!engineBusy&&!activeEngineJob&&!engineStopping)startEngineJob(engineQueue.shift());
-         return;
-       }
-       if(ignoringBestmove){ignoringBestmove=false;return}
-       const job=activeEngineJob;
-       if(!job||job.engineGeneration!==engineGeneration)return;
-       const uci=line.split(/\s+/)[1];
-       if(job.purpose==="gameAnalysis"){
-         finishEngineJob(job,uci);
-         handleGameAnalysisJob(job,uci);
-       }else if(job.purpose==="play"){
-         finishEngineJob(job,uci);
-       }else if(job.purpose==="lesson"){
-         finishEngineJob(job,uci);
-         if(job.fen!==trainerGame.fen()){
-           $("#trainerStatus").textContent="Analysis discarded — lesson position changed.";
-           return;
-         }
-         if(uci&&uci!=="0000"){
-           lessonTarget={fen:job.fen,uci}; recordLearning(job.fen,uci);
-           $("#trainerBoard").dataset.stockfishTarget=uci;
-           $("#trainerStatus").textContent="Stockfish has validated this puzzle position. Find the best move yourself.";
-           $("#lessonProgress").style.width="25%";
-         }else $("#trainerStatus").textContent="No engine move available for this position.";
-       }else if(job.purpose==="training"){
-         finishEngineJob(job,uci);
-         if(job.fen!==game.fen()){
-           $("#trainingLoopStatus").textContent="Analysis discarded — game position changed.";
-           return;
-         }
-         if(uci&&uci!=="0000"){
-           trainingTarget={fen:job.fen,uci,sourceMove:game.history().slice(-1)[0]||""}; recordLearning(job.fen,uci);
-           $("#trainingLoopStatus").textContent="Position analyzed — training target found";
-           $("#trainingLoopText").textContent="Stockfish recommends "+uci.slice(0,2)+" → "+uci.slice(2,4)+". Open Trainer to practice it.";
-           $("#trainingLoopProgress").style.width="55%";
-           return;
-         }
-         $("#trainingLoopStatus").textContent="No engine move available — try another position.";
-       }else if(job.purpose==="course"){
-         finishEngineJob(job,uci);
-         if(job.fen!==courseGame.fen()){
-           $("#courseStatus").textContent="Analysis discarded — course position changed.";
-           return;
-         }
-         if(uci&&uci!=="0000"){
-           recordLearning(job.fen,uci); $("#courseStatus").textContent="Stockfish recommends "+uci.slice(0,2)+" → "+uci.slice(2,4)+". Your course position is unchanged.";
-           $("#courseProgress").style.width="75%";
-         }else $("#courseStatus").textContent="No engine move available for this course position.";
-       }else if(job.purpose==="rebel"){
-         finishEngineJob(job,uci);
-         if(uci&&uci!=="0000"){recordLearning(job.fen,uci);lastEngineInfo.pv=uci;$("#engineReadout").textContent="Depth: "+lastEngineInfo.depth+"\nScore: "+lastEngineInfo.score+"\nNodes: "+lastEngineInfo.nodes+"\nTime: "+lastEngineInfo.time+"\nBest move: "+uci;renderRebelLab();}
-       }else finishEngineJob(job,uci);
-     }else if(line.includes("CRITICAL ERROR")){
-       const job=activeEngineJob;
-       if(job)clearTimeout(job.timeout);
-       activeEngineJob=null;
-       engineBusy=false;
-       engineQueue=[];
-       setEngineStatus("Stockfish rejected the position — restarting");
-       try{engine.terminate()}catch{}
-       engine=null;
-       engineReady=false;
-       engineStopping=false;
-       engineGeneration++;
-       ignoringBestmove=false;
-       clearTimeout(engineStopTimer);
-       engineStopTimer=null;
-       clearTimeout(engineRecoveryTimer);
-       engineRecoveryTimer=setTimeout(()=>{engineRecoveryTimer=null;initEngine()},500);
-     }
-   };
-   engine.onerror=()=>{
-   if(engine)try{engine.terminate()}catch{}
-   engine=null;engineReady=false;engineBusy=false;activeEngineJob=null;engineQueue=[];ignoringBestmove=false;engineStopping=false;engineGeneration++;clearTimeout(engineStopTimer);engineStopTimer=null;
-   setEngineStatus("Stockfish failed — restarting…"); renderRebelLab();
-   clearTimeout(engineRecoveryTimer);
-   engineRecoveryTimer=setTimeout(()=>{engineRecoveryTimer=null;initEngine()},500);
- };
-   engine.postMessage("uci");
- }catch{engineReady=false;engineBusy=false;setEngineStatus("Stockfish failed to start")}
+function loadCourseLesson(){const l=courses[courseId][courseIndex];courseGame=new Chess(l[2]);courseSelected=null;$("courseTitle").textContent=l[0];$("courseText").textContent=l[1];$("courseStatus").textContent="Make your move, then analyze.";renderCourseList();renderAllBoards()}
+function renderCourseList(){const list=courses[courseId],done=Number(localStorage.getItem("course:"+courseId+":done")||0);$("courseMeta").textContent="Lesson "+(courseIndex+1)+" of "+list.length+" · "+Math.round(done/list.length*100)+"%";$("courseBar").style.width=(done/list.length*100)+"%";$("courseLessons").innerHTML=list.map((l,i)=>'<div class="row '+(i===courseIndex?"lesson active":"lesson")+'" data-ci="'+i+'"><b>'+(i<done?"✓ ":"")+l[0]+'</b><small>'+l[1]+'</small></div>').join("");$$("[data-ci]").forEach(x=>x.onclick=()=>{const i=+x.dataset.ci;if(i<=done){courseIndex=i;loadCourseLesson()}})}
+function completeCourse(){let done=Number(localStorage.getItem("course:"+courseId+":done")||0);if(courseIndex>=done)done=courseIndex+1;localStorage.setItem("course:"+courseId+":done",done);progress.xp=(progress.xp||0)+25;progress.lessons=(progress.lessons||0)+1;saveState();$("courseStatus").textContent="Lesson complete — +25 XP";renderCourseList();renderStats()}
+function openDrill(id){cancelEngine();drillId=id;drillGame=new Chess(drills[id][2]);drillSelected=null;$("drillTitle").textContent=drills[id][0];$("drillText").textContent=drills[id][1];$("drillStatus").textContent="Find the move first.";$("drillTarget").textContent="Stockfish will identify the best move.";renderAllBoards();showPage("trainer")}
+function validateDrill(){if(!engineReady){$("drillStatus").textContent="Stockfish is still loading.";return}$("drillStatus").textContent="Analyzing…";engineSearch("drill",drillGame,(uci)=>{$("drillTarget").textContent="Best move: "+uci;if(drillGame.history().length){const last=drillGame.history({verbose:true}).at(-1);const played=last.from+last.to+(last.promotion||"");if(played===uci){$("drillStatus").textContent="Correct — +15 XP";progress.xp=(progress.xp||0)+15;progress.tactics=(progress.tactics||0)+1;saveState()}else $("drillStatus").textContent="Legal move, but not the engine target. Reset and try again."}else $("drillStatus").textContent="No move has been played yet."})}
+function saveGame(){if(!game.history().length){$("reviewStatus").textContent="Play at least one move first.";return}const item={id:Date.now(),fen:game.fen(),startFen:START_FEN,moves:game.history(),date:new Date().toISOString()};saved.unshift(item);saved=saved.slice(0,50);progress.games=saved.length;saveState();renderSaved();$("reviewStatus").textContent="Game saved."}
+function renderSaved(){$("savedCount").textContent=saved.length;$("savedGames").innerHTML=saved.length?saved.map(g=>'<div class="row"><b>'+new Date(g.date).toLocaleString()+'</b><small>'+g.moves.length+' moves</small><button class="btn" data-load="'+g.id+'">Load</button></div>').join(""):'<div class="muted">No saved games.</div>';$$("[data-load]").forEach(b=>b.onclick=()=>loadSaved(+b.dataset.load))}
+function loadSaved(id){const g=saved.find(x=>x.id===id);if(!g)return;game=new Chess(g.startFen||START_FEN);for(const m of g.moves||[])try{game.move(m)}catch{}labGame=new Chess(game.fen());renderGame();renderAllBoards();showPage("play")}
+function fullReview(){
+ if(!game.history().length){$("reviewStatus").textContent="Play a game first.";return}
+ cancelEngine();const snaps=[];const replay=new Chess(START_FEN);for(const m of game.history({verbose:true})){const before=replay.fen();replay.move(m);snaps.push({move:m.san,uci:m.from+m.to+(m.promotion||""),before,after:replay.fen(),side:m.color})}
+ const results=[];let i=0;function next(){if(i>=snaps.length){renderReview(results);return}const s=snaps[i];$("reviewStatus").textContent="Analyzing "+(i+1)+" / "+snaps.length;engineSearch("review",new Chess(s.before),(best,job)=>{const played=s.uci;const cls=played===best?"good":"inaccuracy";results.push({ply:i+1,move:s.move,best,classification:cls,score:job.info.score});$("reviewBar").style.width=((i+1)/snaps.length*100)+"%";i++;next()})}next()
 }
-function handleTrainerClick(square,dragFrom=null){
- if(trainerGame.isGameOver())return;
- const source=dragFrom||trainerSelected;
- if(source){
-   const sourceFen=trainerGame.fen();
-   try{
-     const promotion=promotionFor(trainerGame,source,square);
-     const move=trainerGame.move({from:source,to:square,promotion:promotion||"q"});
-     if(move){
-       trainerSelected=null;
-       renderAll();
-       $("#trainerStatus").textContent=move.san+" played. Now compare with the lesson idea.";
-       if(activeLesson==="training"&&trainerTarget){
-         const target=trainerTarget;
-         const played=move.from+move.to+(move.promotion||"");
-         if(played===target){
-           $("#trainerStatus").textContent=move.san+" — correct. You found Stockfish's move.";
-           $("#lessonProgress").style.width="100%";
-         }else{
-           trainerGame.undo();
-           trainerSelected=null;
-           renderAll();
-           $("#trainerStatus").textContent=move.san+" is legal, but not the engine target. Try again from the same position.";
-           $("#lessonProgress").style.width="10%";
-         }
-       }else if(lessonTarget){
-         const played=move.from+move.to+(move.promotion||"");
-         if(lessonTarget.fen===sourceFen&&played===lessonTarget.uci){
-           $("#trainerStatus").textContent=move.san+" — correct. Stockfish confirms the best move.";
-           $("#lessonProgress").style.width="100%";
-         }else if(lessonTarget.fen===sourceFen){
-           trainerGame.undo();
-           trainerSelected=null;
-           renderAll();
-           $("#trainerStatus").textContent=move.san+" is legal, but Stockfish's best move is different. Try again.";
-           $("#lessonProgress").style.width="10%";
-         }else{
-           trainerGame.undo();
-           trainerSelected=null;
-           renderAll();
-           $("#trainerStatus").textContent="This puzzle changed before validation finished. Reset the lesson and try again.";
-           $("#lessonProgress").style.width="0%";
-         }
-       }else{
-         trainerGame.undo();
-         trainerSelected=null;
-         renderAll();
-         $("#trainerStatus").textContent="Stockfish is still validating this puzzle. Try again in a moment.";
-         $("#lessonProgress").style.width="0%";
-       }
-       return;
-     }
-   }catch{}
-   trainerSelected=null;
- }
- const piece=trainerGame.get(square);
- if(piece&&piece.color===trainerGame.turn())trainerSelected=square;
- renderAll();
-}
-function handleCourseClick(square,dragFrom=null){
- if(courseGame.isGameOver())return;
- const source=dragFrom||courseSelected;
- if(source){
-   try{
-     const promotion=promotionFor(courseGame,source,square);
-     const move=courseGame.move({from:source,to:square,promotion:promotion||"q"});
-     if(move){
-       courseSelected=null;
-       renderAll();
-       $("#courseStatus").textContent=move.san+" played. Now compare your idea with Stockfish.";
-       $("#courseProgress").style.width="50%";
-       return;
-     }
-   }catch{}
-   courseSelected=null;
- }
- const piece=courseGame.get(square);
- if(piece&&piece.color===courseGame.turn())courseSelected=square;
- renderAll();
-}
-function loadCourse(id){
- cancelAnalysisIf("course");
- activeCourse=id;
- const resume=JSON.parse(localStorage.getItem("rebelCourseLast")||"null");
- const saved=resume&&resume.course===id?resume:findNextCourseLesson(id);
- openCourseLesson(id,saved.chapter,saved.lesson);
-}
-function loadTrainingPosition(fen,uci){
- cancelAnalysisIf("lesson");
- activeLesson="training";
- trainerGame=new Chess(fen);
- trainerSelected=null;
- $("#trainerBoard").dataset.trainingTarget=uci||"";
- trainerTarget=uci||null;
- $("#lessonTitle").textContent="Game Review Drill";
- $("#lessonText").textContent="Re-play Stockfish's best continuation from the exact position you just played.";
- $("#trainerStatus").textContent="Find the engine move yourself first.";
- $(".lesson").forEach(x=>x.classList.remove("active"));
- $("#lessonProgress").style.width="0%";
- trainerTarget=uci||null;
- renderAll();
-}
-function loadLesson(id){
- cancelAnalysisIf("lesson");
- activeLesson=id;
- lessonTarget=null;
- $("#trainerBoard").dataset.trainingTarget="";
- trainerTarget=null;
-
- const d=lessonPositions[id];
- trainerGame=new Chess(d.fen);
- trainerSelected=null;
- $("#lessonTitle").textContent=d.title;
- $("#lessonText").textContent=d.text;
- $("#trainerStatus").textContent="Find the move yourself first.";
- $$(".lesson").forEach(x=>x.classList.toggle("active",x.dataset.lesson===id));
- $("#lessonProgress").style.width="0%";
- renderAll();
- if(engineReady) requestEngine("lesson",trainerGame);
-}
-$("#startTrainingFromGame").onclick=()=>{
- if(!game.history().length){$("#trainingLoopStatus").textContent="Play at least one move first.";return}
- if(!trainingTarget||trainingTarget.fen!==game.fen()){
-   if(!engineReady){$("#trainingLoopStatus").textContent="Stockfish is still loading…";return}
-   $("#trainingLoopStatus").textContent="Analyzing position…";
-   $("#trainingLoopText").textContent="Stockfish is finding the best continuation.";
-   $("#trainingLoopProgress").style.width="40%";
-   requestEngine("training",game);
-   return;
- }
- loadTrainingPosition(trainingTarget.fen,trainingTarget.uci);
- $(".page").forEach(p=>p.classList.remove("active"));$("#trainerPage").classList.add("active");
- $("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page==="trainerPage"));
-};$("#newGame").onclick=()=>{gameStartFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";game=new Chess();selected=null;trainingTarget=null;cancelEngine();gameAnalysis=null;renderAll();renderRebelLab();$("#coach").textContent="New game. Start with checks, captures, and threats."};
-$("#localBtn").onclick=()=>{gameStartFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";mode="local";trainingTarget=null;cancelEngine();renderAll();renderRebelLab();$("#engineStatus").textContent=engineReady?"Stockfish ready":"Loading engine…"};
-$("#computerBtn").onclick=()=>{gameStartFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";mode="computer";game=new Chess();selected=null;trainingTarget=null;cancelEngine();renderAll();renderRebelLab();$("#engineStatus").textContent=engineReady?"Your move — White":"Loading Stockfish…"};
-$("#undoBtn").onclick=()=>{if(engineBusy)return;game.undo();if(mode==="computer"&&game.history().length)game.undo();selected=null;renderAll()};
-$("#flipBtn").onclick=()=>{flipped=!flipped;renderAll()};
-$("#applyLevel").onclick=()=>{$("#engineStatus").textContent="Level set — "+$("#level").value+" — applies to the next Stockfish search.";};
-$("#analyzeLesson").onclick=()=>{
- if(!engineReady){$("#trainerStatus").textContent="Stockfish is still loading…";return}
- requestEngine("lesson",trainerGame);
- $("#lessonProgress").style.width="50%";
-};
-$("#resetLesson").onclick=()=>{
- if(activeLesson==="training"&&trainingTarget){
-   loadTrainingPosition(trainingTarget.fen,trainingTarget.uci);
- }else{
-   loadLesson(activeLesson);
- }
-};$("#analyzeCourse").onclick=()=>{
- if(!engineReady){$("#courseStatus").textContent="Stockfish is still loading…";return}
- requestEngine("course",courseGame);
- $("#courseProgress").style.width="60%";
-};
-$("#resetCourse").onclick=()=>loadCourse(activeCourse);
-$$("[data-course]").forEach(b=>b.onclick=()=>loadCourse(b.dataset.course));
-
-$$("[data-lesson]").forEach(b=>b.onclick=()=>loadLesson(b.dataset.lesson));
-$("[data-page]").forEach(b=>b.onclick=()=>{
- $(".page").forEach(p=>p.classList.remove("active"));$("#"+b.dataset.page).classList.add("active");
- $("[data-page]").forEach(x=>{x.classList.toggle("active",x===b);x.setAttribute("aria-current",x===b?"page":"false")});
-});
-
-function scoreToCp(scoreType,scoreValue){
- const n=Number(scoreValue);
- if(scoreType==="mate")return n>0?100000-Math.min(Math.abs(n),99)*1000:-100000+Math.min(Math.abs(n),99)*1000;
- return n;
-}
-function classifyLoss(loss){
- if(loss<=50)return "good";
- if(loss<=100)return "inaccuracy";
- if(loss<=250)return "mistake";
- return "blunder";
-}
-function formatScore(cp){if(cp>=90000)return "+M";if(cp<=-90000)return "-M";return (cp/100).toFixed(2);}
-function buildGameSnapshots(){
- const replay=new Chess(gameStartFen);
- const out=[];
- const verbose=game.history({verbose:true});
- verbose.forEach((move,index)=>{
-   const before=replay.fen();
-   const side=move.color;
-   const san=move.san;
-   replay.move(move);
-   out.push({ply:index+1,moveNumber:Math.floor(index/2)+1,side,san,uci:move.from+move.to+(move.promotion||""),beforeFen:before,afterFen:replay.fen()});
- });
- return out;
-}
-function renderAnalysis(){
- const a=gameAnalysis;if(!a)return;
- const counts={good:0,inaccuracy:0,mistake:0,blunder:0};
- a.results.forEach(r=>counts[r.classification]++);
- $("#analysisInaccuracies").textContent=counts.inaccuracy;
- $("#analysisMistakes").textContent=counts.mistake;
- $("#analysisBlunders").textContent=counts.blunder;
- $("#analysisGood").textContent=counts.good;
- $("#analysisState").textContent=a.running?"ANALYZING":"COMPLETE";
- $("#analysisProgressBar").style.width=(a.total?Math.round(a.done/a.total*100):0)+"%";
- $("#analysisProgressText").textContent=a.running?"Analyzing "+a.done+" / "+a.total+" engine passes…":a.results.length+" moves analyzed."; if(a.results.length){const r=a.results[a.results.length-1];$("#analysisCurrent").textContent="Move "+r.moveNumber+(r.side==="b"?"…":".")+" "+r.san+"\nBest: "+r.bestMove+"\nPlayed eval: "+formatScore(r.playedScoreCp)+"\nLoss: "+(r.lossCp/100).toFixed(2);}
- const report=$("#analysisReport");
- report.innerHTML=a.results.length?a.results.map(r=>{
-   const cls=r.classification;
-   const label=cls==="good"?"GOOD":cls.toUpperCase();
-   const lines=(r.alternatives||[]).map((x,i)=>(i+1)+". "+x).join("\n");
-   return '<div class="analysisMove '+cls+'"><b>'+(r.moveNumber+(r.side==="b"?"...":"."))+'</b><b>'+r.san+'</b><div><strong>'+label+'</strong><small> '+(r.lossCp/100).toFixed(2)+' eval loss · best '+r.bestMove+'</small><div class="analysisLines">'+lines+'</div></div><span>'+formatScore(r.playedScoreCp)+'</span></div>';
- }).join(""):'<div class="notice">No analyzed moves yet.</div>';
- if(!a.running&&a.results.length){
-   const critical=a.results.filter(r=>r.classification==="blunder"||r.classification==="mistake").sort((x,y)=>y.lossCp-x.lossCp).slice(0,5);
-   $("#analysisNarrative").innerHTML='<b>Game summary</b><p>'+a.results.length+' moves reviewed. '+counts.blunder+' blunder(s), '+counts.mistake+' mistake(s), '+counts.inaccuracy+' inaccuracy(ies), and '+counts.good+' good move(s).</p>'+(critical.length?'<b>Critical moments</b><ul>'+critical.map(r=>'<li>Move '+r.moveNumber+(r.side==="b"?"…":".")+' '+r.san+' — best was <b>'+r.bestMove+'</b> ('+(r.lossCp/100).toFixed(2)+' eval loss).</li>').join("")+'</ul>':'<p>No large evaluation swings were detected at this analysis setting.</p>');
- }
-}
-function startGameAnalysis(){
- if(!game.history().length){$("#analysisState").textContent="NO MOVES";$("#analysisProgressText").textContent="Play at least one move first.";return;}
- cancelEngine();
- const snapshots=buildGameSnapshots();
- const jobs=[];
- const generation=Date.now();
- gameAnalysis={running:true,done:0,total:snapshots.length*2,results:[],generation,snapshots};
- snapshots.forEach((s,i)=>{
-   jobs.push({id:++engineRequest,purpose:"gameAnalysis",phase:"before",snapshot:s,fen:s.beforeFen,callback:null,generation});
-   jobs.push({id:++engineRequest,purpose:"gameAnalysis",phase:"after",snapshot:s,fen:s.afterFen,callback:null,generation});
- });
- // The engine's request-generation mechanism is shared with cancellation; keep this batch isolated.
- engineQueue=jobs;
- renderAnalysis();
- if(engineReady&&!engineStopping&&!engineBusy)startEngineJob(engineQueue.shift());
- else $("#analysisProgressText").textContent="Waiting for Stockfish to finish its current shutdown…";
-}
-function stopGameAnalysis(){
- if(!gameAnalysis)return;
- gameAnalysis.running=false;
- cancelEngine();
- gameAnalysis=null;
- $("#analysisState").textContent="STOPPED";
- $("#analysisProgressBar").style.width="0%";
- $("#analysisProgressText").textContent="Analysis stopped safely.";
-}
-function handleGameAnalysisJob(job,uci){
- const a=gameAnalysis;if(!a||!a.running||job.generation!==a.generation)return;
- const key=job.snapshot.ply;
- let r=a.results.find(x=>x.ply===key);
- if(!r){r={ply:key,moveNumber:job.snapshot.moveNumber,side:job.snapshot.side,san:job.snapshot.san,uci:job.snapshot.uci,alternatives:[],bestMove:"—",bestScoreCp:0,playedScoreCp:0,lossCp:0,classification:"good"};a.results.push(r);}
- if(job.phase==="before"){
-   const lines=Object.values(job.lines||{}).sort((x,y)=>x.rank-y.rank);
-   r.alternatives=lines.map(x=>x.uci+" ("+formatScore(x.scoreCp)+")");
-   if(lines.length){r.bestMove=lines[0].uci;r.bestScoreCp=lines[0].scoreCp;}
-   r.beforeReady=true;
- }else{
-   r.playedScoreCp=-(job.finalScoreCp??0);
-   r.afterReady=true;
- }
- a.done++;
- if(r.beforeReady&&r.afterReady){
-   r.lossCp=Math.max(0,r.bestScoreCp-r.playedScoreCp);
-   r.classification=classifyLoss(r.lossCp);
-   recordLearning(r.fen||job.snapshot.beforeFen,r.bestMove);
- }
- renderAnalysis();
- if(a.done>=a.total){a.running=false;renderAnalysis();}
-}
-function persistRebelData(){
- localStorage.setItem("rebelClassicGames",JSON.stringify(savedGames));
- localStorage.setItem("rebelClassicLearning",JSON.stringify(learningBook));
-}
-function currentResult(chess){
- if(chess.isCheckmate())return chess.turn()==="w"?"0-1":"1-0";
- if(chess.isDraw())return "1/2-1/2";
- return "*";
-}
-function saveCurrentGame(){
- const item={id:Date.now(),date:new Date().toLocaleString(),fen:game.fen(),pgn:game.pgn(),moves:game.history(),result:currentResult(game)};
- savedGames=[item,...savedGames].slice(0,100);
- persistRebelData(); renderRebelLab();
- $("#fenStatus").textContent="Game saved to the local Rebel database.";
-}
-function loadSavedGame(id){
- const item=savedGames.find(g=>g.id===id);if(!item)return;
- try{game=new Chess(item.fen);gameStartFen=item.fen;selected=null;trainingTarget=null;cancelEngine();renderAll();$("#fenStatus").textContent="Loaded saved position from "+item.date;showPage("boardPage")}catch{$("#fenStatus").textContent="Could not load that position."}
-}
-function deleteSavedGame(id){
- savedGames=savedGames.filter(g=>g.id!==id);persistRebelData();renderRebelLab();
-}
-function recordLearning(fen,uci){
- if(!fen||!uci)return;
- const key=fen.split(" ").slice(0,4).join(" ");
- const old=learningBook[key]||{fen,uci,hits:0,last:""};
- old.hits++;old.uci=uci;old.last=new Date().toLocaleString();learningBook[key]=old;
- persistRebelData();
-}
-function renderRebelLab(){
- const count=$("#savedGameCount"); if(!count)return;
- count.textContent=savedGames.length;
- $("#learningCount").textContent=Object.values(learningBook).reduce((n,x)=>n+x.hits,0);
- $("#rebelEngineState").textContent=engineReady?"READY":"LOAD";
- $("#engineReadout").textContent="Depth: "+lastEngineInfo.depth+"\nScore: "+lastEngineInfo.score+"\nNodes: "+lastEngineInfo.nodes+"\nTime: "+lastEngineInfo.time+"\nPV: "+(lastEngineInfo.pv||"waiting…");
- const db=$("#gameDatabase");
- db.innerHTML=savedGames.length?savedGames.map(g=>'<div class="gameRow"><div><b>'+g.date+'</b><small>'+((g.moves&&g.moves.length)?g.moves.length+' plies':'Starting position')+' · '+g.result+'</small></div><div class="controls"><button class="btn" data-load-game="'+g.id+'">Load</button><button class="btn" data-delete-game="'+g.id+'">Delete</button></div></div>').join(""):'<div class="notice">No saved games yet. Play a game and save it here.</div>';
- $("[data-load-game]").forEach(b=>b.onclick=()=>loadSavedGame(Number(b.dataset.loadGame)));
- $("[data-delete-game]").forEach(b=>b.onclick=()=>deleteSavedGame(Number(b.dataset.deleteGame)));
- const list=$("#learningList");
- const entries=Object.values(learningBook).sort((a,b)=>b.hits-a.hits).slice(0,12);
- list.innerHTML=entries.length?entries.map(x=>'<div class="gameRow"><div><b>'+x.uci.slice(0,2)+' → '+x.uci.slice(2,4)+'</b><small>'+x.hits+' learning hit(s) · '+x.last+'</small></div><span class="tag">LEARNED</span></div>').join(""):'<div class="notice">No learned positions yet. Analyze a position to start REBLEARN.</div>';
- const book=openingBookFor(game.history());
- $("#bookSummary").textContent=book.length?"Book suggestions for "+(game.history().length?game.history().join(" "):"the starting position"):"No built-in suggestion for this position.";
- $("#bookMoves").innerHTML=book.map(x=>'<div class="bookMove"><span>'+x.move+'</span><span>'+x.note+'</span></div>').join("");
-}
-function showPage(id){
- $(".page").forEach(p=>p.classList.remove("active"));$("#"+id).classList.add("active");
- $("[data-page]").forEach(x=>{const on=x.dataset.page===id;x.classList.toggle("active",on);x.setAttribute("aria-current",on?"page":"false")});
- if(id==="rebelPage")renderRebelLab();
-}
-const openingBook={
- "":"e4 — main line|d4 — main line|Nf3 — flexible",
- "e4":"c5 — Sicilian|e5 — Open Game|c6 — Caro-Kann|e6 — French",
- "e4 c5":"Nf3 — Sicilian development|c3 — Alapin idea|d4 — Open Sicilian",
- "e4 e5":"Nf3 — King's Knight|Bc4 — Italian setup|d4 — Scotch idea",
- "e4 c6":"d4 — Caro-Kann main setup|Nc3 — flexible development",
- "d4":"Nf6 — Indian defenses|d5 — Queen's Pawn|f5 — Dutch setup",
- "d4 Nf6":"c4 — main Queen's pawn continuation|Nf3 — flexible",
- "Nf3":"d5 — central reply|Nf6 — mirror development|c5 — English-style transposition"
-};
-function openingBookFor(hist){
- const key=hist.join(" ");
- return (openingBook[key]||"").split("|").filter(Boolean).map(s=>{const [move,note]=s.split(" — ");return {move,note}});
-}
-$("#saveGameBtn").onclick=saveCurrentGame;
-$("#analyzeGameBtn").onclick=startGameAnalysis;
-$("#stopAnalysisBtn").onclick=stopGameAnalysis;
-$("#clearAnalysisBtn").onclick=()=>{gameAnalysis=null;$("#analysisReport").innerHTML='<div class="notice">Report cleared.</div>';$("#analysisNarrative").textContent="Your report will summarize the critical moments here.";$("#analysisCurrent").textContent="Waiting.";$("#analysisProgressBar").style.width="0%";$("#analysisProgressText").textContent="No analysis running.";$("#analysisState").textContent="READY";};
-
-$("#analyzeMainBtn").onclick=()=>{
- if(!engineReady){$("#engineReadout").textContent="Stockfish is still loading…";return}
- const ok=requestEngine("rebel",game);
- if(!ok)$("#engineReadout").textContent="Stockfish is busy or the position is finished.";
-};
-$("#applyMultiPv").onclick=()=>{
- multiPv=Number($("#multiPv").value)||1;
- if(engine){try{engine.postMessage("setoption name MultiPV value "+multiPv)}catch{}}
- $("#engineReadout").textContent="Candidate lines set to "+multiPv+". Analyze the current board.";
-};
-$("#loadFenBtn").onclick=()=>{
- const fen=$("#fenInput").value.trim();
- try{const next=new Chess(fen);game=next;selected=null;trainingTarget=null;cancelEngine();renderAll();$("#fenStatus").textContent="Position loaded successfully.";renderRebelLab();showPage("boardPage")}catch{$("#fenStatus").textContent="Invalid FEN. Check the six FEN fields and try again."}
-};
-$("#copyFenBtn").onclick=()=>{$("#fenInput").value=game.fen();$("#fenStatus").textContent="Current board FEN copied into the editor."};
-
-// Chessly-style learning layer: courses, studies, quizzes, strategy tests, model games, shuffle and local progress.
-const rebelLearning={studies:[
- {type:"opening",title:"Opening Arsenal",text:"Center control, development and king safety.",action:"course",id:"opening"},
- {type:"tactics",title:"Tactical Patterns",text:"Forks, pins, skewers and forcing moves.",action:"lesson",id:"fork"},
- {type:"endgame",title:"Endgame Essentials",text:"King activity, promotion races and basic technique.",action:"lesson",id:"mate"},
- {type:"opening",title:"Caro-Kann Study",text:"Build a reliable response to 1.e4.",action:"course",id:"opening"},
- {type:"tactics",title:"Calculation Lab",text:"Compare candidate moves with Stockfish.",action:"page",id:"rebelPage"},
- {type:"endgame",title:"Checkmate Practice",text:"Convert a winning position accurately.",action:"lesson",id:"mate"}
-],quiz:[
- {q:"What should you usually prioritize first when looking for a tactical move?",a:["Forcing moves: checks, captures and threats","Moving a random pawn","Trading queens immediately","Ignoring the opponent"],ok:0},
- {q:"Why develop pieces early?",a:["To activate them and prepare king safety","To lose tempi","To keep them on their starting squares","To avoid controlling the center"],ok:0},
- {q:"What is a fork?",a:["One move attacking two or more targets","A type of checkmate only","A pawn ending","A castling rule"],ok:0},
- {q:"What is the purpose of castling?",a:["Improve king safety and connect the rook","Promote a pawn","Win a queen automatically","Skip the opponent's turn"],ok:0}
-],strategy:[
- {q:"Your opponent has an undeveloped king and you can safely develop with tempo. What is the practical plan?",a:["Develop actively and increase pressure","Move the same piece repeatedly for no reason","Trade every pawn","Stop calculating"],ok:0},
- {q:"You are ahead in material in a simplified position. What is often useful?",a:["Trade toward a favorable endgame while avoiding counterplay","Create unnecessary complications","Give back material","Ignore king activity"],ok:0},
- {q:"The center is closed. What should you examine next?",a:["Pawn breaks, piece routes and play on the wings","Only immediate captures","Random checks","The clock only"],ok:0}
-],models:[
- {title:"Development Model",text:"A teaching line built around center control and rapid development.",moves:["1. e4 e5","2. Nf3 Nc6","3. Bc4 Bc5","4. O-O Nf6","5. Re1 d6","6. c3 O-O"]},
- {title:"Tactical Model",text:"A compact pattern study: develop, create threats, then calculate forcing moves.",moves:["1. e4 e5","2. Nf3 Nc6","3. Bb5 a6","4. Ba4 Nf6","5. O-O Be7","6. Re1 b5"]}
-]};
-let quizIndex=0,quizXP=Number(localStorage.getItem("rebelQuizXP")||0),strategyIndex=0,strategyXP=Number(localStorage.getItem("rebelStrategyXP")||0),shuffleStreak=Number(localStorage.getItem("rebelShuffleStreak")||0);
-function renderStudies(filter="all"){const el=$("#studyGrid");if(!el)return;el.innerHTML=rebelLearning.studies.filter(x=>filter==="all"||x.type===filter).map((x,i)=>'<article class="panel chesslyCard"><span class="tag">'+x.type.toUpperCase()+'</span><h3>'+x.title+'</h3><p class="muted">'+x.text+'</p><button class="btn primary" data-study-action="'+x.action+'" data-study-id="'+x.id+'">Open</button></article>').join("");}
-function renderQuiz(){const x=rebelLearning.quiz[quizIndex%rebelLearning.quiz.length];$("#quizQuestion").textContent=x.q;$("#quizOptions").innerHTML=x.a.map((a,i)=>'<button class="btn quizOption" data-quiz-answer="'+i+'">'+a+'</button>').join("");$("#quizFeedback").textContent="Choose an answer.";$("#quizScore").textContent=quizXP+" XP";}
-function renderStrategy(){const x=rebelLearning.strategy[strategyIndex%rebelLearning.strategy.length];$("#strategyQuestion").textContent=x.q;$("#strategyOptions").innerHTML=x.a.map((a,i)=>'<button class="btn quizOption" data-strategy-answer="'+i+'">'+a+'</button>').join("");$("#strategyFeedback").textContent="Pick a plan.";$("#strategyScore").textContent=strategyXP+" XP";}
-function renderModels(){const x=rebelLearning.models[0];$("#modelTitle").textContent=x.title;$("#modelText").textContent=x.text;$("#modelMoves").innerHTML=x.moves.map((m,i)=>'<div class="modelMove" data-model-move="'+i+'"><b>'+m+'</b><small class="muted"> Click to replay this idea on the board.</small></div>').join("");}
-function saveLearningXP(){localStorage.setItem("rebelQuizXP",quizXP);localStorage.setItem("rebelStrategyXP",strategyXP);localStorage.setItem("rebelShuffleStreak",shuffleStreak);}
-// Shared UX hardening: keep every major workspace visibly large and make section navigation deterministic.
-function rebelOpenPage(id){
-  const el=document.getElementById(id);
-  if(!el)return;
-  showPage(id);
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-document.addEventListener("click",e=>{
-  const b=e.target.closest("button[data-page],a[data-page]");
-  if(b && b.dataset.page){e.preventDefault();rebelOpenPage(b.dataset.page);}
-});
-// Full course/chapter/lesson progression with resume + completion tracking.
-const courseCatalog={
- foundations:{title:"Chess Fundamentals",chapters:[
-  {title:"Chapter 1 · Board & Moves",lessons:[
-   {title:"The Board",text:"Understand files, ranks, colors and starting setup.",fen:coursePositions.foundations.fen},
-   {title:"Piece Movement",text:"Practice legal piece movement before calculating.",fen:lessonPositions.opening.fen},
-   {title:"Checks & Captures",text:"Identify forcing moves and legal captures.",fen:lessonPositions.fork.fen}
-  ]},
-  {title:"Chapter 2 · Core Tactics",lessons:[
-   {title:"Knight Forks",text:"Spot a double attack with a knight.",fen:lessonPositions.fork.fen},
-   {title:"Checks First",text:"Scan forcing checks before quiet moves.",fen:lessonPositions.mate.fen},
-   {title:"Candidate Moves",text:"Compare forcing candidates before choosing.",fen:coursePositions.stockfish.fen}
-  ]},
-  {title:"Chapter 3 · Game Review",lessons:[
-   {title:"Find the Mistake",text:"Compare your idea with Stockfish.",fen:coursePositions.stockfish.fen},
-   {title:"Best Move",text:"Play the engine's strongest continuation.",fen:lessonPositions.fork.fen}
-  ]}
- ]},
- opening:{title:"Opening Basics",chapters:[
-  {title:"Chapter 1 · Principles",lessons:[
-   {title:"Control the Center",text:"Build a strong central presence.",fen:coursePositions.opening.fen},
-   {title:"Develop Pieces",text:"Bring pieces toward useful squares.",fen:lessonPositions.opening.fen},
-   {title:"King Safety",text:"Prepare to castle and connect your pieces.",fen:coursePositions.opening.fen}
-  ]},
-  {title:"Chapter 2 · Repertoire",lessons:[
-   {title:"1.e4 Responses",text:"Recognize major replies to 1.e4.",fen:lessonPositions.opening.fen},
-   {title:"Caro-Kann Setup",text:"Practice the basic Caro-Kann structure.",fen:coursePositions.opening.fen},
-   {title:"Opening Review",text:"Check your plan against Stockfish.",fen:coursePositions.stockfish.fen}
-  ]}
- ]},
- stockfish:{title:"Stockfish Course",chapters:[
-  {title:"Chapter 1 · Engine Basics",lessons:[
-   {title:"Evaluation",text:"Understand what an engine score means.",fen:coursePositions.stockfish.fen},
-   {title:"Candidate Moves",text:"Generate your own candidates before checking.",fen:coursePositions.stockfish.fen},
-   {title:"Best Line",text:"Compare the principal variation with your plan.",fen:coursePositions.stockfish.fen}
-  ]},
-  {title:"Chapter 2 · Game Analysis",lessons:[
-   {title:"Inaccuracies",text:"Learn to recognize smaller evaluation losses.",fen:coursePositions.stockfish.fen},
-   {title:"Mistakes",text:"Find moves that change the evaluation significantly.",fen:coursePositions.stockfish.fen},
-   {title:"Blunders",text:"Identify critical tactical errors.",fen:lessonPositions.fork.fen}
-  ]}
- ]}}
-let courseProgressData=JSON.parse(localStorage.getItem("rebelCourseProgress")||"{}");
-let activeCourseLesson={course:"foundations",chapter:0,lesson:0};
-function courseKey(course,chapter,lesson){return course+"-"+chapter+"-"+lesson}
-function isCourseDone(course,chapter,lesson){return !!courseProgressData[courseKey(course,chapter,lesson)]}
-function saveCourseProgress(){localStorage.setItem("rebelCourseProgress",JSON.stringify(courseProgressData));localStorage.setItem("rebelCourseLast",JSON.stringify(activeCourseLesson))}
-function courseStats(course){
- const d=courseCatalog[course],total=d.chapters.reduce((n,ch)=>n+ch.lessons.length,0),done=Object.keys(courseProgressData).filter(k=>k.startsWith(course+"-")&&courseProgressData[k]).length;
- return {total,done,pct:total?Math.round(done/total*100):0}
-}
-function findNextCourseLesson(course){
- const d=courseCatalog[course];
- for(let ci=0;ci<d.chapters.length;ci++)for(let li=0;li<d.chapters[ci].lessons.length;li++)if(!isCourseDone(course,ci,li))return {chapter:ci,lesson:li};
- const last=d.chapters.length-1;return {chapter:last,lesson:d.chapters[last].lessons.length-1};
-}
-function renderCourseProgress(){
- const d=courseCatalog[activeCourse],s=courseStats(activeCourse),el=$("#courseLessonList");if(!el||!d)return;
- $("#coursePathMeta").textContent=s.done+" / "+s.total+" lessons complete · "+s.pct+"%";
- $("#courseProgress").style.width=s.pct+"%";
- el.innerHTML=d.chapters.map((ch,ci)=>'<div class="courseChapter"><div class="courseChapterBar"><h3>'+ch.title+'</h3><small class="muted">'+ch.lessons.filter((_,li)=>isCourseDone(activeCourse,ci,li)).length+'/'+ch.lessons.length+'</small></div>'+ch.lessons.map((l,li)=>{const done=isCourseDone(activeCourse,ci,li),cur=activeCourseLesson.chapter===ci&&activeCourseLesson.lesson===li;return '<div class="lessonRow '+(done?"done ":"")+(cur?"current ":"")+(done||ci===0||li===0?"":"locked")+'" data-course-lesson="'+ci+':'+li+'"><div class="lessonNum">'+(done?"✓":(li+1))+'</div><div><b>'+l.title+'</b><small>'+l.text+'</small></div><span class="completionTag">'+(done?"DONE":cur?"NOW":"NEXT")+'</span></div>'}).join("")+'</div>').join("");
- $("#completeCourseLesson").disabled=isCourseDone(activeCourse,activeCourseLesson.chapter,activeCourseLesson.lesson);
-}
-function openCourseLesson(course,chapter,lesson){
- const d=courseCatalog[course];if(!d||!d.chapters[chapter]||!d.chapters[chapter].lessons[lesson])return;
- activeCourse=course;activeCourseLesson={course,chapter,lesson};const l=d.chapters[chapter].lessons[lesson];
- courseGame=new Chess(l.fen);courseSelected=null;cancelAnalysisIf("course");
- $("#courseTitle").textContent=d.title+" · "+l.title;$("#courseText").textContent=l.text;
- $("#courseStep").textContent="Chapter "+(chapter+1)+" · Lesson "+(lesson+1);
- $("#courseStatus").textContent=engineReady?"Stockfish ready — make your move first.":"Waiting for Stockfish…";$("#courseProgress").style.width=courseStats(course).pct+"%";
- renderCourseProgress();renderAll();showPage("coursePage");
-}
-function nextCourseLesson(){
- const d=courseCatalog[activeCourse];let ci=activeCourseLesson.chapter,li=activeCourseLesson.lesson;
- if(li+1<d.chapters[ci].lessons.length)li++;else if(ci+1<d.chapters.length){ci++;li=0}else{renderCourseProgress();return}
- openCourseLesson(activeCourse,ci,li);
-}
-$("#completeCourseLesson").onclick=()=>{
- const k=courseKey(activeCourse,activeCourseLesson.chapter,activeCourseLesson.lesson);
- if(!courseProgressData[k]){courseProgressData[k]=Date.now();quizXP+=25;saveLearningXP();saveCourseProgress();}
- renderCourseProgress();refreshRebelArchitecture?.();$("#courseStatus").textContent="Lesson complete! +25 XP. Choose Next lesson to continue.";
-};
-$("#nextCourseLesson").onclick=nextCourseLesson;
-document.addEventListener("click",e=>{const row=e.target.closest("[data-course-lesson]");if(row){const [ci,li]=row.dataset.courseLesson.split(":").map(Number);openCourseLesson(activeCourse,ci,li)}});
-
-document.addEventListener("click",e=>{
- const qa=e.target.closest("[data-quiz-answer]");if(qa){const x=rebelLearning.quiz[quizIndex%rebelLearning.quiz.length],i=Number(qa.dataset.quizAnswer);if(i===x.ok){quizXP+=10;qa.classList.add("correct");$("#quizFeedback").textContent="Correct. +10 XP";}else{qa.classList.add("wrong");$("#quizFeedback").textContent="Not quite. Review the idea and try the next one."}saveLearningXP();$("#quizScore").textContent=quizXP+" XP";}
- const sa=e.target.closest("[data-strategy-answer]");if(sa){const x=rebelLearning.strategy[strategyIndex%rebelLearning.strategy.length],i=Number(sa.dataset.strategyAnswer);if(i===x.ok){strategyXP+=15;sa.classList.add("correct");$("#strategyFeedback").textContent="Strong plan. +15 XP";}else{sa.classList.add("wrong");$("#strategyFeedback").textContent="Review the strategic goal, then continue."}saveLearningXP();$("#strategyScore").textContent=strategyXP+" XP";}
- const st=e.target.closest("[data-study-action]");if(st){const a=st.dataset.studyAction,id=st.dataset.studyId;if(a==="course")loadCourse(id);if(a==="lesson")loadLesson(id);if(a==="page")showPage(id);}
-});
-$("#nextQuiz").onclick=()=>{quizIndex++;renderQuiz()};$("#nextStrategy").onclick=()=>{strategyIndex++;renderStrategy()};
-$("[data-study-filter]").forEach(b=>b.onclick=()=>{$("[data-study-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderStudies(b.dataset.studyFilter)});
-\nfunction wireNavigation(){ $( "[data-page]" ).forEach(b=>b.onclick=()=>showPage(b.dataset.page)); }
-wireNavigation(); renderRebelLab();
-
-loadLesson("fork");
-renderAll();
-initEngine();
-</script>
-
-<script>
-(function(){
- function refreshArchitecture(){
-   let learning={};try{learning=JSON.parse(localStorage.getItem("rebelClassicLearning")||"{}")}catch{}
-   const hits=Object.values(learning).reduce((n,x)=>n+(Number(x.hits)||0),0);
-   let games=[];try{games=JSON.parse(localStorage.getItem("rebelClassicGames")||"[]")}catch{}
-   const xp=hits*10+games.length*25;
-   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
-   set("homeLearningCount",hits);set("homeGameCount",games);
-   set("progressXp",xp);set("progressGames",games.length);set("progressEngine",document.getElementById("engineStatus")?.textContent?.includes("ready")?"READY":"LOADING");
-   const lane=(hits||games)?Math.min(100,20+hits*5):0;
-   set("skillTactics",lane?lane+"%":"Building");
-   set("skillOpenings",games.length?Math.min(100,25+games.length*8)+"%":"Building");
-   set("skillCalculation",hits?Math.min(100,20+hits*6)+"%":"Building");
-   set("skillReview",games.length&&hits?Math.min(100,20+games.length*5+hits*3)+"%":"Building");
- }
- window.refreshRebelArchitecture=refreshArchitecture;
- document.addEventListener("click",function(e){
-   const b=e.target.closest("[data-page]");
-   if(b && b.dataset.page){e.preventDefault();if(typeof window.showPage==="function")window.showPage(b.dataset.page);refreshArchitecture();}
- });
- setTimeout(()=>{refreshArchitecture();renderStudies();renderQuiz();renderStrategy();renderModels();renderCourseProgress();},100);
-})();
+function renderReview(results){$("reviewStatus").textContent="Review complete.";const counts={good:0,inaccuracy:0};results.forEach(r=>counts[r.classification]++);$("reviewSummary").textContent=results.length+" moves reviewed · "+counts.good+" engine matches · "+counts.inaccuracy+" alternatives";$("reviewReport").innerHTML=results.map(r=>'<div class="report '+r.classification+'"><b>'+r.ply+'</b><b>'+r.move+'</b><div><strong>'+r.classification.toUpperCase()+'</strong><small class="muted"> · best '+r.best+'</small></div><span>'+r.score+'</span></div>').join("");progress.analysis=(progress.analysis||0)+results.length;saveState()}
+function renderStats(){const done=["foundations","opening","engine"].reduce((n,id)=>n+Number(localStorage.getItem("course:"+id+":done")||0),0),total=Object.values(courses).reduce((n,a)=>n+a.length,0),pct=Math.round(done/total*100);$("homeCourse").textContent=pct+"%";$("homeCourseBar").style.width=pct+"%";$("homeGames").textContent=saved.length;$("xp").textContent=progress.xp||0;$("lessonsDone").textContent=progress.lessons||0;$("gamesDone").textContent=saved.length;$("tactics").textContent=progress.tactics||0;$("openings").textContent=Number(localStorage.getItem("course:opening:done")||0);$("analysisCount").textContent=progress.analysis||0}
+$$("[data-page]").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+$$("[data-course]").forEach(b=>b.onclick=()=>openCourse(b.dataset.course));
+$$("[data-drill]").forEach(b=>b.onclick=()=>openDrill(b.dataset.drill));
+$("newGame").onclick=newGame;
+$("twoPlayer").onclick=()=>{newGame();mode="local"};
+$("computer").onclick=()=>{newGame();mode="computer";$("coach").textContent="You are White. Stockfish will play Black."};
+$("undo").onclick=()=>{if(engineBusy)return;game.undo();if(mode==="computer"&&game.history().length)game.undo();renderGame();renderAllBoards()};
+$("flip").onclick=()=>{flipped=!flipped;renderAllBoards()};
+$("applyLevel").onclick=()=>{$("engineStatus").textContent="Level "+$("level").value+" selected for the next search."};
+$("trainPosition").onclick=()=>{drillGame=new Chess(game.fen());drillId="opening";drillSelected=null;$("drillTitle").textContent="Game Position Drill";$("drillText").textContent="Replay the best move from this position.";showPage("trainer");validateDrill()};
+$("courseAnalyze").onclick=()=>engineSearch("course",courseGame,(uci)=>{$("courseStatus").textContent="Stockfish best move: "+uci});
+$("courseReset").onclick=loadCourseLesson;
+$("courseComplete").onclick=completeCourse;
+$("courseNext").onclick=()=>{const done=Number(localStorage.getItem("course:"+courseId+":done")||0);if(courseIndex+1<courses[courseId].length&&courseIndex+1<=done){courseIndex++;loadCourseLesson()}};
+$("drillValidate").onclick=validateDrill;
+$("drillReset").onclick=()=>openDrill(drillId);
+$("analyzePosition").onclick=analyzePosition;
+$("saveGame").onclick=saveGame;
+$("useFen").onclick=()=>$("fen").value=labGame.fen();
+$("loadFen").onclick=()=>{try{const c=new Chess($("fen").value.trim());labGame=c;labSelected=null;$("fenStatus").textContent="FEN loaded.";renderAllBoards()}catch{$("fenStatus").textContent="Invalid FEN."}};
+$("fullReview").onclick=fullReview;
+$("stopReview").onclick=()=>{cancelEngine();$("reviewStatus").textContent="Review stopped."};
+$("clearReview").onclick=()=>{$("reviewReport").innerHTML="";$("reviewSummary").textContent="";$("reviewBar").style.width="0";$("reviewStatus").textContent="No report."};
+function boot(){courseGame=new Chess(courses.foundations[0][2]);drillGame=new Chess(drills.fork[2]);labGame=new Chess();$("fen").value=labGame.fen();renderGame();renderSaved();renderStats();renderAllBoards();initEngine()}
+boot();
 </script>
 </body>
 </html>
