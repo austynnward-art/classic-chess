@@ -246,12 +246,20 @@ function initEngine(){
          if(job.fen===game.fen())applyEngineMove(uci,job);
        }else if(job.purpose==="lesson"){
          finishEngineJob(job,uci);
+         if(job.fen!==trainerGame.fen()){
+           $("#trainerStatus").textContent="Analysis discarded — lesson position changed.";
+           return;
+         }
          if(uci&&uci!=="0000"){
            $("#trainerStatus").textContent="Stockfish recommends "+uci.slice(0,2)+" → "+uci.slice(2,4)+". Now try it on the board.";
            $("#lessonProgress").style.width="75%";
          }else $("#trainerStatus").textContent="No engine move available for this position.";
        }else if(job.purpose==="course"){
          finishEngineJob(job,uci);
+         if(job.fen!==courseGame.fen()){
+           $("#courseStatus").textContent="Analysis discarded — course position changed.";
+           return;
+         }
          if(uci&&uci!=="0000"){
            $("#courseStatus").textContent="Stockfish recommends "+uci.slice(0,2)+" → "+uci.slice(2,4)+". Your course position is unchanged.";
            $("#courseProgress").style.width="75%";
