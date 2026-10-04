@@ -448,6 +448,7 @@ function loadLesson(id){
  $$(".lesson").forEach(x=>x.classList.toggle("active",x.dataset.lesson===id));
  $("#lessonProgress").style.width="0%";
  renderAll();
+ if(engineReady) requestEngine("lesson",trainerGame);
 }
 $("#startTrainingFromGame").onclick=()=>{
  if(!game.history().length){$("#trainingLoopStatus").textContent="Play at least one move first.";return}
