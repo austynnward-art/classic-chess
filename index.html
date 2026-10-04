@@ -377,7 +377,7 @@ $("#resetCourse").onclick=()=>loadCourse(activeCourse);
 $$("[data-course]").forEach(b=>b.onclick=()=>loadCourse(b.dataset.course));
 
 $$("[data-lesson]").forEach(b=>b.onclick=()=>loadLesson(b.dataset.lesson));
-$("[data-page]").forEach(b=>b.onclick=()=>{
+$$("[data-page]").forEach(b=>b.onclick=()=>{
  $$(".page").forEach(p=>p.classList.remove("active"));$("#"+b.dataset.page).classList.add("active");
  $$("[data-page]").forEach(x=>x.classList.toggle("active",x===b));
 });
