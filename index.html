@@ -121,6 +121,8 @@ let engineRequest = 0;
 let activeEngineJob = null;
 let engineQueue = [];
 let ignoringBestmove = false;
+let engineStopping = false;
+let engineStopTimer = null;
 let activeLesson = "fork";
 let trainingTarget = null;
 let trainerTarget = null;
@@ -220,11 +222,11 @@ function startEngineJob(job){
  if(job.purpose==="course")$("#courseStatus").textContent="Stockfish is analyzing the course position…";
  job.timeout=setTimeout(()=>{
    if(activeEngineJob&&activeEngineJob.id===job.id){
-     ignoringBestmove=true;
-     engine.postMessage("stop");
+     clearTimeout(job.timeout);
      activeEngineJob=null;
      engineBusy=false;
-     setEngineStatus("Stockfish search timed out — ready");
+     beginEngineStop();
+     setEngineStatus("Stockfish search timed out — stopping");
      if(job.purpose==="lesson")$("#trainerStatus").textContent="Stockfish timed out. Try again.";
      if(job.purpose==="course")$("#courseStatus").textContent="Stockfish timed out. Try again.";
      if(job.purpose==="training")$("#trainingLoopStatus").textContent="Analysis timed out — try again.";
@@ -293,6 +295,15 @@ function initEngine(){
        setEngineStatus("Stockfish 19 Lite ready");
        if(activeLesson!=="training" && trainerGame && !lessonTarget) requestEngine("lesson",trainerGame);
      }else if(line.startsWith("bestmove")){
+       if(engineStopping){
+         clearTimeout(engineStopTimer);
+         engineStopTimer=null;
+         engineStopping=false;
+         ignoringBestmove=false;
+         engineBusy=false;
+         setEngineStatus(engineReady?"Stockfish 19 Lite ready":"Loading engine…");
+         return;
+       }
        if(ignoringBestmove){ignoringBestmove=false;return}
        const job=activeEngineJob;
        if(!job)return;
@@ -344,7 +355,7 @@ function initEngine(){
    };
    engine.onerror=()=>{
    if(engine)try{engine.terminate()}catch{}
-   engine=null;engineReady=false;engineBusy=false;activeEngineJob=null;engineQueue=[];ignoringBestmove=true;
+   engine=null;engineReady=false;engineBusy=false;activeEngineJob=null;engineQueue=[];ignoringBestmove=false;engineStopping=false;clearTimeout(engineStopTimer);engineStopTimer=null;
    setEngineStatus("Stockfish failed — restarting…");
    clearTimeout(engineRecoveryTimer);
    engineRecoveryTimer=setTimeout(()=>{engineRecoveryTimer=null;initEngine()},500);
