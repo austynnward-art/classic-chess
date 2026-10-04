@@ -6,14 +6,14 @@
 <title>Rebuild Chess — Play · Train · Watch</title>
 <style>
 :root{--bg:#07090b;--panel:#0d1217;--panel2:#11181e;--line:#25303a;--text:#f4f6f7;--muted:#8d98a2;--lime:#1597ff;--light:#eee;--dark:#b7c5d6;--blue:#4d8cff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}.app{min-height:100vh;display:grid;grid-template-columns:220px 1fr}.sideNav{border-right:1px solid var(--line);background:#080b0e;padding:24px 14px;position:sticky;top:0;height:100vh}.brand{display:flex;align-items:center;gap:10px;margin:4px 8px 30px}.logo{width:42px;height:42px;border-radius:12px;background:var(--lime);color:#091007;display:grid;place-items:center;font-size:25px;font-weight:900}.brand b{font-size:16px}.brand small{display:block;color:#69747e;margin-top:3px}.nav button{display:block;width:100%;border:0;background:transparent;color:#87919a;text-align:left;border-radius:10px;padding:13px 12px;margin:5px 0;font-weight:800;cursor:pointer}.nav button.active,.nav button:hover{background:#151c22;color:#fff}.nav button.active:before{content:"";display:inline-block;width:4px;height:16px;border-radius:5px;background:var(--lime);vertical-align:-3px;margin-right:10px}.main{padding:28px 34px 60px}.page{display:none;max-width:1400px;margin:auto}.page.active{display:block}.layout{display:grid;grid-template-columns:minmax(480px,760px) 330px;gap:20px;justify-content:center}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px #0005}.boardPanel{padding:22px}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--lime);font-weight:950}.head{display:flex;justify-content:space-between;gap:15px;margin-bottom:17px}.head h1{margin:6px 0 3px;font-size:30px}.muted{color:var(--muted);line-height:1.5}.tag{display:inline-block;padding:6px 9px;border-radius:999px;background:#1597ff18;color:var(--lime);font-size:9px;font-weight:900;letter-spacing:1px}.boardFrame{width:min(700px,100%);margin:auto;background:#454548;padding:9px 10px 23px;border:2px solid #292a2d;box-shadow:0 8px 24px #0008}.board{width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);border:2px solid #68686b}.sq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(31px,7vw,68px);line-height:1;user-select:none}.light{background:var(--light)}.dark{background:var(--dark)}.sq.selected{box-shadow:inset 0 0 0 4px var(--lime)}.sq.drag-over{box-shadow:inset 0 0 0 5px #fff8}.sq[draggable="true"]{cursor:grab}.sq:active{cursor:grabbing}.sq.legal:after{content:"";width:15%;height:15%;border-radius:50%;background:#27303699}.sq.capture:after{content:"";position:absolute;inset:8%;border:4px solid #273036aa;border-radius:50%}.piece{font-family:"DejaVu Sans",serif;transform:translateY(-1px);text-shadow:0 2px 2px #0006}.piece.w{color:#fff}.piece.b{color:var(--blue)}.coord{position:absolute;font:800 9px ui-monospace,monospace;opacity:.7}.rank{left:3px;top:3px}.file{right:3px;bottom:3px}.light .coord{color:#555}.dark .coord{color:#eee}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.btn{border:1px solid var(--line);background:#151c22;color:#e8edf0;border-radius:10px;padding:10px 14px;font-weight:850;cursor:pointer}.btn:hover{border-color:#53606a}.btn.primary{background:var(--lime);border-color:var(--lime);color:#fff}.sideCards{display:flex;flex-direction:column;gap:10px}.card{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:15px}.card strong{display:block;color:#68737d;font-size:9px;letter-spacing:1.5px;margin-bottom:7px}.status{font-size:17px;font-weight:900}.moves{max-height:330px;overflow:auto;white-space:pre-line;font:12px/1.8 ui-monospace,monospace}.coach{background:linear-gradient(145deg,#092a48,#0b131a);border-color:#1597ff30}.select{width:100%;margin-top:8px;background:#0b1014;color:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}.hero{padding:32px;border-radius:20px;background:radial-gradient(circle at 80% 20%,#082e57,#08131e 65%);border:1px solid #29362c;margin-bottom:18px}.hero h1{font-size:46px;color:#fff;letter-spacing:-2px;margin:9px 0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.tile{padding:20px;min-height:150px}.tile h3{margin:12px 0 7px}.videoGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}.video{overflow:hidden}.video iframe{width:100%;aspect-ratio:16/9;border:0;display:block;background:#020304}.videoBody{padding:14px}.videoBody h3{margin:0 0 5px;font-size:15px}.videoBody p{margin:0 0 12px;color:var(--muted);font-size:12px}.link{color:var(--lime);text-decoration:none;font-weight:800}.resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.resource{padding:16px;text-decoration:none;color:inherit}.resource:hover{border-color:#1597ff55}.trainer{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px}.lessonList{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0}.lesson{padding:14px;cursor:pointer}.lesson.active{border-color:var(--lime);box-shadow:0 0 0 1px #1597ff22}.lesson b{display:block;margin-bottom:6px}.lesson small{color:var(--muted)}.trainerBoard{padding:18px}.notice{padding:12px;border-radius:10px;background:#ffffff08;color:#cbd3d8;font-size:12px;margin-top:10px}.hidden{display:none!important}.videoNote{margin-top:15px;padding:14px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px}.progress{height:7px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--lime);width:0}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.flipInfo{font-size:11px;color:var(--muted)}@media(max-width:1050px){.app{grid-template-columns:72px 1fr}.sideNav{padding:20px 8px}.brand{justify-content:center}.brand>div:not(.logo){display:none}.nav button{font-size:0;text-align:center}.nav button.active:before{margin:0}.layout,.trainer{grid-template-columns:1fr}.sideCards{display:grid;grid-template-columns:1fr 1fr}.coach{grid-column:1/-1}.grid3,.resourceGrid{grid-template-columns:1fr 1fr}}@media(max-width:680px){.app{display:block}.sideNav{height:62px;position:sticky;z-index:10;display:flex;align-items:center;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.brand{margin:0}.nav{display:flex;gap:4px;margin-left:auto}.nav button{font-size:12px;padding:9px}.nav button.active:before{display:none}.main{padding:16px 10px 40px}.boardPanel{padding:13px}.head h1{font-size:24px}.sideCards{display:block}.card{margin-top:10px}.videoGrid,.grid3,.resourceGrid,.lessonList{grid-template-columns:1fr}.hero{padding:24px}.hero h1{font-size:36px}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}.app{min-height:100vh;display:grid;grid-template-columns:220px 1fr}.sideNav{border-right:1px solid var(--line);background:#080b0e;padding:24px 14px;position:sticky;top:0;height:100vh}.brand{display:flex;align-items:center;gap:10px;margin:4px 8px 30px}.logo{width:42px;height:42px;border-radius:12px;background:var(--lime);color:#091007;display:grid;place-items:center;font-size:25px;font-weight:900}.brand b{font-size:16px}.brand small{display:block;color:#69747e;margin-top:3px}.nav button{display:block;width:100%;border:0;background:transparent;color:#87919a;text-align:left;border-radius:10px;padding:13px 12px;margin:5px 0;font-weight:800;cursor:pointer}.nav button.active,.nav button:hover{background:#151c22;color:#fff}.nav button.active:before{content:"";display:inline-block;width:4px;height:16px;border-radius:5px;background:var(--lime);vertical-align:-3px;margin-right:10px}.main{padding:28px 34px 60px}.page{display:none;max-width:1400px;margin:auto}.page.active{display:block}.layout{display:grid;grid-template-columns:minmax(480px,760px) 330px;gap:20px;justify-content:center}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px #0005}.boardPanel{padding:22px}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--lime);font-weight:950}.head{display:flex;justify-content:space-between;gap:15px;margin-bottom:17px}.head h1{margin:6px 0 3px;font-size:30px}.muted{color:var(--muted);line-height:1.5}.tag{display:inline-block;padding:6px 9px;border-radius:999px;background:#1597ff18;color:var(--lime);font-size:9px;font-weight:900;letter-spacing:1px}.boardFrame{width:min(700px,100%);margin:auto;background:#454548;padding:9px 10px 23px;border:2px solid #292a2d;box-shadow:0 8px 24px #0008}.board{width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);border:2px solid #68686b}.sq{position:relative;border:0;padding:0;display:grid;place-items:center;cursor:pointer;font-size:clamp(31px,7vw,68px);line-height:1;user-select:none}.light{background:var(--light)}.dark{background:var(--dark)}.sq.selected{box-shadow:inset 0 0 0 4px var(--lime)}.sq.drag-over{box-shadow:inset 0 0 0 5px #fff8}.sq[draggable="true"]{cursor:grab}.sq:active{cursor:grabbing}.sq.legal:after{content:"";width:15%;height:15%;border-radius:50%;background:#27303699}.sq.capture:after{content:"";position:absolute;inset:8%;border:4px solid #273036aa;border-radius:50%}.piece{font-family:"DejaVu Sans",serif;display:grid;place-items:center;width:82%;height:82%;transform:none;line-height:1;text-align:center;text-shadow:0 2px 2px #0006}.piece.w{color:#fff}.piece.b{color:var(--blue)}.coord{position:absolute;font:800 9px ui-monospace,monospace;opacity:.7}.rank{left:3px;top:3px}.file{right:3px;bottom:3px}.light .coord{color:#555}.dark .coord{color:#eee}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.btn{border:1px solid var(--line);background:#151c22;color:#e8edf0;border-radius:10px;padding:10px 14px;font-weight:850;cursor:pointer}.btn:hover{border-color:#53606a}.btn.primary{background:var(--lime);border-color:var(--lime);color:#fff}.sideCards{display:flex;flex-direction:column;gap:10px}.card{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:15px}.card strong{display:block;color:#68737d;font-size:9px;letter-spacing:1.5px;margin-bottom:7px}.status{font-size:17px;font-weight:900}.moves{max-height:330px;overflow:auto;white-space:pre-line;font:12px/1.8 ui-monospace,monospace}.coach{background:linear-gradient(145deg,#092a48,#0b131a);border-color:#1597ff30}.select{width:100%;margin-top:8px;background:#0b1014;color:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}.hero{padding:32px;border-radius:20px;background:radial-gradient(circle at 80% 20%,#082e57,#08131e 65%);border:1px solid #29362c;margin-bottom:18px}.hero h1{font-size:46px;color:#fff;letter-spacing:-2px;margin:9px 0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.tile{padding:20px;min-height:150px}.tile h3{margin:12px 0 7px}.videoGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}.video{overflow:hidden}.video iframe{width:100%;aspect-ratio:16/9;border:0;display:block;background:#020304}.videoBody{padding:14px}.videoBody h3{margin:0 0 5px;font-size:15px}.videoBody p{margin:0 0 12px;color:var(--muted);font-size:12px}.link{color:var(--lime);text-decoration:none;font-weight:800}.resourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.courseGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.courseCard{padding:18px;display:flex;flex-direction:column;min-height:190px}.courseCard h3{margin:8px 0 5px}.courseCard .btn{margin-top:auto}.courseBoard{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px}.coursePanel{padding:18px}.courseMeta{display:flex;gap:8px;flex-wrap:wrap}.courseMeta span{padding:5px 8px;border-radius:999px;background:#ffffff09;color:#aab5bd;font-size:10px}.resource{padding:16px;text-decoration:none;color:inherit}.resource:hover{border-color:#1597ff55}.trainer{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px}.lessonList{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0}.lesson{padding:14px;cursor:pointer}.lesson.active{border-color:var(--lime);box-shadow:0 0 0 1px #1597ff22}.lesson b{display:block;margin-bottom:6px}.lesson small{color:var(--muted)}.trainerBoard{padding:18px}.notice{padding:12px;border-radius:10px;background:#ffffff08;color:#cbd3d8;font-size:12px;margin-top:10px}.hidden{display:none!important}.videoNote{margin-top:15px;padding:14px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px}.progress{height:7px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--lime);width:0}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.flipInfo{font-size:11px;color:var(--muted)}@media(max-width:1050px){.courseGrid{grid-template-columns:1fr 1fr}.courseBoard{grid-template-columns:1fr}.nav button{font-size:12px}.nav button.active:before{margin-right:6px}}@media(max-width:1050px){.app{grid-template-columns:72px 1fr}.sideNav{padding:20px 8px}.brand{justify-content:center}.brand>div:not(.logo){display:none}.nav button{font-size:0;text-align:center}.nav button.active:before{margin:0}.layout,.trainer{grid-template-columns:1fr}.sideCards{display:grid;grid-template-columns:1fr 1fr}.coach{grid-column:1/-1}.grid3,.resourceGrid{grid-template-columns:1fr 1fr}}@media(max-width:680px){.app{display:block}.sideNav{height:62px;position:sticky;z-index:10;display:flex;align-items:center;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.brand{margin:0}.nav{display:flex;gap:4px;margin-left:auto}.nav button{font-size:12px;padding:9px}.nav button.active:before{display:none}.main{padding:16px 10px 40px}.boardPanel{padding:13px}.head h1{font-size:24px}.sideCards{display:block}.card{margin-top:10px}.videoGrid,.grid3,.resourceGrid,.lessonList,.courseGrid{grid-template-columns:1fr}.hero{padding:24px}.hero h1{font-size:36px}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sideNav">
  <div class="brand"><div class="logo">♞</div><div><b>Rebuild Chess</b><small>BLUE CHESS LAB</small></div></div>
- <nav class="nav"><button class="active" data-page="boardPage">Board</button><button data-page="trainerPage">Trainer</button><button data-page="videoPage">Videos</button></nav>
+ <nav class="nav"><button class="active" data-page="boardPage">Board</button><button data-page="trainerPage">Trainer</button><button data-page="coursePage">Courses</button><button data-page="videoPage">Videos</button><button data-page="rulesPage">Rules</button></nav>
 </aside>
 <main class="main">
 <section id="boardPage" class="page active">
@@ -51,6 +51,33 @@
  </div>
 </section>
 
+<section id="coursePage" class="page">
+ <div class="hero"><span class="eyebrow">Courses</span><h1>Learn → Practice → Analyze</h1><p class="muted">Every course lesson uses the same legal chess board and the same single Stockfish 19 engine service. No three-player or four-player modes.</p></div>
+ <div class="courseGrid">
+  <article class="panel courseCard"><span class="tag">FOUNDATIONS</span><h3>Chess Fundamentals</h3><p class="muted">Board setup, piece movement, checks, captures, castling, promotion and basic tactics.</p><div class="courseMeta"><span>8 lessons</span><span>Interactive</span></div><button class="btn primary" data-course="foundations">Start course</button></article>
+  <article class="panel courseCard"><span class="tag">OPENINGS</span><h3>Opening Basics</h3><p class="muted">Build a sound opening with center control, development and king safety.</p><div class="courseMeta"><span>6 lessons</span><span>Stockfish</span></div><button class="btn primary" data-course="opening">Start course</button></article>
+  <article class="panel courseCard"><span class="tag">ENGINE LAB</span><h3>Stockfish Course</h3><p class="muted">Learn evaluation, candidate moves, tactics and how to compare your idea with engine analysis.</p><div class="courseMeta"><span>10 lessons</span><span>Stockfish 19</span></div><button class="btn primary" data-course="stockfish">Start course</button></article>
+ </div>
+ <div class="courseBoard" style="margin-top:18px">
+  <section class="panel coursePanel">
+   <div class="head"><div><span class="eyebrow">Course lesson board</span><h2 id="courseTitle">Chess Fundamentals</h2><p id="courseText" class="muted">Start with a legal position, make your move, then ask the same Stockfish service to analyze it.</p></div><span class="tag">ONE ENGINE</span></div>
+   <div class="boardFrame"><div id="courseBoard" class="board"></div></div>
+   <div class="controls"><button class="btn primary" id="analyzeCourse">Analyze lesson</button><button class="btn" id="resetCourse">Reset lesson</button><span id="courseStatus" class="muted">Stockfish ready state will appear here.</span></div>
+  </section>
+  <aside class="card"><span class="tag">COURSE PATH</span><h3 id="courseStep">Lesson 1</h3><p class="muted">1. Watch the lesson video<br>2. Play the position<br>3. Analyze with Stockfish<br>4. Review the idea</p><div class="progress"><i id="courseProgress"></i></div><div class="notice">The course board has its own Chess position object. Stockfish never replaces or mutates the main game.</div></aside>
+ </div>
+</section>
+
+<section id="rulesPage" class="page">
+ <div class="hero"><span class="eyebrow">Chess rules library</span><h1>Rules & Handbooks</h1><p class="muted">Use official rule sources as references for the learning platform. The current FIDE Laws took effect January 1, 2023.</p></div>
+ <div class="resourceGrid">
+  <a class="panel resource" href="https://rcc.fide.com/wp-content/uploads/2022/12/20230101Laws-of-Chess_final.pdf" target="_blank" rel="noopener"><b>FIDE Laws of Chess</b><p class="muted">Official 2023 Laws of Chess PDF ↗</p></a>
+  <a class="panel resource" href="https://www.fide.com/main/rules/" target="_blank" rel="noopener"><b>FIDE Rules</b><p class="muted">Official FIDE rules hub ↗</p></a>
+  <a class="panel resource" href="https://www.fide.com/fide-publishes-technical-commission-manual/" target="_blank" rel="noopener"><b>FIDE Technical Commission</b><p class="muted">Current technical regulations reference ↗</p></a>
+ </div>
+ <div class="card" style="margin-top:14px"><strong>BOARD SETUP</strong><p class="muted">The platform uses a standard 8×8 board with equal-size squares. White begins on ranks 1–2 and moves first; Black begins on ranks 7–8. The board renderer keeps every square the same size and centers every piece.</p></div>
+</section>
+
 <section id="videoPage" class="page">
  <div class="hero"><span class="eyebrow">Video room</span><h1>Chessly + GothamChess</h1><p class="muted">Separate URLs for each source. YouTube videos can play directly inside this page.</p></div>
  <div class="videoGrid">
@@ -82,14 +109,14 @@ let trainerGame = new Chess();
 let flipped = false;
 let mode = "local";
 let selected = null;
-let trainerSelected = null;
+let trainerSelected = null;\nlet courseGame = new Chess();\nlet courseSelected = null;\nlet activeCourse = "foundations";
 let engine = null;
 let engineReady = false;
 let engineBusy = false;
 let engineRequest = 0;
 let enginePurpose = "";
 let activeLesson = "fork";
-let lessonPositions = {
+let coursePositions = {\n foundations:{title:"Chess Fundamentals",text:"Practice a legal starting position and use the engine only after you form your own idea.",fen:"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"},\n opening:{title:"Opening Basics",text:"Develop a piece toward the center and compare your choice with Stockfish.",fen:"rnbqkbnr/pppppppp/8/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 1"},\n stockfish:{title:"Stockfish Course",text:"Find a candidate move first, then use Stockfish to evaluate the course position.",fen:"r1bqk2r/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 4 5"}\n};\nlet lessonPositions = {
  fork:{title:"Knight Fork",text:"Find a knight move that attacks two valuable targets.",fen:"r3k2r/ppp2ppp/2n5/8/4N3/2N5/PPP2PPP/R3K2R w KQkq - 0 1"},
  opening:{title:"Opening Basics",text:"Play a sensible developing move and keep the king safe.",fen:"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"},
  mate:{title:"Mate in 1",text:"Find the immediate checkmate.",fen:"7k/6pp/5Q2/8/8/8/6PP/6K1 w - - 0 1"}
@@ -130,7 +157,7 @@ function render(chess,root,selection,clickHandler){
      sq.ondragstart=e=>{e.dataTransfer.setData("text/plain",cell.sq);e.dataTransfer.effectAllowed="move";clickHandler(cell.sq)};
      sq.ondragend=()=>{$$(".drag-over").forEach(x=>x.classList.remove("drag-over"))};
    }
-   sq.ondragover=e=>{if(selection){e.preventDefault();sq.classList.add("drag-over")}};
+   sq.ondragover=e=>{if(selection||cell.p){e.preventDefault();sq.classList.add("drag-over")}};
    sq.ondragleave=()=>sq.classList.remove("drag-over");
    sq.ondrop=e=>{
      e.preventDefault();sq.classList.remove("drag-over");
@@ -141,7 +168,7 @@ function render(chess,root,selection,clickHandler){
    el.append(sq);
  }
 }
-function renderAll(){render(game,"#board",selected,handleMainClick);render(trainerGame,"#trainerBoard",trainerSelected,handleTrainerClick);updateMainInfo()}
+function renderAll(){render(game,"#board",selected,handleMainClick);render(trainerGame,"#trainerBoard",trainerSelected,handleTrainerClick);render(courseGame,"#courseBoard",courseSelected,handleCourseClick);updateMainInfo()}
 function updateMainInfo(){
  const turn=game.turn()==="w"?"White":"Black";
  let status=turn+" to move";
@@ -230,6 +257,15 @@ function initEngine(){
          }else{
            $("#trainerStatus").textContent="No engine move available for this position.";
          }
+       }else if(enginePurpose==="course"){
+         engineBusy=false;
+         $("#engineStatus").textContent="Stockfish 19 Lite ready";
+         if(uci&&uci!=="0000"){
+           $("#courseStatus").textContent="Stockfish recommends "+uci.slice(0,2)+" → "+uci.slice(2,4)+". Your course position is unchanged.";
+           $("#courseProgress").style.width="75%";
+         }else{
+           $("#courseStatus").textContent="No engine move available for this course position.";
+         }
        }else{
          engineBusy=false;
        }
@@ -265,6 +301,38 @@ function handleTrainerClick(square,dragFrom=null){
  if(piece&&piece.color===trainerGame.turn())trainerSelected=square;
  renderAll();
 }
+function handleCourseClick(square,dragFrom=null){
+ if(courseGame.isGameOver())return;
+ const source=dragFrom||courseSelected;
+ if(source){
+   try{
+     const move=courseGame.move({from:source,to:square,promotion:"q"});
+     if(move){
+       courseSelected=null;
+       renderAll();
+       $("#courseStatus").textContent=move.san+" played. Now compare your idea with Stockfish.";
+       $("#courseProgress").style.width="50%";
+       return;
+     }
+   }catch{}
+   courseSelected=null;
+ }
+ const piece=courseGame.get(square);
+ if(piece&&piece.color===courseGame.turn())courseSelected=square;
+ renderAll();
+}
+function loadCourse(id){
+ activeCourse=id;
+ const d=coursePositions[id];
+ courseGame=new Chess(d.fen);
+ courseSelected=null;
+ $("#courseTitle").textContent=d.title;
+ $("#courseText").textContent=d.text;
+ $("#courseStep").textContent="Lesson 1 · "+d.title;
+ $("#courseStatus").textContent=engineReady?"Stockfish ready — make your move first.":"Waiting for Stockfish…";
+ $("#courseProgress").style.width="0%";
+ renderAll();
+}
 function loadLesson(id){
  activeLesson=id;
  const d=lessonPositions[id];
@@ -278,8 +346,8 @@ function loadLesson(id){
  renderAll();
 }
 $("#newGame").onclick=()=>{game=new Chess();selected=null;engineBusy=false;engineRequest++;enginePurpose="";if(engine)engine.postMessage("stop");renderAll();$("#coach").textContent="New game. Start with checks, captures, and threats."};
-$("#localBtn").onclick=()=>{mode="local";engineBusy=false;engineRequest++;renderAll();$("#engineStatus").textContent=engineReady?"Stockfish ready":"Loading engine…"};
-$("#computerBtn").onclick=()=>{mode="computer";game=new Chess();selected=null;engineBusy=false;engineRequest++;renderAll();$("#engineStatus").textContent=engineReady?"Your move — White":"Loading Stockfish…"};
+$("#localBtn").onclick=()=>{mode="local";engineBusy=false;engineRequest++;enginePurpose="";if(engine)engine.postMessage("stop");renderAll();$("#engineStatus").textContent=engineReady?"Stockfish ready":"Loading engine…"};
+$("#computerBtn").onclick=()=>{mode="computer";game=new Chess();selected=null;engineBusy=false;engineRequest++;enginePurpose="";if(engine)engine.postMessage("stop");renderAll();$("#engineStatus").textContent=engineReady?"Your move — White":"Loading Stockfish…"};
 $("#undoBtn").onclick=()=>{if(engineBusy)return;game.undo();if(mode==="computer"&&game.history().length)game.undo();selected=null;renderAll()};
 $("#flipBtn").onclick=()=>{flipped=!flipped;renderAll()};
 $("#applyLevel").onclick=()=>{$("#engineStatus").textContent="Level set — "+$("#level").value;};
@@ -289,7 +357,15 @@ $("#analyzeLesson").onclick=()=>{
  requestEngine("lesson",trainerGame);
  $("#lessonProgress").style.width="50%";
 };
-$("#resetLesson").onclick=()=>loadLesson(activeLesson);
+$("#resetLesson").onclick=()=>loadLesson(activeLesson);$("#analyzeCourse").onclick=()=>{
+ if(!engineReady){$("#courseStatus").textContent="Stockfish is still loading…";return}
+ if(engineBusy){$("#courseStatus").textContent="Stockfish is already analyzing another position…";return}
+ requestEngine("course",courseGame);
+ $("#courseProgress").style.width="60%";
+};
+$("#resetCourse").onclick=()=>loadCourse(activeCourse);
+$("[data-course]").forEach(b=>b.onclick=()=>loadCourse(b.dataset.course));
+
 $$("[data-lesson]").forEach(b=>b.onclick=()=>loadLesson(b.dataset.lesson));
 $("[data-page]").forEach(b=>b.onclick=()=>{
  $$(".page").forEach(p=>p.classList.remove("active"));$("#"+b.dataset.page).classList.add("active");
