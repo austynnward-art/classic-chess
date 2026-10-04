@@ -36,16 +36,62 @@
 textarea.fenInput{width:100%;min-height:74px;resize:vertical;background:#080d11;color:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;font:12px ui-monospace,monospace}
 @media(max-width:1050px){.rebelGrid,.analysisGrid{grid-template-columns:1fr}.rebelCards,.analysisSummary{grid-template-columns:1fr 1fr}}
 @media(max-width:680px){.rebelCards{grid-template-columns:1fr}}@media(max-width:1050px){.courseGrid{grid-template-columns:1fr 1fr}.courseBoard{grid-template-columns:1fr}.nav button{font-size:12px}.nav button.active:before{margin-right:6px}}@media(max-width:1050px){.app{grid-template-columns:72px 1fr}.sideNav{padding:20px 8px}.brand{justify-content:center}.brand>div:not(.logo){display:none}.nav button{font-size:0;text-align:center}.nav button.active:before{margin:0}.layout,.trainer{grid-template-columns:1fr}.sideCards{display:grid;grid-template-columns:1fr 1fr}.coach{grid-column:1/-1}.grid3,.resourceGrid{grid-template-columns:1fr 1fr}}@media(max-width:680px){.app{display:block}.sideNav{height:62px;position:sticky;z-index:10;display:flex;align-items:center;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.brand{margin:0}.nav{display:flex;gap:4px;margin-left:auto}.nav button{font-size:12px;padding:9px}.nav button.active:before{display:none}.main{padding:16px 10px 40px}.boardPanel{padding:13px}.head h1{font-size:24px}.sideCards{display:block}.card{margin-top:10px}.videoGrid,.grid3,.resourceGrid,.lessonList,.courseGrid{grid-template-columns:1fr}.hero{padding:24px}.hero h1{font-size:36px}}
+
+.archPage{max-width:1400px;margin:auto}
+.archHero{padding:28px;border-radius:20px;background:radial-gradient(circle at 80% 20%,#082e57,#08131e 65%);border:1px solid #29362c;margin-bottom:18px}
+.archHero h1{font-size:40px;margin:8px 0}.archGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.archCard{padding:18px}.archCard h3{margin:7px 0}.archStat{font-size:27px;font-weight:950}.archList{display:grid;gap:9px;margin-top:12px}
+.archItem{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px;background:#ffffff05}
+.archItem small{color:var(--muted)}.archProgress{height:8px;background:#1b2228;border-radius:99px;overflow:hidden;margin-top:8px}.archProgress i{display:block;height:100%;background:var(--lime);width:0}
+.archPill{display:inline-block;padding:5px 8px;border-radius:999px;background:#1597ff18;color:var(--lime);font-size:9px;font-weight:900;letter-spacing:1px}
+@media(max-width:900px){.archGrid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.archGrid{grid-template-columns:1fr}.archHero h1{font-size:31px}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sideNav">
  <div class="brand"><div class="logo">♞</div><div><b>Rebel Classic Chess</b><small>REBEL CHESS LAB</small></div></div>
- <nav class="nav" aria-label="Primary"><button class="active" aria-current="page" data-page="boardPage">Board</button><button data-page="trainerPage">Trainer</button><button data-page="coursePage">Courses</button><button data-page="rebelPage">Rebel Lab</button><button data-page="videoPage">Videos</button><button data-page="rulesPage">Rules</button></nav>
+ <nav class="nav" aria-label="Primary"><button class="active" aria-current="page" data-page="homePage">Home</button><button data-page="coursePage">Learn</button><button data-page="boardPage">Play</button><button data-page="trainerPage">Train</button><button data-page="rebelPage">Lab</button><button data-page="progressPage">Progress</button><button data-page="videoPage">Videos</button><button data-page="rulesPage">Rules</button></nav>
 </aside>
 <main class="main">
-<section id="boardPage" class="page active">
+
+<section id="homePage" class="page active">
+ <div class="archPage">
+  <div class="archHero"><span class="eyebrow">Rebel learning system</span><h1>Learn → Play → Analyze → Train</h1><p class="muted">Your Chessly-style course workflow is now connected to the existing Rebel board, Stockfish analysis, saved games and training positions.</p>
+   <div class="controls"><button class="btn primary" data-page="coursePage">Continue learning</button><button class="btn" data-page="trainerPage">Train weaknesses</button><button class="btn" data-page="boardPage">Play a game</button></div>
+  </div>
+  <div class="archGrid">
+   <div class="panel archCard"><span class="archPill">LEARNING</span><h3>Courses</h3><div class="archStat">3</div><small class="muted">Interactive course paths currently connected.</small><div class="archProgress"><i style="width:33%"></i></div></div>
+   <div class="panel archCard"><span class="archPill">TRAINING</span><h3>Saved positions</h3><div id="homeLearningCount" class="archStat">0</div><small class="muted">Engine-checked positions in your Rebel learning book.</small></div>
+   <div class="panel archCard"><span class="archPill">GAMES</span><h3>Saved games</h3><div id="homeGameCount" class="archStat">0</div><small class="muted">Games available in your local Rebel database.</small></div>
+  </div>
+  <div class="archGrid" style="margin-top:14px">
+   <div class="panel archCard"><span class="eyebrow">Course path</span><h3>Chess Fundamentals</h3><p class="muted">Board setup → legal moves → checks → tactics → analysis.</p><button class="btn primary" data-course="foundations">Open course</button></div>
+   <div class="panel archCard"><span class="eyebrow">Recommended</span><h3>Train your latest analysis</h3><p class="muted">Turn an analyzed position into a repeatable drill.</p><button class="btn" data-page="trainerPage">Open Trainer</button></div>
+   <div class="panel archCard"><span class="eyebrow">Rebel Lab</span><h3>Review a game</h3><p class="muted">Mistakes, blunders, best moves, alternatives and move-by-move reporting.</p><button class="btn" data-page="rebelPage">Open Lab</button></div>
+  </div>
+ </div>
+</section>
+
+<section id="progressPage" class="page">
+ <div class="archPage">
+  <div class="archHero"><span class="eyebrow">Progress</span><h1>Your Rebel training profile</h1><p class="muted">Progress is calculated from the training and game data already stored in this browser.</p></div>
+  <div class="archGrid">
+   <div class="panel archCard"><span class="archPill">XP</span><h3>Total learning XP</h3><div id="progressXp" class="archStat">0</div><small class="muted">Training hits + saved games + completed drills.</small></div>
+   <div class="panel archCard"><span class="archPill">GAMES</span><h3>Games analyzed</h3><div id="progressGames" class="archStat">0</div><small class="muted">Local saved-game library.</small></div>
+   <div class="panel archCard"><span class="archPill">ENGINE</span><h3>Engine state</h3><div id="progressEngine" class="archStat">—</div><small class="muted">Single Stockfish service.</small></div>
+  </div>
+  <div class="panel archCard" style="margin-top:14px"><span class="eyebrow">Skill lanes</span><h2>Training categories</h2>
+   <div class="archList">
+    <div class="archItem"><div><b>Tactics</b><small>Forks, checks, captures and threats</small></div><span id="skillTactics">Building</span></div>
+    <div class="archItem"><div><b>Openings</b><small>Course and book positions</small></div><span id="skillOpenings">Building</span></div>
+    <div class="archItem"><div><b>Calculation</b><small>Engine-checked candidate moves</small></div><span id="skillCalculation">Building</span></div>
+    <div class="archItem"><div><b>Game review</b><small>Mistakes converted into training</small></div><span id="skillReview">Building</span></div>
+   </div>
+  </div>
+ </div>
+</section>
+<section id="boardPage" class="page">
  <div class="layout">
   <section class="panel boardPanel">
    <div class="head"><div><span class="eyebrow">Live chess board</span><h1>Play against Stockfish</h1><p class="muted">White starts on rank 1. Blue pieces are Black.</p></div><span id="modeTag" class="tag">2 PLAYER</span></div>
@@ -894,6 +940,34 @@ wireNavigation(); renderRebelLab();
 loadLesson("fork");
 renderAll();
 initEngine();
+</script>
+
+<script>
+(function(){
+ function refreshArchitecture(){
+   const hits=Object.values(window.learningBook||{}).reduce((n,x)=>n+(Number(x.hits)||0),0);
+   const games=(window.savedGames||[]).length;
+   const xp=hits*10+games*25;
+   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+   set("homeLearningCount",hits);set("homeGameCount",games);
+   set("progressXp",xp);set("progressGames",games);set("progressEngine",window.engineReady?"READY":"LOADING");
+   const lane=(hits||games)?Math.min(100,20+hits*5):0;
+   set("skillTactics",lane?lane+"%":"Building");
+   set("skillOpenings",games?Math.min(100,25+games*8)+"%":"Building");
+   set("skillCalculation",hits?Math.min(100,20+hits*6)+"%":"Building");
+   set("skillReview",games&&hits?Math.min(100,20+games*5+hits*3)+"%":"Building");
+ }
+ window.refreshRebelArchitecture=refreshArchitecture;
+ document.addEventListener("click",function(e){
+   const b=e.target.closest("[data-page]");
+   if(b && b.dataset.page){e.preventDefault();if(typeof window.showPage==="function")window.showPage(b.dataset.page);refreshArchitecture();}
+ });
+ const oldShow=window.showPage;
+ if(oldShow){
+   window.showPage=function(id){oldShow(id);refreshArchitecture();}
+ }
+ setTimeout(refreshArchitecture,100);
+})();
 </script>
 </body>
 </html>
