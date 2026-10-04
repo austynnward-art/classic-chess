@@ -5,6 +5,7 @@ module.exports = defineConfig({
   testMatch: 'e2e.spec.js',
   timeout: 30000,
   fullyParallel: true,
+  workers: process.env.CI ? 1 : undefined,
   reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }], ['list']],
   use: {
     baseURL: 'http://127.0.0.1:4173',
