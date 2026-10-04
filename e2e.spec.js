@@ -75,9 +75,9 @@ test("trainer has an isolated board and can move pieces", async ({ page }) => {
   await page.getByRole("button", { name: "Trainer" }).click();
   await expect(page.locator("#trainerBoard .sq")).toHaveCount(64);
   await page.getByRole("button", { name: "Opening Basics" }).click();
-  await square(page, "trainerBoard", "e7").click();
-  await square(page, "trainerBoard", "e5").click();
-  await expect(square(page, "trainerBoard", "e5").locator(".piece")).toHaveText("♟");
+  await square(page, "trainerBoard", "e2").click();
+  await square(page, "trainerBoard", "e4").click();
+  await expect(square(page, "trainerBoard", "e4").locator(".piece")).toHaveText("♙");
   await expect(page.locator("#moves")).toHaveText("No moves yet.");
 });
 
@@ -129,4 +129,33 @@ test("computer mode returns a legal engine reply without replacing the human pos
   await expect(page.locator("#moves")).toContainText("e4");
   await expect.poll(() => page.locator("#moves").innerText(), { timeout: 20000 }).not.toBe("1.  e4");
   await expect(page.locator("#status")).toContainText(/White to move|Checkmate|Draw/);
+});
+
+test("navigation buttons do not throw page errors", async ({ page }) => {
+  const errors = await openApp(page);
+  for (const name of ["Trainer", "Courses", "Videos", "Rules", "Board"]) {
+    await page.getByRole("button", { name }).click();
+  }
+  expect(errors.map(e => e.message)).toEqual([]);
+});
+
+test("engine level changes do not create a second worker", async ({ page }) => {
+  await openApp(page);
+  await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
+  await page.locator("#level").selectOption("2400");
+  await page.locator("#applyLevel").click();
+  await expect(page.locator("#engineStatus")).toContainText("Level set — 2400");
+  await expect(page.locator("#board .sq")).toHaveCount(64);
+});
+
+test("reset cancels an active engine search before a new game", async ({ page }) => {
+  await openApp(page);
+  await expect(page.locator("#engineStatus")).toContainText("Stockfish 19 Lite ready", { timeout: 30000 });
+  await page.getByRole("button", { name: "Play computer" }).click();
+  await square(page, "board", "e2").click();
+  await square(page, "board", "e4").click();
+  await page.getByRole("button", { name: "New game" }).click();
+  await expect(page.locator("#status")).toHaveText("White to move");
+  await expect(page.locator("#moves")).toHaveText("No moves yet.");
+  await expect(square(page, "board", "e2").locator(".piece")).toHaveText("♙");
 });
