@@ -163,7 +163,18 @@ body{background:
   <div class="archHero"><span class="eyebrow">REBEL CHESS / COMMAND CENTER</span><h1>Play sharper.<br>Train smarter.</h1><p class="muted">One chess workspace for playing, studying, drilling, reviewing games and turning mistakes into targeted training.</p>
    <div class="controls"><button class="btn primary" data-page="coursePage">Continue learning</button><button class="btn" data-page="trainerPage">Train weaknesses</button><button class="btn" data-page="boardPage">Play a game</button></div>
   </div>
-  <div class="archGrid">
+  <div class="homeCommandGrid">
+   <div class="panel commandCard"><span class="eyebrow">YOUR NEXT MOVE</span><h2>Command center</h2><p class="muted">Jump straight into the part of Rebel you want to use.</p>
+    <div class="commandRows">
+     <div class="commandRow" data-page="boardPage"><b>Play a Game</b><small>Board + Stockfish opponent</small></div>
+     <div class="commandRow" data-page="rebelPage"><b>Analyze a Game</b><small>Mistakes · blunders · best moves</small></div>
+     <div class="commandRow" data-page="trainerPage"><b>Train Weaknesses</b><small>Drills from your positions</small></div>
+     <div class="commandRow" data-page="coursePage"><b>Continue Course</b><small>Resume your learning path</small></div>
+    </div>
+   </div>
+   <div class="panel commandCard"><span class="eyebrow">REBEL LOOP</span><h2>Play → Review → Repeat</h2><p class="muted">Every analyzed game can feed the next training session.</p><div class="progress"><i style="width:38%"></i></div><small class="muted">Training pipeline active</small></div>
+  </div>
+  <div class="archGrid" style="margin-top:14px">
    <div class="panel archCard"><span class="archPill">LEARNING</span><h3>Courses</h3><div class="archStat">3</div><small class="muted">Interactive course paths currently connected.</small><div class="archProgress"><i style="width:33%"></i></div></div>
    <div class="panel archCard"><span class="archPill">TRAINING</span><h3>Saved positions</h3><div id="homeLearningCount" class="archStat">0</div><small class="muted">Engine-checked positions in your Rebel learning book.</small></div>
    <div class="panel archCard"><span class="archPill">GAMES</span><h3>Saved games</h3><div id="homeGameCount" class="archStat">0</div><small class="muted">Games available in your local Rebel database.</small></div>
