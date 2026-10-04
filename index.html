@@ -322,7 +322,8 @@ function startEngineJob(job){
      setEngineStatus("Stockfish search timed out — stopping");
      if(job.purpose==="lesson")$("#trainerStatus").textContent="Stockfish timed out. Try again.";
      if(job.purpose==="course")$("#courseStatus").textContent="Stockfish timed out. Try again.";
-     if(job.purpose==="training")$("#trainingLoopStatus").textContent="Analysis timed out — try again.";\n     if(job.purpose==="rebel")$("#engineReadout").textContent="Search timed out — engine is stopping safely.";
+     if(job.purpose==="training")$("#trainingLoopStatus").textContent="Analysis timed out — try again.";
+     if(job.purpose==="rebel")$("#engineReadout").textContent="Search timed out — engine is stopping safely.";
    }
  },limit.time+1500);
  return true;
